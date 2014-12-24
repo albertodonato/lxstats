@@ -33,3 +33,8 @@ class TestCase(TestWithFixtures):
         if mode is not None:
             os.chmod(path, mode)
         return path
+
+    def readfile(self, path):
+        '''Return the content of the specified file.'''
+        with open(path) as fh:
+            return fh.read()
