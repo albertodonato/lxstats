@@ -47,7 +47,7 @@ class ToggleFile(object):
     @property
     def enabled(self):
         '''Return whether the toggle value is enabled.'''
-        return self._parser.content() == '1'
+        return self._parser.content().strip() == '1'
 
     def toggle(self, value):
         '''Enable or disable the value.'''

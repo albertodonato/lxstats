@@ -53,12 +53,12 @@ class ToggleFileTests(TestCase):
 
     def test_enabled_true(self):
         '''If content is '1', the toggle is enabled.'''
-        self.mkfile(path=self.path, content='1')
+        self.mkfile(path=self.path, content='1\n')
         self.assertTrue(self.toggle_file.enabled)
 
     def test_enabled_false(self):
         '''If content is '0', the toggle is not enabled.'''
-        self.mkfile(path=self.path, content='0')
+        self.mkfile(path=self.path, content='0\n')
         self.assertFalse(self.toggle_file.enabled)
 
     def test_toggle_true(self):
