@@ -1,17 +1,27 @@
-from procsys.parse.text import FileParser, SingleLineFileParser
+from procsys.parse.text import FileParser, SplitterFileParser
 
 
-class OptionSelectFile(object):
-    '''File to select one of possible options.'''
+class OptionsFile(object):
+    '''File listing a set of options.'''
 
     def __init__(self, path):
         self.path = path
-        self._parser = SingleLineFileParser(self.path)
+        self._parser = SplitterFileParser(self.path)
 
     @property
     def options(self):
         '''Return a list with avalilable options.'''
         return [self._strip_selected(value) for value in self._parse()]
+
+    def _parse(self):
+        return self._parser.parse()
+
+    def _strip_selected(self, value):
+        return value[1:-1] if value.startswith('[') else value
+
+
+class SelectableOptionsFile(OptionsFile):
+    '''File listing a set of options with a single selected one.'''
 
     @property
     def selected(self):
@@ -29,12 +39,6 @@ class OptionSelectFile(object):
             raise ValueError(value)
         with open(self.path, 'w') as fh:
             fh.write(value)
-
-    def _parse(self):
-        return self._parser.parse()
-
-    def _strip_selected(self, value):
-        return value[1:-1] if value.startswith('[') else value
 
 
 class ToggleFile(object):

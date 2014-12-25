@@ -1,19 +1,32 @@
 from procsys.testing import TestCase
 
-from procsys.files import OptionSelectFile, ToggleFile
+from procsys.files import OptionsFile, SelectableOptionsFile, ToggleFile
 
 
-class OptionSelectFileTests(TestCase):
+class OptionsFileTests(TestCase):
 
     def setUp(self):
-        super(OptionSelectFileTests, self).setUp()
+        super(OptionsFileTests, self).setUp()
         self.path = self.mktemp()
-        self.select_file = OptionSelectFile(self.path)
+        self.options_file = OptionsFile(self.path)
 
-    def test_options(self):
-        '''Option values can be listed.'''
+    def test_options_single_line(self):
+        '''Option values can be listed from single-line files.'''
         self.mkfile(path=self.path, content='foo bar baz')
-        self.assertEqual(self.select_file.options, ['foo', 'bar', 'baz'])
+        self.assertEqual(self.options_file.options, ['foo', 'bar', 'baz'])
+
+    def test_options_multiple_lines(self):
+        '''Option values can be listed from multi-lines files.'''
+        self.mkfile(path=self.path, content='foo\nbar\nbaz')
+        self.assertEqual(self.options_file.options, ['foo', 'bar', 'baz'])
+
+
+class SelectableOptionsFileTests(TestCase):
+
+    def setUp(self):
+        super(SelectableOptionsFileTests, self).setUp()
+        self.path = self.mktemp()
+        self.select_file = SelectableOptionsFile(self.path)
 
     def test_options_selected(self):
         '''The selected option is included.'''
