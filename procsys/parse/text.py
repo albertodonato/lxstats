@@ -72,3 +72,17 @@ class SingleLineFileParser(FileParser):
 
             fields.append(field)
         return fields
+
+
+class SplitterFileParser(FileParser):
+    '''Parse a file splitting the content in words.
+
+    It's meant to work with files that have one word per line or a single
+    space-separated line.
+    '''
+
+    def parser(self, lines):
+        if len(lines) == 1:
+            return lines[0].split()
+        else:
+            return lines

@@ -1,6 +1,7 @@
 from procsys.testing import TestCase
 
-from procsys.parse.text import FileParser, SingleLineFileParser
+from procsys.parse.text import (
+    FileParser, SingleLineFileParser, SplitterFileParser)
 
 
 class FileParserTests(TestCase):
@@ -80,3 +81,24 @@ class SingleLineFileParserTests(TestCase):
         parser.fields = ('one', ('two', int), ('three', float))
         self.assertEqual(
             parser.parse(), {'one': 'foo', 'two': 1, 'three': 30.3})
+
+
+class SplitterFileParserTests(TestCase):
+
+    def test_parser_single_line(self):
+        '''A single line of content is split on spaces.'''
+        path = self.mkfile(content='foo bar baz')
+        parser = SplitterFileParser(path)
+        self.assertEqual(parser.parse(), ['foo', 'bar', 'baz'])
+
+    def test_parser_multiple_lines(self):
+        '''A file with multiple lines is split on newlines.'''
+        path = self.mkfile(content='foo\nbar\nbaz')
+        parser = SplitterFileParser(path)
+        self.assertEqual(parser.parse(), ['foo', 'bar', 'baz'])
+
+    def test_parser_multiple_lines_trailing_newline(self):
+        '''Trailing newline is ignored.'''
+        path = self.mkfile(content='foo\nbar\nbaz\n')
+        parser = SplitterFileParser(path)
+        self.assertEqual(parser.parse(), ['foo', 'bar', 'baz'])
