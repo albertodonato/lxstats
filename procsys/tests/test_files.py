@@ -1,6 +1,25 @@
 from procsys.testing import TestCase
 
-from procsys.files import OptionsFile, SelectableOptionsFile, ToggleFile
+from procsys.files import (
+    File, OptionsFile, SelectableOptionsFile, ValueFile, ToggleFile)
+
+
+class FileTests(TestCase):
+
+    def setUp(self):
+        super(FileTests, self).setUp()
+        self.path = self.mktemp()
+        self.file = File(self.path)
+
+    def test_read(self):
+        '''File content can be read.'''
+        self.mkfile(path=self.path, content='some content')
+        self.assertEqual(self.file.read(), 'some content')
+
+    def test_write(self):
+        '''Content can be written to file.'''
+        self.file.write('some content')
+        self.assertEqual(self.readfile(self.path), 'some content')
 
 
 class OptionsFileTests(TestCase):
@@ -55,6 +74,24 @@ class SelectableOptionsFileTests(TestCase):
         '''If an invalid value is specified, a ValueError is raised.'''
         self.mkfile(path=self.path, content='foo [bar] baz')
         self.assertRaises(ValueError, self.select_file.select, 'unknown')
+
+
+class ValueFileTests(TestCase):
+
+    def setUp(self):
+        super(ValueFileTests, self).setUp()
+        self.path = self.mktemp()
+        self.value_file = ValueFile(self.path)
+
+    def test_value(self):
+        '''Value from the file can be returned.'''
+        self.mkfile(path=self.path, content='55\n')
+        self.assertEqual(self.value_file.value, '55')
+
+    def test_set(self):
+        '''Value can be set to file.'''
+        self.value_file.set('99')
+        self.assertEqual(self.readfile(self.path), '99')
 
 
 class ToggleFileTests(TestCase):
