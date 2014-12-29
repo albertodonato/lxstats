@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from procsys.parse.text import FileParser, SplitterFileParser
 
 
@@ -55,6 +57,33 @@ class SelectableOptionsFile(OptionsFile):
         if value not in self.options:
             raise ValueError(value)
         self.write(value)
+
+
+class TogglableOptionsFile(OptionsFile):
+    '''A file with a list of options that can be individually enabled.
+
+    Disabled options have names prefixed by "no".
+    '''
+
+    @property
+    def options(self):
+        '''Return a dict with options and their current values.'''
+        options = OrderedDict()
+        for option in super(TogglableOptionsFile, self).options:
+            value = not option.startswith('no')
+            if not value:
+                option = option[2:]
+            options[option] = value
+
+        return options
+
+    def toggle(self, option, value):
+        '''Change the value of the specified option.'''
+        if option not in self.options:
+            raise ValueError(option)
+
+        prefix = '' if value else 'no'
+        self.write('{}{}'.format(prefix, option))
 
 
 class ValueFile(File):

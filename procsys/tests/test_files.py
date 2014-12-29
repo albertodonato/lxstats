@@ -1,7 +1,8 @@
 from procsys.testing import TestCase
 
 from procsys.files import (
-    File, OptionsFile, SelectableOptionsFile, ValueFile, ToggleFile)
+    File, OptionsFile, SelectableOptionsFile, TogglableOptionsFile, ValueFile,
+    ToggleFile)
 
 
 class FileTests(TestCase):
@@ -74,6 +75,42 @@ class SelectableOptionsFileTests(TestCase):
         '''If an invalid value is specified, a ValueError is raised.'''
         self.mkfile(path=self.path, content='foo [bar] baz')
         self.assertRaises(ValueError, self.select_file.select, 'unknown')
+
+
+class TogglableOptionsFileTests(TestCase):
+
+    def setUp(self):
+        super(TogglableOptionsFileTests, self).setUp()
+        self.path = self.mktemp()
+        self.toggle_options_file = TogglableOptionsFile(self.path)
+
+    def test_options(self):
+        '''Options are returned as a dict with current values.'''
+        self.mkfile(path=self.path, content='foo\nnobar\nbaz')
+        self.assertEqual(
+            self.toggle_options_file.options,
+            {'foo': True, 'bar': False, 'baz': True})
+
+    def test_toggle_option_true(self):
+        '''Options can be enabled.'''
+        self.mkfile(path=self.path, content='foo\nnobar\nbaz')
+        self.toggle_options_file.toggle('bar', True)
+        # The value is written to file. For /proc and /sys files this will
+        # result in passing the value to the kernel.
+        self.assertEqual(self.readfile(self.path), 'bar')
+
+    def test_toggle_option_false(self):
+        '''Options can be disabled.'''
+        self.mkfile(path=self.path, content='foo\nnobar\nbaz')
+        self.toggle_options_file.toggle('foo', False)
+        # When an option is disabled the name is prefixed with "no".
+        self.assertEqual(self.readfile(self.path), 'nofoo')
+
+    def test_toggle_option_unknown(self):
+        '''Passing an unknown option name raises a ValueError.'''
+        self.mkfile(path=self.path, content='foo\nnobar\nbaz')
+        self.assertRaises(
+            ValueError, self.toggle_options_file.toggle, 'other', True)
 
 
 class ValueFileTests(TestCase):
