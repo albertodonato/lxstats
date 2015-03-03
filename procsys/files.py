@@ -94,7 +94,7 @@ class ValueFile(File):
 
     @property
     def value(self):
-        '''Return whether the toggle value is enabled.'''
+        '''Return the current value in the file.'''
         return self.read().strip()
 
     def set(self, value):
