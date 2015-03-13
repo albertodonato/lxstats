@@ -1,6 +1,7 @@
 '''Parser for text files.'''
 
 import os
+from itertools import izip
 
 
 class FileParser(object):
@@ -42,12 +43,14 @@ class SingleLineFileParser(FileParser):
     '''Parse a single-line file into fields based on a common separator.
 
     Subclasses can define a list of fields and a different separator.
+
     '''
 
     separator = ' '
 
     # If provided it must be a list of keys or (key, type) tuples. In the
-    # latter case, the value is converted to the type.
+    # latter case, the value is converted to the type. None can be used if the
+    # field should not be parsed and included.
     fields = None
 
     def parser(self, lines):
@@ -58,16 +61,18 @@ class SingleLineFileParser(FileParser):
 
         fields = self._get_fields()
 
-        result = {}
-        for idx, (key, field_type) in enumerate(fields):
-            result[key] = field_type(splitted[idx])
-
-        return result
+        # Map fields values to their name converting to the proper type
+        return {
+            key: field_type(value)
+            for (key, field_type), value in izip(fields, splitted)
+            if key is not None}
 
     def _get_fields(self):
         fields = []
         for field in self.fields:
-            if isinstance(field, str):
+            if field is None:
+                field = (None, None)
+            elif isinstance(field, str):
                 field = (field, str)
 
             fields.append(field)
@@ -79,6 +84,7 @@ class SplitterFileParser(FileParser):
 
     It's meant to work with files that have one word per line or a single
     space-separated line.
+
     '''
 
     def parser(self, lines):

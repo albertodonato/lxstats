@@ -1,3 +1,18 @@
+#
+# This file is part of Procsys.
+
+# Procsys is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# Procsys is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Procsys.  If not, see <http://www.gnu.org/licenses/>.
+
 from procsys.testing import TestCase
 
 from procsys.parse.text import (
@@ -81,6 +96,20 @@ class SingleLineFileParserTests(TestCase):
         parser.fields = ('one', ('two', int), ('three', float))
         self.assertEqual(
             parser.parse(), {'one': 'foo', 'two': 1, 'three': 30.3})
+
+    def test_parser_with_fields_with_none(self):
+        '''If a field is None, it's skipped in the result.'''
+        path = self.mkfile(content='foo baz bar')
+        parser = SingleLineFileParser(path)
+        parser.fields = ('one', None, 'three')
+        self.assertEqual(parser.parse(), {'one': 'foo', 'three': 'bar'})
+
+    def test_parser_with_less_fields(self):
+        '''If fields less fields are present, they're skipped in the result.'''
+        path = self.mkfile(content='foo bar')
+        parser = SingleLineFileParser(path)
+        parser.fields = ('one', 'two', 'three', 'four')
+        self.assertEqual(parser.parse(), {'one': 'foo', 'two': 'bar'})
 
 
 class SplitterFileParserTests(TestCase):
