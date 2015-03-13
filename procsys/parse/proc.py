@@ -142,3 +142,15 @@ class ProcPIDStatm(SingleLineFileParser):
         ('lib', int),
         ('data', int),
         ('dt', int))
+
+
+class ProcPIDIo(FileParser):
+    '''Parser for /proc/[pid]/io.'''
+
+    def parser(self, lines):
+        # Each line eis in the form "name: count".
+        result = {}
+        for line in lines:
+            key, value = line.split(': ', 1)
+            result[key] = int(value)
+        return result

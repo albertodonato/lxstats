@@ -13,11 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Procsys.  If not, see <http://www.gnu.org/licenses/>.
 
+from textwrap import dedent
+
 from procsys.testing import TestCase
 
 from procsys.parse.proc import (
     ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats,
-    ProcPIDStat, ProcPIDStatm)
+    ProcPIDStat, ProcPIDStatm, ProcPIDIo)
 
 
 class ProcStatTests(TestCase):
@@ -172,3 +174,30 @@ class ProcPIDStatmTests(TestCase):
             parser.parse(),
             {'size': 1, 'resident': 2, 'share': 3, 'text': 4, 'lib': 5,
              'data': 6, 'dt': 7})
+
+
+class ProcPIDIOTests(TestCase):
+
+    def test_fields(self):
+        '''Fields and values from /proc/[pid]/io files are reported.'''
+        content = dedent(
+            '''\
+            rchar: 100
+            wchar: 200
+            syscr: 300
+            syscw: 400
+            read_bytes: 500
+            write_bytes: 600
+            cancelled_write_bytes: 700
+            ''')
+        path = self.mkfile(content=content)
+        parser = ProcPIDIo(path)
+        self.assertEqual(
+            parser.parse(),
+            {'rchar': 100,
+             'wchar': 200,
+             'syscr': 300,
+             'syscw': 400,
+             'read_bytes': 500,
+             'write_bytes': 600,
+             'cancelled_write_bytes': 700})
