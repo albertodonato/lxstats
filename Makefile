@@ -16,9 +16,9 @@
 BASEDIR = procsys
 
 PYTHON = python
-TEST_RUNNER = trial
-LINT = flake8
 SETUP = $(PYTHON) setup.py
+LINT = flake8
+
 
 all: build
 
@@ -32,9 +32,9 @@ clean:
 	rm -rf build *.egg-info _trial_temp
 
 test:
-	@$(TEST_RUNNER) $(BASEDIR)
+	$(SETUP) test
 
 lint:
-	@$(LINT) $(BASEDIR)
+	@$(LINT) .
 
 .PHONY: build
