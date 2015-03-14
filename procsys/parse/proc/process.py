@@ -22,8 +22,8 @@ class ProcPIDStat(SingleLineFileParser):
     '''Parser for /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
 
     fields = (
-        None,
-        None,
+        ('pid', int),
+        ('comm', str),
         ('state', str),
         ('ppid', int),
         ('pgrp', int),

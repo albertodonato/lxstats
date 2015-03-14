@@ -30,7 +30,9 @@ class ProcPIDStatTests(TestCase):
         parser = ProcPIDStat(path)
         self.assertEqual(
             parser.parse(),
-            {'state': '2',
+            {'pid': 0,
+             'comm': '1',
+             'state': '2',
              'ppid': 3,
              'pgrp': 4,
              'session': 5,
