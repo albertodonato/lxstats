@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Parsers for Linux /proc files.'''
+'''Parsers for /proc files containing system information.'''
 
 from procsys.parse.text import FileParser, SingleLineFileParser
 
@@ -78,79 +78,4 @@ class ProcDiskstats(FileParser):
             dev_name, values = split[0], split[1:]
             values = [int(value) for value in values]
             result[dev_name] = dict(zip(self.diskstat_fields, values))
-        return result
-
-
-class ProcPIDStat(SingleLineFileParser):
-    '''Parser for /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
-
-    fields = (
-        None,
-        None,
-        ('state', str),
-        ('ppid', int),
-        ('pgrp', int),
-        ('session', int),
-        ('tty_nr', int),
-        ('tpgid', int),
-        ('flags', int),
-        ('minflt', int),
-        ('cminflt', int),
-        ('majflt', int),
-        ('cmajflt', int),
-        ('utime', int),
-        ('stime', int),
-        ('cutime', int),
-        ('cstime', int),
-        ('priority', int),
-        ('nice', int),
-        ('num_threads', int),
-        ('itrealvalue', int),
-        ('starttime', int),
-        ('vsize', int),
-        ('rss', int),
-        ('rsslim', int),
-        ('startcode', int),
-        ('endcode', int),
-        ('startstack', int),
-        ('kstkesp', int),
-        ('kstkeip', int),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        ('exit_signal', int),
-        ('processor', int),
-        ('rt_priority', int),
-        ('policy', int),
-        ('delayacct_blkio_ticks', int),
-        ('guest_time', int),
-        ('cguest_time', int))
-
-
-class ProcPIDStatm(SingleLineFileParser):
-    '''Parser for /proc/[pid]/statm.'''
-
-    fields = (
-        ('size', int),
-        ('resident', int),
-        ('share', int),
-        ('text', int),
-        ('lib', int),
-        ('data', int),
-        ('dt', int))
-
-
-class ProcPIDIo(FileParser):
-    '''Parser for /proc/[pid]/io.'''
-
-    def parser(self, lines):
-        # Each line eis in the form "name: count".
-        result = {}
-        for line in lines:
-            key, value = line.split(': ', 1)
-            result[key] = int(value)
         return result
