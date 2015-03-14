@@ -16,8 +16,25 @@
 from os import path
 
 from procsys.testing import TestCase
-from procsys.files import File
-from procsys.directory import Directory
+from procsys.fs import File, Directory
+
+
+class FileTests(TestCase):
+
+    def setUp(self):
+        super(FileTests, self).setUp()
+        self.path = self.mktemp()
+        self.file = File(self.path)
+
+    def test_read(self):
+        '''File content can be read.'''
+        self.mkfile(path=self.path, content='some content')
+        self.assertEqual(self.file.read(), 'some content')
+
+    def test_write(self):
+        '''Content can be written to file.'''
+        self.file.write('some content')
+        self.assertEqual(self.readfile(self.path), 'some content')
 
 
 class DirectoryTests(TestCase):

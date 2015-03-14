@@ -13,7 +13,27 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
+'''Classes mapping file and directories.'''
+
+
 import os
+
+
+class File(object):
+    '''Wrapper to reaad/write a file.'''
+
+    def __init__(self, path):
+        self.path = path
+
+    def read(self):
+        '''Return file content.'''
+        with open(self.path) as fh:
+            return fh.read()
+
+    def write(self, content):
+        '''Write content to file.'''
+        with open(self.path, 'w') as fh:
+            fh.write(content)
 
 
 class Directory(object):

@@ -13,26 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
+'''Classes mapping different file types.'''
+
+
 from collections import OrderedDict
 
 from procsys.parse.text import FileParser, SplitterFileParser
-
-
-class File(object):
-    '''Wrapper to reaad/write a file.'''
-
-    def __init__(self, path):
-        self.path = path
-
-    def read(self):
-        '''Return file content.'''
-        with open(self.path) as fh:
-            return fh.read()
-
-    def write(self, content):
-        '''Write content to file.'''
-        with open(self.path, 'w') as fh:
-            fh.write(content)
+from procsys.fs import File
 
 
 class OptionsFile(File):
