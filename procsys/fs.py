@@ -50,6 +50,10 @@ class Directory(object):
         return sorted(
             name for name in self.files if os.path.exists(self._path(name)))
 
+    def listdir(self):
+        '''Return all names in the Directory.'''
+        return os.listdir(self.path)
+
     def __getitem__(self, name):
         '''Return the File instance for a name.'''
         path = self._path(name)

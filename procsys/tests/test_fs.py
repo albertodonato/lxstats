@@ -57,6 +57,12 @@ class DirectoryTests(TestCase):
         self.mkfile(path=path.join(self.path, 'foo'))
         self.assertEqual(self.dir.list(), ['foo'])
 
+    def test_listdir(self):
+        '''All names in the directory are returned.'''
+        self.mkfile(path=path.join(self.path, 'foo'))
+        self.mkfile(path=path.join(self.path, 'bar'))
+        self.assertEqual(self.dir.listdir(), ['bar', 'foo'])
+
     def test_get_file(self):
         '''File items can be accessed.'''
         self.mkfile(path=path.join(self.path, 'foo'), content='foo text')
