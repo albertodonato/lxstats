@@ -71,3 +71,18 @@ class DirectoryTests(TestCase):
     def test_get_file_not_existing(self):
         '''Accessing a known file that doesn't exist raises an error.'''
         self.assertRaises(KeyError, self.dir.__getitem__, 'foo')
+
+    def test_get_directory(self):
+        '''A Directory can contains sub-Directories.'''
+
+        class SubDirectory(Directory):
+            files = {'foo': File}
+
+        self.mkfile(
+            path=path.join(self.path, 'subdir', 'foo'),
+            content='foo text')
+        self.dir.files = {'subdir': SubDirectory}
+        # The directory shows in the parent list
+        self.assertEqual(self.dir.list(), ['subdir'])
+        # The file is accessible through the tree
+        self.assertEqual(self.dir['subdir']['foo'].read(), 'foo text')

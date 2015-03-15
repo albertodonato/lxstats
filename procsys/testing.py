@@ -42,6 +42,12 @@ class TestCase(TestWithFixtures):
         '''Create a temporary file and return its path.'''
         if path is None:
             path = self.mktemp()
+
+        # Create missing path elements as needed
+        dirname = os.path.dirname(path)
+        if dirname and not os.path.isdir(dirname):
+            os.makedirs(dirname)
+
         with open(path, 'w') as fh:
             fh.write(content)
 
