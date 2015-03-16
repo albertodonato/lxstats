@@ -29,6 +29,7 @@ class ProcPIDCmdlineTests(TestCase):
         cmdline_file = ProcPIDCmdline(path)
         self.assertEqual(cmdline_file.read(), "/bin/foo bar baz")
 
+
 class ProcPIDStatTests(TestCase):
 
     def test_fields(self):
