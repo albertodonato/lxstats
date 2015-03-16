@@ -16,4 +16,4 @@
 '''
 Classes for easy access and content parsing for different types of files
 under /proc and /sys Linux filesystems.
-"""
+'''
