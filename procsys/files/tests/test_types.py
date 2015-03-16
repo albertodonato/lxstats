@@ -15,7 +15,7 @@
 
 from procsys.testing import TestCase
 
-from procsys.files import (
+from procsys.files.types import (
     OptionsFile, SelectableOptionsFile, TogglableOptionsFile, ValueFile,
     ToggleFile)
 
