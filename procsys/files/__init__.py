@@ -12,3 +12,8 @@
 
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
+
+'''
+Classes for easy access and content parsing for different types of files
+under /proc and /sys Linux filesystems.
+"""
