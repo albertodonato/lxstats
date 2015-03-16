@@ -15,7 +15,7 @@
 
 from procsys.testing import TestCase
 
-from procsys.parse.proc.system import (
+from procsys.files.proc.system import (
     ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats)
 
 

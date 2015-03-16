@@ -15,20 +15,20 @@
 
 '''Parsers for /proc files containing system information.'''
 
-from procsys.parse.text import FileParser, SingleLineFileParser
+from procsys.files.text import ParsedFile, SingleLineFile
 
 
-class ProcStat(FileParser):
+class ProcStat(ParsedFile):
     '''Parse /proc/stat'''
 
     stat_fields = [
         'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal',
         'guest', 'guest-nice']
 
-    def parser(self, lines):
+    def parser(self, content):
         result = {}
 
-        for line in lines:
+        for line in content.splitlines():
             if not line.startswith('cpu'):
                 # Only CPU stats are reported for now.
                 break
@@ -44,36 +44,36 @@ class ProcStat(FileParser):
         return result
 
 
-class ProcUptime(SingleLineFileParser):
+class ProcUptime(SingleLineFile):
     '''Parser for /proc/uptime'''
 
     fields = (('uptime', float), ('idle', float))
 
 
-class ProcLoadavg(SingleLineFileParser):
+class ProcLoadavg(SingleLineFile):
     '''Parser for /proc/loadavg'''
 
     fields = (('load1', float), ('load5', float), ('load15', float))
 
 
-class ProcVmstat(FileParser):
+class ProcVmstat(ParsedFile):
     '''Parser for /proc/vmstat'''
 
-    def parser(self, lines):
-        items = (line.split() for line in lines)
+    def parser(self, content):
+        items = (line.split() for line in content.splitlines())
         return dict((key, int(value)) for key, value in items)
 
 
-class ProcDiskstats(FileParser):
+class ProcDiskstats(ParsedFile):
     '''Parser for /proc/diskstats'''
 
     diskstat_fields = [
         'read', 'read-merged', 'read-sect', 'read-ms', 'write', 'write-merged',
         'write-sect', 'write-ms', 'io-curr', 'io-ms', 'io-ms-weighted']
 
-    def parser(self, lines):
+    def parser(self, content):
         result = {}
-        for line in lines:
+        for line in content.splitlines():
             split = line.split()[2:]  # Ignore major/minor fields
             dev_name, values = split[0], split[1:]
             values = [int(value) for value in values]

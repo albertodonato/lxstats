@@ -17,8 +17,7 @@ from textwrap import dedent
 
 from procsys.testing import TestCase
 
-from procsys.parse.proc.process import (
-    ProcPIDStat, ProcPIDStatm, ProcPIDIo)
+from procsys.files.proc.process import ProcPIDStat, ProcPIDStatm, ProcPIDIo
 
 
 class ProcPIDStatTests(TestCase):

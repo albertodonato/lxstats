@@ -15,10 +15,10 @@
 
 '''Parsers for per-process files under /proc/[pid]/.'''
 
-from procsys.parse.text import FileParser, SingleLineFileParser
+from procsys.files.text import ParsedFile, SingleLineFile
 
 
-class ProcPIDStat(SingleLineFileParser):
+class ProcPIDStat(SingleLineFile):
     '''Parser for /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
 
     fields = (
@@ -68,7 +68,7 @@ class ProcPIDStat(SingleLineFileParser):
         ('cguest_time', int))
 
 
-class ProcPIDStatm(SingleLineFileParser):
+class ProcPIDStatm(SingleLineFile):
     '''Parser for /proc/[pid]/statm.'''
 
     fields = (
@@ -81,13 +81,13 @@ class ProcPIDStatm(SingleLineFileParser):
         ('dt', int))
 
 
-class ProcPIDIo(FileParser):
+class ProcPIDIo(ParsedFile):
     '''Parser for /proc/[pid]/io.'''
 
-    def parser(self, lines):
+    def parser(self, content):
         # Each line is in the form "name: count".
         result = {}
-        for line in lines:
+        for line in content.splitlines():
             key, value = line.split(': ', 1)
             result[key] = int(value)
         return result
