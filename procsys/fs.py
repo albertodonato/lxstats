@@ -19,11 +19,19 @@
 import os
 
 
-class File(object):
-    '''Wrapper to reaad/write a file.'''
+class Entity(object):
+    '''Base class for File and Directory.'''
 
     def __init__(self, path):
         self.path = path
+
+    def exists(self):
+        '''Whether the element exists.'''
+        return os.path.exists(self.path)
+
+
+class File(Entity):
+    '''Wrapper to reaad/write a file.'''
 
     def read(self):
         '''Return file content.'''
@@ -36,14 +44,11 @@ class File(object):
             fh.write(content)
 
 
-class Directory(object):
+class Directory(Entity):
     '''Exposes a collection of Files with a dict-like interface.'''
 
     # Subclasses should define this as dict mapping file names to File type
     files = {}
-
-    def __init__(self, path):
-        self.path = path
 
     def list(self):
         '''Return a list of names in the directory.'''
@@ -51,15 +56,16 @@ class Directory(object):
             name for name in self.files if os.path.exists(self._path(name)))
 
     def listdir(self):
-        '''Return all names in the Directory.'''
+        '''Return all existing names in the Directory.'''
         return os.listdir(self.path)
 
     def __getitem__(self, name):
         '''Return the File instance for a name.'''
         path = self._path(name)
-        if not os.path.exists(path):
+        item = self.files[name](path)
+        if not item.exists():
             raise KeyError(name)
-        return self.files[name](path)
+        return item
 
     def _path(self, name):
         return os.path.join(self.path, name)

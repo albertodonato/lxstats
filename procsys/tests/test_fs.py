@@ -16,7 +16,24 @@
 from os import path
 
 from procsys.testing import TestCase
-from procsys.fs import File, Directory
+from procsys.fs import Entity, File, Directory
+
+
+class EntityTests(TestCase):
+
+    def setUp(self):
+        super(EntityTests, self).setUp()
+        self.path = self.mktemp()
+        self.entity = Entity(self.path)
+
+    def test_exists_false(self):
+        '''The exists method returns False if the entity doesn't exist.'''
+        self.assertFalse(self.entity.exists())
+
+    def test_exists_true(self):
+        '''The exists method returns True if the entity exists.'''
+        self.mkfile(path=self.path)
+        self.assertTrue(self.entity.exists())
 
 
 class FileTests(TestCase):
