@@ -28,7 +28,7 @@ class OptionsFile(SplittedFile):
     @property
     def options(self):
         '''Return a list with avalilable options.'''
-        return [self._strip_selected(value) for value in self.parse()]
+        return [self._strip_selected(value) for value in self.read()]
 
     def _strip_selected(self, value):
         return value[1:-1] if value.startswith('[') else value
@@ -40,7 +40,7 @@ class SelectableOptionsFile(OptionsFile):
     @property
     def selected(self):
         '''Return the selected option.'''
-        for value in self.parse():
+        for value in self.read():
             if value.startswith('['):
                 return self._strip_selected(value)
 

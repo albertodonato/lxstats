@@ -27,9 +27,9 @@ class ProcStatTests(TestCase):
             content=(
                 'cpu0 2.0 0.0 3.0 5.0 7.0 3.0 10.0 20.0 30.0 20.0\n'
                 'cpu1 10.0 7.0 5.0 3.0 0.0 3.0 2.0 30.0 20.0 20.0\n'))
-        parser = ProcStat(path)
+        stat_file = ProcStat(path)
         self.assertEqual(
-            parser.parse(),
+            stat_file.read(),
             {'cpu0': {
                 'user': 0.02, 'nice': 0.0, 'system': 0.03, 'idle': 0.05,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1, 'steal': 0.2,
@@ -43,9 +43,9 @@ class ProcStatTests(TestCase):
         '''Some CPU fields may be missing.'''
         path = self.mkfile(
             content='cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\n')
-        parser = ProcStat(path)
+        stat_file = ProcStat(path)
         self.assertEqual(
-            parser.parse(),
+            stat_file.read(),
             {'cpu0': {
                 'user': 0.2, 'nice': 0.1, 'system': 0.3, 'idle': 0.2,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1}})
@@ -55,9 +55,9 @@ class ProcStatTests(TestCase):
         path = self.mkfile(
             content=(
                 'cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\nanother row\n'))
-        parser = ProcStat(path)
+        stat_file = ProcStat(path)
         self.assertEqual(
-            parser.parse(),
+            stat_file.read(),
             {'cpu0': {
                 'user': 0.2, 'nice': 0.1, 'system': 0.3, 'idle': 0.2,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1}})
@@ -68,9 +68,9 @@ class ProcUptimeTests(TestCase):
     def test_fields(self):
         '''Uptime and idle times are reported.'''
         path = self.mkfile(content='67569.47 106913.77')
-        parser = ProcUptime(path)
+        uptime_file = ProcUptime(path)
         self.assertEqual(
-            parser.parse(), {'uptime': 67569.47, 'idle': 106913.77})
+            uptime_file.read(), {'uptime': 67569.47, 'idle': 106913.77})
 
 
 class ProcLoadavgTests(TestCase):
@@ -78,9 +78,9 @@ class ProcLoadavgTests(TestCase):
     def test_fields(self):
         '''Load average over 1, 5, and 15 minutes is reported.'''
         path = self.mkfile(content='0.40 0.30 0.20')
-        parser = ProcLoadavg(path)
+        loadavg_file = ProcLoadavg(path)
         self.assertEqual(
-            parser.parse(),
+            loadavg_file.read(),
             {'load1': 0.40, 'load5': 0.30, 'load15': 0.20})
 
 
@@ -89,8 +89,8 @@ class ProcVmstatTests(TestCase):
     def test_fields(self):
         '''Fields and values from the /proc/vmstat file are reported.'''
         path = self.mkfile(content='foo 123\nbar 456')
-        parser = ProcVmstat(path)
-        self.assertEqual(parser.parse(), {'foo': 123, 'bar': 456})
+        vmstat_file = ProcVmstat(path)
+        self.assertEqual(vmstat_file.read(), {'foo': 123, 'bar': 456})
 
 
 class ProcDiskstatsTest(TestCase):
@@ -101,9 +101,9 @@ class ProcDiskstatsTest(TestCase):
             content=(
                 '8 0 sda 10 20 30 40 50 60 70 80 90 100 110\n'
                 '8 1 sda1 1 2 3 4 5 6 7 8 9 10 11\n'))
-        parser = ProcDiskstats(path)
+        diskstats_file = ProcDiskstats(path)
         self.assertEqual(
-            parser.parse(),
+            diskstats_file.read(),
             {'sda': {
                 'read': 10, 'read-merged': 20, 'read-sect': 30, 'read-ms': 40,
                 'write': 50, 'write-merged': 60, 'write-sect': 70,

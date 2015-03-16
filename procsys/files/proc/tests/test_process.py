@@ -26,9 +26,9 @@ class ProcPIDStatTests(TestCase):
         '''Fields and values from /proc/[pid]/stat files are reported.'''
         content = ' '.join(str(i) for i in range(45))
         path = self.mkfile(content=content)
-        parser = ProcPIDStat(path)
+        stat_file = ProcPIDStat(path)
         self.assertEqual(
-            parser.parse(),
+            stat_file.read(),
             {'pid': 0,
              'comm': '1',
              'state': '2',
@@ -73,9 +73,9 @@ class ProcPIDStatmTests(TestCase):
     def test_fields(self):
         '''Fields and values from /proc/[pid]/statm files are reported.'''
         path = self.mkfile(content='1 2 3 4 5 6 7')
-        parser = ProcPIDStatm(path)
+        statm_file = ProcPIDStatm(path)
         self.assertEqual(
-            parser.parse(),
+            statm_file.read(),
             {'size': 1, 'resident': 2, 'share': 3, 'text': 4, 'lib': 5,
              'data': 6, 'dt': 7})
 
@@ -95,9 +95,9 @@ class ProcPIDIOTests(TestCase):
             cancelled_write_bytes: 700
             ''')
         path = self.mkfile(content=content)
-        parser = ProcPIDIo(path)
+        io_file = ProcPIDIo(path)
         self.assertEqual(
-            parser.parse(),
+            io_file.read(),
             {'rchar': 100,
              'wchar': 200,
              'syscr': 300,

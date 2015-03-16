@@ -21,20 +21,18 @@ from procsys.fs import File
 
 
 class ParsedFile(File):
-    '''A file whose content can be parsed.
-
-    It provides a parse() method which returns the parsed data from the file.
+    '''A file whose content is parsed when read.
 
     Subclasses must implement the parser() method which receives the content of
-    the file.
+    the file and returns the parsed information.
     '''
 
-    def parse(self):
-        '''Parse the content of the file.'''
+    def read(self):
+        '''Read the file and preturn the parsed content.'''
         if not self.exists():
             return
 
-        return self.parser(self.read())
+        return self.parser(super(ParsedFile, self).read())
 
     def parser(self, content):
         '''Parse the content of the file.
