@@ -26,8 +26,16 @@ class Entity(object):
         self.path = path
 
     def exists(self):
-        '''Whether the element exists.'''
+        '''Whether the path exists.'''
         return os.path.exists(self.path)
+
+    def readable(self):
+        '''Whether the path is readable.'''
+        return os.access(self.path, os.R_OK)
+
+    def writable(self):
+        '''Whether the path is writable.'''
+        return os.access(self.path, os.W_OK)
 
 
 class File(Entity):

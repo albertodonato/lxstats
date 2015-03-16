@@ -35,6 +35,26 @@ class EntityTests(TestCase):
         self.mkfile(path=self.path)
         self.assertTrue(self.entity.exists())
 
+    def test_readable_false(self):
+        '''The readable method returns False if the path is not readable.'''
+        self.mkfile(path=self.path, mode=0o200)
+        self.assertFalse(self.entity.readable())
+
+    def test_readable_true(self):
+        '''The readable method returns True if the path is readable.'''
+        self.mkfile(path=self.path)
+        self.assertTrue(self.entity.readable())
+
+    def test_writable_false(self):
+        '''The writable method returns False if the path is not writable.'''
+        self.mkfile(path=self.path, mode=0o400)
+        self.assertFalse(self.entity.writable())
+
+    def test_writable_true(self):
+        '''The writable method returns True if the path is writable.'''
+        self.mkfile(path=self.path)
+        self.assertTrue(self.entity.writable())
+
 
 class FileTests(TestCase):
 
