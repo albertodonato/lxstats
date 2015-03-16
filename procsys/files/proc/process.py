@@ -18,8 +18,15 @@
 from procsys.files.text import ParsedFile, SingleLineFile
 
 
+class ProcPIDCmdline(ParsedFile):
+    '''Parse /proc/[pid]/cmdline.'''
+
+    def parser(self, content):
+        return content.replace('\x00', ' ').strip()
+
+
 class ProcPIDStat(SingleLineFile):
-    '''Parser for /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
+    '''Parse /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
 
     fields = (
         ('pid', int),
@@ -69,7 +76,7 @@ class ProcPIDStat(SingleLineFile):
 
 
 class ProcPIDStatm(SingleLineFile):
-    '''Parser for /proc/[pid]/statm.'''
+    '''Parse /proc/[pid]/statm.'''
 
     fields = (
         ('size', int),
@@ -82,7 +89,7 @@ class ProcPIDStatm(SingleLineFile):
 
 
 class ProcPIDIo(ParsedFile):
-    '''Parser for /proc/[pid]/io.'''
+    '''Parse /proc/[pid]/io.'''
 
     def parser(self, content):
         # Each line is in the form "name: count".

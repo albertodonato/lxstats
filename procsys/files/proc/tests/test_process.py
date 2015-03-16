@@ -17,8 +17,17 @@ from textwrap import dedent
 
 from procsys.testing import TestCase
 
-from procsys.files.proc.process import ProcPIDStat, ProcPIDStatm, ProcPIDIo
+from procsys.files.proc.process import (
+    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo)
 
+
+class ProcPIDCmdlineTests(TestCase):
+
+    def test_parse(self):
+        '''Command line tokens are parsed and space-separated.'''
+        path = self.mkfile(content="/bin/foo\x00bar\x00baz")
+        cmdline_file = ProcPIDCmdline(path)
+        self.assertEqual(cmdline_file.read(), "/bin/foo bar baz")
 
 class ProcPIDStatTests(TestCase):
 

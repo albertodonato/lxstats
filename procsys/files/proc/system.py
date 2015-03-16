@@ -19,7 +19,7 @@ from procsys.files.text import ParsedFile, SingleLineFile
 
 
 class ProcStat(ParsedFile):
-    '''Parse /proc/stat'''
+    '''Parse /proc/stat.'''
 
     stat_fields = [
         'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal',
@@ -45,19 +45,19 @@ class ProcStat(ParsedFile):
 
 
 class ProcUptime(SingleLineFile):
-    '''Parser for /proc/uptime'''
+    '''Parse /proc/uptime.'''
 
     fields = (('uptime', float), ('idle', float))
 
 
 class ProcLoadavg(SingleLineFile):
-    '''Parser for /proc/loadavg'''
+    '''Parse /proc/loadavg.'''
 
     fields = (('load1', float), ('load5', float), ('load15', float))
 
 
 class ProcVmstat(ParsedFile):
-    '''Parser for /proc/vmstat'''
+    '''Parse /proc/vmstat.'''
 
     def parser(self, content):
         items = (line.split() for line in content.splitlines())
@@ -65,7 +65,7 @@ class ProcVmstat(ParsedFile):
 
 
 class ProcDiskstats(ParsedFile):
-    '''Parser for /proc/diskstats'''
+    '''Parse /proc/diskstats.'''
 
     diskstat_fields = [
         'read', 'read-merged', 'read-sect', 'read-ms', 'write', 'write-merged',
