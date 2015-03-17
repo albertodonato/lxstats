@@ -35,7 +35,7 @@ class ProcessDir(Directory):
 class Process(object):
     '''Retrieve and hold information about a given process.'''
 
-    def __init__(self, pid, proc_dir):
+    def __init__(self, pid, proc_dir='/proc'):
         self.pid = pid
         self._dir = ProcessDir(proc_dir)
         self._stats = {}
@@ -92,3 +92,6 @@ class Process(object):
 
     def __eq__(self, other):
         return self.pid == other.pid
+
+    def __hash__(self):
+        return hash((self.__class__, self.pid))
