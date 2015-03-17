@@ -1,0 +1,103 @@
+#
+# This file is part of ProcSys.
+
+# ProcSys is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# ProcSys is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
+
+from procsys.testing import TestCase, ProcessTestMixin
+
+from procsys.process.process import Process
+from procsys.process.collection import Collector, Collection
+
+
+class CollectorTests(TestCase, ProcessTestMixin):
+
+    def test_collector_scan(self):
+        '''The Collector returns Processes for all PIDs.'''
+        self.make_proc_file(10, 'cmdline')
+        self.make_proc_file(20, 'cmdline')
+        self.make_proc_file(30, 'cmdline')
+        collector = Collector(proc=self.tempdir)
+        self.assertItemsEqual(
+            (process.pid for process in collector.collect()),
+            [10, 20, 30])
+
+    def test_collector_with_pids(self):
+        '''If PIDs are provided, only those are included.'''
+        self.make_proc_file(10, 'cmdline')
+        self.make_proc_file(20, 'cmdline')
+        self.make_proc_file(30, 'cmdline')
+        collector = Collector(proc=self.tempdir, pids=(10, 30))
+        self.assertItemsEqual(
+            (process.pid for process in collector.collect()),
+            [10, 30])
+
+
+class CollectionTests(TestCase, ProcessTestMixin):
+
+    def setUp(self):
+        super(CollectionTests, self).setUp()
+        pids = (10, 30, 20)  # Not ordered so tests can sort
+        self.collector = Collector(proc=self.tempdir, pids=pids)
+        self.make_proc_file(10, 'comm', content='foo')
+        self.make_proc_file(20, 'comm', content='zza')
+        self.make_proc_file(30, 'comm', content='bar')
+
+    def test_iter(self):
+        '''Collector is an iterable yielding Processes.'''
+        collection = Collection(collector=self.collector)
+        self.assertItemsEqual(
+            collection, [Process(10), Process(20), Process(30)])
+
+    def test_sort_by(self):
+        '''Collector can sort by the specified Process stat.'''
+        collection = Collection(collector=self.collector, sort_by='comm')
+        self.assertEqual(
+            list(collection), [Process(30), Process(10), Process(20)])
+
+    def test_sort_by_reversed(self):
+        '''Collector can sort in reverse order.'''
+        collection = Collection(collector=self.collector, sort_by='-comm')
+        self.assertEqual(
+            list(collection), [Process(20), Process(10), Process(30)])
+
+    def test_sort_by_pid(self):
+        '''Collector can sort by pid attribute.'''
+        collection = Collection(collector=self.collector, sort_by='pid')
+        self.assertEqual(
+            list(collection), [Process(10), Process(20), Process(30)])
+
+    def test_sort_by_cmd(self):
+        '''Collector can sort by cmd attribute.'''
+        collection = Collection(collector=self.collector, sort_by='cmd')
+        self.assertEqual(
+            list(collection), [Process(30), Process(10), Process(20)])
+
+    def test_add_filter(self):
+        '''Collector.add_filter adds a filter for processes.'''
+        collection = Collection(collector=self.collector)
+        collection.add_filter(lambda proc: proc.pid != 20)
+        self.assertItemsEqual(collection, [Process(10), Process(30)])
+
+    def test_filter_multiple(self):
+        '''Multiple filters can be added.'''
+        collection = Collection(collector=self.collector)
+        collection.add_filter(lambda proc: proc.pid != 20)
+        collection.add_filter(lambda proc: proc.pid != 30)
+        self.assertItemsEqual(collection, [Process(10)])
+
+    def test_filter_exclusive(self):
+        '''Filters are applied in 'or'.'''
+        collection = Collection(collector=self.collector)
+        collection.add_filter(lambda proc: proc.pid == 10)
+        collection.add_filter(lambda proc: proc.pid != 10)
+        self.assertItemsEqual(collection, [])

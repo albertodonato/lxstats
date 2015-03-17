@@ -40,6 +40,15 @@ class Process(object):
         self._dir = ProcessDir(proc_dir)
         self._stats = {}
 
+    @property
+    def cmd(self):
+        '''The process command line, with brackets for kernel processes.'''
+        cmdline = self._stats.get('cmdline')
+        if cmdline:
+            return cmdline
+        comm = self._stats.get('comm')
+        return '[{}]'.format(comm) if comm else ''
+
     def exists(self):
         '''Whether the process exists.'''
         return self._dir.exists()
@@ -74,15 +83,6 @@ class Process(object):
     def get(self, stat):
         '''Return the stat with the name name, or None if not available.'''
         return self._stats.get(stat)
-
-    @property
-    def cmd(self):
-        '''The process command line, with brackets for kernel processes.'''
-        cmdline = self._stats.get('cmdline')
-        if cmdline:
-            return cmdline
-        comm = self._stats.get('comm')
-        return '[{}]'.format(comm) if comm else ''
 
     def __getitem__(self, item):
         return self._stats[item]
