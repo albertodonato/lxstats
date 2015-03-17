@@ -14,6 +14,7 @@
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
 from procsys.testing import TestCase, ProcessTestMixin
+
 from procsys.process.process import Process
 
 
@@ -24,6 +25,12 @@ class ProcessTests(TestCase, ProcessTestMixin):
         self.pid = 10
         self.process = Process(
             self.pid, '{}/{}'.format(self.tempdir, self.pid))
+
+    def test_exists(self):
+        '''It's possible to check whether a process exists.'''
+        self.assertFalse(self.process.exists())
+        self.make_proc_file(self.pid, 'cmdline', content='cmd')
+        self.assertTrue(self.process.exists())
 
     def test_collect_stats(self):
         '''Stats are collected from proc when collect_stats is called.'''

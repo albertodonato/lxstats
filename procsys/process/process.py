@@ -40,6 +40,10 @@ class Process(object):
         self._dir = ProcessDir(proc_dir)
         self._stats = {}
 
+    def exists(self):
+        '''Whether the process exists.'''
+        return self._dir.exists()
+
     def collect_stats(self):
         '''Collect stats about the process from /proc files.'''
         self._stats = {}  # Reset
