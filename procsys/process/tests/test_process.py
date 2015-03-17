@@ -114,3 +114,12 @@ class ProcessTests(TestCase, ProcessTestMixin):
         '''If the requested stat is not found, None is returned.'''
         self.process.collect_stats()
         self.assertIsNone(self.process.get('wchan'))
+
+    def test_equal(self):
+        '''Two Processes are equal if they have the same pid.'''
+        other = Process(
+            self.pid, '{}/{}'.format(self.tempdir, self.pid))
+        different = Process(
+            self.pid + 1, '{}/{}'.format(self.tempdir, self.pid))
+        self.assertEqual(self.process, other)
+        self.assertNotEqual(self.process, different)

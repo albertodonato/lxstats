@@ -89,3 +89,6 @@ class Process(object):
 
     def __repr__(self):
         return '{}({})'.format(self.__class__.__name__, self.pid)
+
+    def __eq__(self, other):
+        return self.pid == other.pid
