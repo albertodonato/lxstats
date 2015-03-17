@@ -66,10 +66,6 @@ class TestCase(TestWithFixtures):
 class ProcessTestMixin(object):
     '''Mixin class with utilities for testing Process classes.'''
 
-    def make_process(self, pid):
-        '''Return a L{Process} with the specified pid.'''
-        return Process(pid, '{}/{}'.format(self.tempdir, pid))
-
     def make_proc_file(self, pid, name, content='', mode=None):
         '''Create a proc file for the process with the specified content.'''
         path = os.path.join(self.tempdir, str(pid), name)
