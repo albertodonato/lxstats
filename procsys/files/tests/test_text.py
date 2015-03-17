@@ -24,17 +24,17 @@ class ParsedFileTests(TestCase):
         '''ParsedFile.read calls the parser with the file content.'''
         content = 'line 1\nline 2'
         path = self.mkfile(content=content)
-        parser = ParsedFile(path)
-        parser.parser = lambda content: content
-        self.assertEqual(parser.read(), content)
+        parsed_file = ParsedFile(path)
+        parsed_file.parser = lambda content: content
+        self.assertEqual(parsed_file.read(), content)
 
     def test_read_not_existent(self):
         '''FileParser.read returns None if file doesn't exist.'''
         path = self.mktemp()
-        parser = ParsedFile(path)
-        parser.parser = lambda content: content
+        parsed_file = ParsedFile(path)
+        parsed_file.parser = lambda content: content
         # The parser method is not called
-        self.assertIsNone(parser.read())
+        self.assertIsNone(parsed_file.read())
 
 
 class SingleLineFileTests(TestCase):
@@ -42,45 +42,54 @@ class SingleLineFileTests(TestCase):
     def test_read_default_separator(self):
         '''By default the file content is split on spaces.'''
         path = self.mkfile(content='foo bar baz')
-        parser = SingleLineFile(path)
-        self.assertEqual(parser.read(), ['foo', 'bar', 'baz'])
+        single_line_file = SingleLineFile(path)
+        self.assertEqual(single_line_file.read(), ['foo', 'bar', 'baz'])
 
     def test_read_different_separator(self):
         '''The file content is split on a custom separator.'''
         path = self.mkfile(content='foo|bar|baz')
-        parser = SingleLineFile(path)
-        parser.separator = "|"
-        self.assertEqual(parser.read(), ['foo', 'bar', 'baz'])
+        single_line_file = SingleLineFile(path)
+        single_line_file.separator = "|"
+        self.assertEqual(single_line_file.read(), ['foo', 'bar', 'baz'])
+
+    def test_read_no_separator(self):
+        '''If no separator is set, the stripped content is returned.'''
+        path = self.mkfile(content='just some text\n')
+        single_line_file = SingleLineFile(path)
+        single_line_file.separator = None
+        self.assertEqual(single_line_file.read(), 'just some text')
 
     def test_read_with_fields(self):
         '''If fields are specified, a dict is returned upon read.'''
         path = self.mkfile(content='foo bar baz')
-        parser = SingleLineFile(path)
-        parser.fields = ('one', 'two', 'three')
+        single_line_file = SingleLineFile(path)
+        single_line_file.fields = ('one', 'two', 'three')
         self.assertEqual(
-            parser.read(), {'one': 'foo', 'two': 'bar', 'three': 'baz'})
+            single_line_file.read(),
+            {'one': 'foo', 'two': 'bar', 'three': 'baz'})
 
     def test_read_with_fields_with_type(self):
         '''Typed fields are converted in the result.'''
         path = self.mkfile(content='foo 1 30.3')
-        parser = SingleLineFile(path)
-        parser.fields = ('one', ('two', int), ('three', float))
+        single_line_file = SingleLineFile(path)
+        single_line_file.fields = ('one', ('two', int), ('three', float))
         self.assertEqual(
-            parser.read(), {'one': 'foo', 'two': 1, 'three': 30.3})
+            single_line_file.read(), {'one': 'foo', 'two': 1, 'three': 30.3})
 
     def test_read_with_fields_with_none(self):
         '''If a field is None, it's skipped in the result.'''
         path = self.mkfile(content='foo baz bar')
-        parser = SingleLineFile(path)
-        parser.fields = ('one', None, 'three')
-        self.assertEqual(parser.read(), {'one': 'foo', 'three': 'bar'})
+        single_line_file = SingleLineFile(path)
+        single_line_file.fields = ('one', None, 'three')
+        self.assertEqual(
+            single_line_file.read(), {'one': 'foo', 'three': 'bar'})
 
-    def test_read__with_less_fields(self):
+    def test_read_with_less_fields(self):
         '''If fields less fields are present, they're skipped in the result.'''
         path = self.mkfile(content='foo bar')
-        parser = SingleLineFile(path)
-        parser.fields = ('one', 'two', 'three', 'four')
-        self.assertEqual(parser.read(), {'one': 'foo', 'two': 'bar'})
+        single_line_file = SingleLineFile(path)
+        single_line_file.fields = ('one', 'two', 'three', 'four')
+        self.assertEqual(single_line_file.read(), {'one': 'foo', 'two': 'bar'})
 
 
 class SplittedFileTests(TestCase):
@@ -88,17 +97,17 @@ class SplittedFileTests(TestCase):
     def test_read_single_line(self):
         '''A single line of content is split on spaces.'''
         path = self.mkfile(content='foo bar baz')
-        parser = SplittedFile(path)
-        self.assertEqual(parser.read(), ['foo', 'bar', 'baz'])
+        splitted_file = SplittedFile(path)
+        self.assertEqual(splitted_file.read(), ['foo', 'bar', 'baz'])
 
     def test_read_multiple_lines(self):
         '''A file with multiple lines is split on newlines.'''
         path = self.mkfile(content='foo\nbar\nbaz')
-        parser = SplittedFile(path)
-        self.assertEqual(parser.read(), ['foo', 'bar', 'baz'])
+        splitted_file = SplittedFile(path)
+        self.assertEqual(splitted_file.read(), ['foo', 'bar', 'baz'])
 
     def test_read_multiple_lines_trailing_newline(self):
         '''Trailing newline is ignored.'''
         path = self.mkfile(content='foo\nbar\nbaz\n')
-        parser = SplittedFile(path)
-        self.assertEqual(parser.read(), ['foo', 'bar', 'baz'])
+        splitted_file = SplittedFile(path)
+        self.assertEqual(splitted_file.read(), ['foo', 'bar', 'baz'])

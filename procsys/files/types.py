@@ -18,8 +18,7 @@
 
 from collections import OrderedDict
 
-from procsys.fs import File
-from procsys.files.text import SplittedFile
+from procsys.files.text import SplittedFile, SingleLineFile
 
 
 class OptionsFile(SplittedFile):
@@ -81,25 +80,29 @@ class TogglableOptionsFile(OptionsFile):
         self.write('{}{}'.format(prefix, option))
 
 
-class ValueFile(File):
+class ValueFile(SingleLineFile):
     '''File to read or set a value.'''
+
+    separator = None
 
     @property
     def value(self):
         '''Return the current value in the file.'''
-        return self.read().strip()
+        return self.read()
 
     def set(self, value):
         self.write(value)
 
 
-class ToggleFile(File):
+class ToggleFile(SingleLineFile):
     '''File to enable or disable an option.'''
+
+    separator = None
 
     @property
     def enabled(self):
         '''Return whether the toggle value is enabled.'''
-        return self.read().strip() == '1'
+        return self.read() == '1'
 
     def toggle(self, value):
         '''Enable or disable the value.'''
