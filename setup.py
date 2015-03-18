@@ -32,6 +32,9 @@ config = {
     'download_url': 'https://bitbucket.org/ack/procsys/downloads',
     'packages': find_packages(exclude=['*.test.*', '*.test', 'test.*']),
     'include_package_data': True,
+    "entry_points": {
+        "console_scripts": [
+            "procs = procsys.scripts.procs:main"]},
     'test_suite': 'procsys',
     'tests_require': ['fixtures'],
     'keywords': 'linux proc sys performance monitoring system admin',
