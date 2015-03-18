@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
+from os import path
+
 from procsys.testing import TestCase
 
 from procsys.process.process import Process
@@ -52,48 +54,49 @@ class CollectionTests(TestCase):
         self.make_process_file(20, 'comm', content='zza')
         self.make_process_file(30, 'comm', content='bar')
 
+    def process_list(self, pids):
+        '''Return a list of processes with specified pids.'''
+        return [
+            Process(pid, path.join(self.tempdir, str(pid)))
+            for pid in pids]
+
     def test_iter(self):
         '''Collector is an iterable yielding Processes.'''
         collection = Collection(collector=self.collector)
-        self.assertItemsEqual(
-            collection, [Process(10), Process(20), Process(30)])
+        self.assertItemsEqual(collection, self.process_list([10, 20, 30]))
 
     def test_sort_by(self):
         '''Collector can sort by the specified Process stat.'''
         collection = Collection(collector=self.collector, sort_by='comm')
-        self.assertEqual(
-            list(collection), [Process(30), Process(10), Process(20)])
+        self.assertEqual(list(collection), self.process_list([30, 10, 20]))
 
     def test_sort_by_reversed(self):
         '''Collector can sort in reverse order.'''
         collection = Collection(collector=self.collector, sort_by='-comm')
-        self.assertEqual(
-            list(collection), [Process(20), Process(10), Process(30)])
+        self.assertEqual(list(collection), self.process_list([20, 10, 30]))
 
     def test_sort_by_pid(self):
         '''Collector can sort by pid attribute.'''
         collection = Collection(collector=self.collector, sort_by='pid')
-        self.assertEqual(
-            list(collection), [Process(10), Process(20), Process(30)])
+        self.assertEqual(list(collection), self.process_list([10, 20, 30]))
 
     def test_sort_by_cmd(self):
         '''Collector can sort by cmd attribute.'''
         collection = Collection(collector=self.collector, sort_by='cmd')
-        self.assertEqual(
-            list(collection), [Process(30), Process(10), Process(20)])
+        self.assertEqual(list(collection), self.process_list([30, 10, 20]))
 
     def test_add_filter(self):
         '''Collector.add_filter adds a filter for processes.'''
         collection = Collection(collector=self.collector)
         collection.add_filter(lambda proc: proc.pid != 20)
-        self.assertItemsEqual(collection, [Process(10), Process(30)])
+        self.assertItemsEqual(collection, self.process_list([10, 30]))
 
     def test_filter_multiple(self):
         '''Multiple filters can be added.'''
         collection = Collection(collector=self.collector)
         collection.add_filter(lambda proc: proc.pid != 20)
         collection.add_filter(lambda proc: proc.pid != 30)
-        self.assertItemsEqual(collection, [Process(10)])
+        self.assertItemsEqual(collection, self.process_list([10]))
 
     def test_filter_exclusive(self):
         '''Filters are applied in 'or'.'''

@@ -21,7 +21,7 @@ from procsys.files.proc import ProcPIDDirectory
 class Process(object):
     '''Retrieve and hold information about a given process.'''
 
-    def __init__(self, pid, proc_dir='/proc'):
+    def __init__(self, pid, proc_dir):
         self.pid = pid
         self._dir = ProcPIDDirectory(proc_dir)
         self._stats = {}
