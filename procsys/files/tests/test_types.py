@@ -100,7 +100,7 @@ class TogglableOptionsFileTests(TestCase):
         '''Options can be disabled.'''
         self.mkfile(path=self.path, content='foo\nnobar\nbaz')
         self.toggle_options_file.toggle('foo', False)
-        # When an option is disabled the name is prefixed with "no".
+        # When an option is disabled the name is prefixed with 'no'.
         self.assertEqual(self.readfile(self.path), 'nofoo')
 
     def test_toggle_option_unknown(self):

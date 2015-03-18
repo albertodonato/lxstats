@@ -49,7 +49,7 @@ class SingleLineFileTests(TestCase):
         '''The file content is split on a custom separator.'''
         path = self.mkfile(content='foo|bar|baz')
         single_line_file = SingleLineFile(path)
-        single_line_file.separator = "|"
+        single_line_file.separator = '|'
         self.assertEqual(single_line_file.read(), ['foo', 'bar', 'baz'])
 
     def test_read_no_separator(self):

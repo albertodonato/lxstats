@@ -92,7 +92,7 @@ class ProcPIDIo(ParsedFile):
     '''Parse /proc/[pid]/io.'''
 
     def parser(self, content):
-        # Each line is in the form "name: count".
+        # Each line is in the form 'name: count'.
         result = {}
         for line in content.splitlines():
             key, value = line.split(': ', 1)

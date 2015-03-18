@@ -56,7 +56,7 @@ class SelectableOptionsFile(OptionsFile):
 class TogglableOptionsFile(OptionsFile):
     '''A file with a list of options that can be individually enabled.
 
-    Disabled options have names prefixed by "no".
+    Disabled options have names prefixed by 'no'.
     '''
 
     @property

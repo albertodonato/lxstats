@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Hold information about a running process."""
+'''Hold information about a running process.'''
 
 from procsys.fs import Directory
 from procsys.files.types import ValueFile
