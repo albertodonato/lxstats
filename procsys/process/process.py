@@ -15,21 +15,7 @@
 
 '''Hold information about a running process.'''
 
-from procsys.fs import Directory
-from procsys.files.types import ValueFile
-from procsys.files.proc.process import (
-    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo)
-
-
-class ProcessDir(Directory):
-
-    files = {
-        'cmdline': ProcPIDCmdline,
-        'comm': ValueFile,
-        'io': ProcPIDIo,
-        'stat': ProcPIDStat,
-        'statm': ProcPIDStatm,
-        'wchan': ValueFile}
+from procsys.files.proc import ProcPIDDirectory
 
 
 class Process(object):
@@ -37,7 +23,7 @@ class Process(object):
 
     def __init__(self, pid, proc_dir='/proc'):
         self.pid = pid
-        self._dir = ProcessDir(proc_dir)
+        self._dir = ProcPIDDirectory(proc_dir)
         self._stats = {}
 
     @property
