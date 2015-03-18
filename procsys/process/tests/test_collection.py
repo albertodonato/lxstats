@@ -13,19 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from procsys.testing import TestCase, ProcessTestMixin
+from procsys.testing import TestCase
 
 from procsys.process.process import Process
 from procsys.process.collection import Collector, Collection
 
 
-class CollectorTests(TestCase, ProcessTestMixin):
+class CollectorTests(TestCase):
 
     def test_collector_scan(self):
         '''The Collector returns Processes for all PIDs.'''
-        self.make_proc_file(10, 'cmdline')
-        self.make_proc_file(20, 'cmdline')
-        self.make_proc_file(30, 'cmdline')
+        self.make_process_file(10, 'cmdline')
+        self.make_process_file(20, 'cmdline')
+        self.make_process_file(30, 'cmdline')
         collector = Collector(proc=self.tempdir)
         self.assertItemsEqual(
             (process.pid for process in collector.collect()),
@@ -33,24 +33,24 @@ class CollectorTests(TestCase, ProcessTestMixin):
 
     def test_collector_with_pids(self):
         '''If PIDs are provided, only those are included.'''
-        self.make_proc_file(10, 'cmdline')
-        self.make_proc_file(20, 'cmdline')
-        self.make_proc_file(30, 'cmdline')
+        self.make_process_file(10, 'cmdline')
+        self.make_process_file(20, 'cmdline')
+        self.make_process_file(30, 'cmdline')
         collector = Collector(proc=self.tempdir, pids=(10, 30))
         self.assertItemsEqual(
             (process.pid for process in collector.collect()),
             [10, 30])
 
 
-class CollectionTests(TestCase, ProcessTestMixin):
+class CollectionTests(TestCase):
 
     def setUp(self):
         super(CollectionTests, self).setUp()
         pids = (10, 30, 20)  # Not ordered so tests can sort
         self.collector = Collector(proc=self.tempdir, pids=pids)
-        self.make_proc_file(10, 'comm', content='foo')
-        self.make_proc_file(20, 'comm', content='zza')
-        self.make_proc_file(30, 'comm', content='bar')
+        self.make_process_file(10, 'comm', content='foo')
+        self.make_process_file(20, 'comm', content='zza')
+        self.make_process_file(30, 'comm', content='bar')
 
     def test_iter(self):
         '''Collector is an iterable yielding Processes.'''

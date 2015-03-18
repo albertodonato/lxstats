@@ -13,13 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from procsys.testing import TestCase, ProcessTestMixin
+from procsys.testing import TestCase
 
 from procsys.process.process import Process
 from procsys.process.filter import CommandLineFilter
 
 
-class CommandLineFilterTests(TestCase, ProcessTestMixin):
+class CommandLineFilterTests(TestCase):
 
     def setUp(self):
         super(CommandLineFilterTests, self).setUp()
@@ -30,20 +30,20 @@ class CommandLineFilterTests(TestCase, ProcessTestMixin):
     def test_filter_matching_process(self):
         '''CommandLineFilter matches a process.'''
         proc_filter = CommandLineFilter('foo')
-        self.make_proc_file(self.pid, 'cmdline', content='/bin/foo bar')
+        self.make_process_file(self.pid, 'cmdline', content='/bin/foo bar')
         self.process.collect_stats()
         self.assertTrue(proc_filter(self.process))
 
     def test_filter_non_matching_process(self):
         '''CommandLineFilter doesn't match a process.'''
         proc_filter = CommandLineFilter('foo')
-        self.make_proc_file(self.pid, 'cmdline', content='/bin/bar foo')
+        self.make_process_file(self.pid, 'cmdline', content='/bin/bar foo')
         self.process.collect_stats()
         self.assertFalse(proc_filter(self.process))
 
     def test_include_args(self):
         '''Arguments are included in match if include_args is True.'''
         proc_filter = CommandLineFilter('foo', include_args=True)
-        self.make_proc_file(self.pid, 'cmdline', content='/bin/bar foo')
+        self.make_process_file(self.pid, 'cmdline', content='/bin/bar foo')
         self.process.collect_stats()
         self.assertTrue(proc_filter(self.process))

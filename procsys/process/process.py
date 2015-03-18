@@ -82,10 +82,10 @@ class Process(object):
 
     def get(self, stat):
         '''Return the stat with the name name, or None if not available.'''
-        return self._stats.get(stat)
+        if stat in ('pid', 'cmd'):
+            return getattr(self, stat)
 
-    def __getitem__(self, item):
-        return self._stats[item]
+        return self._stats.get(stat)
 
     def __repr__(self):
         return '{}({})'.format(self.__class__.__name__, self.pid)

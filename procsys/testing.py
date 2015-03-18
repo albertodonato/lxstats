@@ -20,8 +20,6 @@ from tempfile import mktemp
 
 from fixtures import TestWithFixtures, TempDir
 
-from procsys.process.process import Process
-
 
 class TestCase(TestWithFixtures):
     '''Base class for tests.'''
@@ -62,11 +60,7 @@ class TestCase(TestWithFixtures):
         with open(path) as fh:
             return fh.read()
 
-
-class ProcessTestMixin(object):
-    '''Mixin class with utilities for testing Process classes.'''
-
-    def make_proc_file(self, pid, name, content='', mode=None):
-        '''Create a proc file for the process with the specified content.'''
+    def make_process_file(self, pid, name, content='', mode=None):
+        '''Create a /proc file for the process with the specified content.'''
         path = os.path.join(self.tempdir, str(pid), name)
         self.mkfile(path=path, content=content, mode=mode)
