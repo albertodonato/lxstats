@@ -75,16 +75,6 @@ class CollectionTests(TestCase):
         collection = Collection(collector=self.collector, sort_by='-comm')
         self.assertEqual(list(collection), self.process_list([20, 10, 30]))
 
-    def test_sort_by_pid(self):
-        '''Collector can sort by pid attribute.'''
-        collection = Collection(collector=self.collector, sort_by='pid')
-        self.assertEqual(list(collection), self.process_list([10, 20, 30]))
-
-    def test_sort_by_cmd(self):
-        '''Collector can sort by cmd attribute.'''
-        collection = Collection(collector=self.collector, sort_by='cmd')
-        self.assertEqual(list(collection), self.process_list([30, 10, 20]))
-
     def test_add_filter(self):
         '''Collector.add_filter adds a filter for processes.'''
         collection = Collection(collector=self.collector)

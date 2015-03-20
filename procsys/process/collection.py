@@ -92,17 +92,11 @@ class Collection(object):
             iterator = ifilter(self._filter, iterator)
 
         if self._sort_by is not None:
+            key = lambda elem: elem.get(self._sort_by)
             iterator = iter(sorted(
-                iterator, key=self._sort_key, reverse=self._sort_reverse))
+                iterator, key=key, reverse=self._sort_reverse))
 
         return iterator
-
-    def _sort_key(self, elem):
-        '''Key function for sorting.'''
-        if self._sort_by in ('pid', 'cmd'):
-            return getattr(elem, self._sort_by)
-        else:
-            return elem.get(self._sort_by)
 
     def _filter(self, proc):
         '''Apply filters to a Process.'''
