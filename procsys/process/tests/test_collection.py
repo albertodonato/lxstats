@@ -59,6 +59,7 @@ class CollectorTests(TestCase):
         self.assertEqual(
             [process.pid for process in collector.collect()], [10])
 
+
 class CollectionTests(TestCase):
 
     def setUp(self):
