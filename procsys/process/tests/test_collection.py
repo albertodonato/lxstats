@@ -43,6 +43,13 @@ class CollectorTests(TestCase):
             (process.pid for process in collector.collect()),
             [10, 30])
 
+    def test_collector_with_pids_sorts(self):
+        '''Processes are listed in PID order.'''
+        collector = Collector(proc=self.tempdir, pids=(20, 10))
+        self.assertItemsEqual(
+            (process.pid for process in collector.collect()),
+            [10, 20])
+
 
 class CollectionTests(TestCase):
 

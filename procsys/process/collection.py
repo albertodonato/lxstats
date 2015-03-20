@@ -39,7 +39,8 @@ class Collector(object):
     def collect(self):
         '''Return an iterator yielding Process objects.'''
         if self._pids:
-            proc_dirs = ('{}{}'.format(self._proc, pid) for pid in self._pids)
+            proc_dirs = (
+                '{}{}'.format(self._proc, pid) for pid in sorted(self._pids))
         else:
             proc_dirs = iglob('{}[0-9]*'.format(self._proc))
 
