@@ -17,9 +17,9 @@
 
 import sys
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 
-from procsys.process.collection import Collection
+from procsys.process.collection import Collection, Collector
 from procsys.process.filter import CommandLineFilter
 from procsys.process.formatters import get_formats, get_formatter
 
@@ -27,12 +27,22 @@ from procsys.process.formatters import get_formats, get_formatter
 def get_parser():
     parser = ArgumentParser(
         description='Dump info about running processes.')
+
+    def pids(pid_list):
+        '''Comma-separated list of PIDs.'''
+        try:
+            return [int(pid) for pid in pid_list.split(',')]
+        except:
+            raise ArgumentTypeError('Must specify a list of PIDs')
+
     parser.add_argument(
         '--fields', '-f',
         help='comma-separated list of fields to display',
         default='pid,stat.state,comm')
     parser.add_argument(
         '--regexp', '-r', help='regexp to filter commandline')
+    parser.add_argument(
+        '--pids', '-p', help='list specific PIDs', type=pids)
     parser.add_argument(
         '--format', '-F', help='output format', choices=get_formats(),
         default='table')
@@ -42,7 +52,9 @@ def get_parser():
 def main():
     args = get_parser().parse_args()
     fields = [field.strip() for field in args.fields.split(',')]
-    collection = Collection()
+
+    collector = Collector(pids=args.pids)
+    collection = Collection(collector=collector)
     if args.regexp:
         collection.add_filter(CommandLineFilter(args.regexp))
     formatter_class = get_formatter(args.format)
