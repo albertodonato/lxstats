@@ -15,6 +15,8 @@
 
 '''Parsers for /proc files containing system information.'''
 
+import re
+
 from procsys.files.text import ParsedFile, SingleLineFile
 
 
@@ -79,3 +81,16 @@ class ProcDiskstats(ParsedFile):
             values = [int(value) for value in values]
             result[dev_name] = dict(zip(self.diskstat_fields, values))
         return result
+
+
+class ProcMeminfo(ParsedFile):
+    '''Parse /proc/meminfo.'''
+
+    _parse_re = re.compile(r'(?P<name>.+):\s+(?P<value>[0-9]+)')
+
+    def parser(self, content):
+        return dict(self._parse_line(line) for line in content.splitlines())
+
+    def _parse_line(self, line):
+        match = self._parse_re.match(line).groupdict()
+        return match['name'], int(match['value'])

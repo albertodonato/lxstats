@@ -16,7 +16,7 @@
 from procsys.testing import TestCase
 
 from procsys.files.proc.system import (
-    ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats)
+    ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats, ProcMeminfo)
 
 
 class ProcStatTests(TestCase):
@@ -93,7 +93,7 @@ class ProcVmstatTests(TestCase):
         self.assertEqual(vmstat_file.read(), {'foo': 123, 'bar': 456})
 
 
-class ProcDiskstatsTest(TestCase):
+class ProcDiskstatsTests(TestCase):
 
     def test_fields(self):
         '''Fields for each device/partition are reported.'''
@@ -113,3 +113,18 @@ class ProcDiskstatsTest(TestCase):
                 'read': 1, 'read-merged': 2, 'read-sect': 3, 'read-ms': 4,
                 'write': 5, 'write-merged': 6, 'write-sect': 7, 'write-ms': 8,
                 'io-curr': 9, 'io-ms': 10, 'io-ms-weighted': 11}})
+
+
+class ProcMeminfoTests(TestCase):
+
+    def test_fields(self):
+        '''Each line in the file /proc/meminfo file is reported.'''
+        path = self.mkfile(
+            content=(
+                'MemTotal:       1000 kB\n'
+                'MemFree:         200 kB\n'
+                'HugePages_Total:   0\n'))
+        meminfo_file = ProcMeminfo(path)
+        self.assertEqual(
+            meminfo_file.read(),
+            {'MemTotal': 1000, 'MemFree': 200, 'HugePages_Total': 0})

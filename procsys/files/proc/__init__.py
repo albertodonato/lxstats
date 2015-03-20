@@ -19,7 +19,7 @@ from procsys.fs import Directory
 
 from procsys.files.types import ValueFile
 from procsys.files.proc.system import (
-    ProcDiskstats, ProcLoadavg, ProcStat, ProcVmstat, ProcUptime)
+    ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
 from procsys.files.proc.process import (
     ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm)
 
@@ -30,6 +30,7 @@ class ProcDirectory(Directory):
     files = {
         'diskstats': ProcDiskstats,
         'loadavg': ProcLoadavg,
+        'meminfo': ProcMeminfo,
         'vmstat': ProcVmstat,
         'stat': ProcStat,
         'uptime': ProcUptime,
