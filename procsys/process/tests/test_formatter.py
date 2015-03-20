@@ -34,7 +34,7 @@ class SampleFormatter(Formatter):
         self._write('footer\n')
 
     def _format_process(self, process):
-        self._write('process %d\n' % process.pid)
+        self._write('process {} {}\n'.format(process.pid, process.cmd))
 
     def _dump(self):
         self._write('dump\n')
@@ -48,15 +48,17 @@ class FormatterTests(TestCase):
 
     def test_format(self):
         '''Formatter.format outputs process info with header and footer.'''
+        self.make_process_file(10, 'cmdline', content='cmd1')
+        self.make_process_file(20, 'cmdline', content='cmd2')
         collector = Collector(proc=self.tempdir, pids=(10, 20))
         collection = Collection(collector=collector)
-        formatter = SampleFormatter(self.stream, ['pid', 'cmdline'])
+        formatter = SampleFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(collection)
         self.assertEqual(
             self.stream.getvalue(),
             'header\n'
-            'process 10\n'
-            'process 20\n'
+            'process 10 cmd1\n'
+            'process 20 cmd2\n'
             'footer\n'
             'dump\n')
 

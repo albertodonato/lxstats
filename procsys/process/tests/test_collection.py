@@ -45,11 +45,19 @@ class CollectorTests(TestCase):
 
     def test_collector_with_pids_sorts(self):
         '''Processes are listed in PID order.'''
+        self.make_process_file(10, 'cmdline')
+        self.make_process_file(20, 'cmdline')
         collector = Collector(proc=self.tempdir, pids=(20, 10))
         self.assertItemsEqual(
             (process.pid for process in collector.collect()),
             [10, 20])
 
+    def test_collector_skip_non_existing(self):
+        '''Collector skips non-existing processes.'''
+        self.make_process_file(10, 'cmdline')
+        collector = Collector(proc=self.tempdir, pids=(10, 20))
+        self.assertEqual(
+            [process.pid for process in collector.collect()], [10])
 
 class CollectionTests(TestCase):
 
