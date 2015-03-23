@@ -16,6 +16,7 @@
 '''Parsers for /proc files containing system information.'''
 
 import re
+from itertools import izip
 
 from procsys.files.text import ParsedFile, SingleLineFile
 
@@ -42,7 +43,7 @@ class ProcStat(ParsedFile):
             values = [(value / total) for value in values]
             # If there are less fields than the declared ones, they are ignored
             # by zip().
-            result[label] = dict(zip(self.stat_fields, values))
+            result[label] = dict(izip(self.stat_fields, values))
         return result
 
 
@@ -79,7 +80,7 @@ class ProcDiskstats(ParsedFile):
             split = line.split()[2:]  # Ignore major/minor fields
             dev_name, values = split[0], split[1:]
             values = [int(value) for value in values]
-            result[dev_name] = dict(zip(self.diskstat_fields, values))
+            result[dev_name] = dict(izip(self.diskstat_fields, values))
         return result
 
 
