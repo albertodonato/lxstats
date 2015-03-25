@@ -1,4 +1,5 @@
 *.pyc
-/_trial_temp
+_trial_temp
 /build
-/*.egg-info
+/html
+*.egg-info
