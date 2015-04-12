@@ -59,7 +59,7 @@ class Collector(object):
 class Collection(object):
     '''A Process collection.
 
-    Paramters:
+    Parameters:
       collector: A ProcessCollector instance. If not provided, a default one
         will be created.
       sort_by: The field to sort processes by. It can be prefixed with '-'
