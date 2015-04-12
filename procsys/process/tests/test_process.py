@@ -61,15 +61,17 @@ class ProcessTests(TestCase):
         self.assertEqual(self.process.available_stats(), [])
 
     def test_cmd_from_cmdline(self):
-        '''Process.cmd parses the content of /proc/cmdline if not empty.'''
-        self.make_process_file(self.pid, 'cmdline', content='cmd\0with\0args')
+        '''Process.cmd parses the content of cmdline if not empty.'''
+        self.make_process_file(
+            self.pid, 'cmdline', content='cmd\x00with\x00args\x00')
         self.process.collect_stats()
         self.assertNotIn('comm', self.process.available_stats())
-        self.assertEqual(self.process.get('cmdline'), 'cmd with args')
+        self.assertEqual(
+            self.process.get('cmdline'), 'cmd with args')
         self.assertEqual(self.process.cmd, 'cmd with args')
 
     def test_cmd_from_comm(self):
-        '''If /proc/cmdline is empty, /proc/cmd is read.'''
+        '''If cmdline is empty, comm is read.'''
         self.make_process_file(self.pid, 'comm', content='cmd')
         self.process.collect_stats()
         self.assertNotIn('cmdline', self.process.available_stats())
