@@ -33,23 +33,23 @@ class TableFormatterTests(TestCase):
 
     def test_format(self):
         '''TableFormatter outputs a table with processes data.'''
-        formatter = TableFormatter(self.stream, ['pid', 'cmdline'])
+        formatter = TableFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
-            ' pid  cmdline  \n'
+            ' pid  cmd      \n'
             ' 10   /bin/foo \n'
             ' 20   /bin/bar \n')
 
     def test_format_border(self):
         '''TableFormatter can add borders to the table.'''
         formatter = TableFormatter(
-            self.stream, ['pid', 'cmdline'], borders=True)
+            self.stream, ['pid', 'cmd'], borders=True)
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
             '+-----+----------+\n'
-            '| pid | cmdline  |\n'
+            '| pid | cmd      |\n'
             '+-----+----------+\n'
             '| 10  | /bin/foo |\n'
             '| 20  | /bin/bar |\n'

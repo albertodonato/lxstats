@@ -48,6 +48,8 @@ class SingleLineFile(ParsedFile):
 
     The line is split into fields based on a separator (space by default).  If
     the separator is set to None, the stripped content of the file is returned.
+    If separator is a callable, it's used to split the field (it gets passed
+    the line and must return a list of fields).
 
     Subclasses can define a list of fields and a different separator.
 
@@ -61,11 +63,12 @@ class SingleLineFile(ParsedFile):
     fields = None
 
     def parser(self, content):
-        content = content.strip()
+        # Take just fhe first line
+        content = content.split('\n')[0]
         if self.separator is None:
             return content
 
-        splitted = content.split(self.separator)
+        splitted = self._split(content)
         if self.fields is None:
             return splitted
 
@@ -87,6 +90,13 @@ class SingleLineFile(ParsedFile):
 
             fields.append(field)
         return fields
+
+    def _split(self, content):
+        if callable(self.separator):
+            return self.separator(content)
+
+        content = content.strip(self.separator)
+        return content.split(self.separator)
 
 
 class SplittedFile(ParsedFile):

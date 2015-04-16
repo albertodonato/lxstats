@@ -31,7 +31,7 @@ class Process(object):
         '''The process command line, with brackets for kernel processes.'''
         cmdline = self._stats.get('cmdline')
         if cmdline:
-            return cmdline
+            return ' '.join(cmdline)
         comm = self._stats.get('comm')
         return '[{}]'.format(comm) if comm else ''
 

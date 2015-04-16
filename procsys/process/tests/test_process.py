@@ -67,7 +67,7 @@ class ProcessTests(TestCase):
         self.process.collect_stats()
         self.assertNotIn('comm', self.process.available_stats())
         self.assertEqual(
-            self.process.get('cmdline'), 'cmd with args')
+            self.process.get('cmdline'), ['cmd', 'with', 'args'])
         self.assertEqual(self.process.cmd, 'cmd with args')
 
     def test_cmd_from_comm(self):

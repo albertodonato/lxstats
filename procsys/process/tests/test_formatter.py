@@ -65,7 +65,7 @@ class FormatterTests(TestCase):
     def test_wb_fields_values(self):
         '''Formatter._fields_values returns a list with Process values.'''
         self.make_process_file(10, 'cmdline', '/bin/foo')
-        formatter = SampleFormatter(self.stream, ['pid', 'cmdline'])
+        formatter = SampleFormatter(self.stream, ['pid', 'cmd'])
         process = Process(10, proc_dir='{}/10'.format(self.tempdir))
         process.collect_stats()
         self.assertEqual(

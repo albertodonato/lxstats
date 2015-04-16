@@ -24,10 +24,16 @@ from procsys.files.proc.process import (
 class ProcPIDCmdlineTests(TestCase):
 
     def test_parse(self):
-        '''Command line tokens are parsed and space-separated.'''
-        path = self.mkfile(content='/bin/foo\x00bar\x00baz')
+        '''Command line tokens are parsed and split into a list.'''
+        path = self.mkfile(content='/bin/foo\x00bar\x00baz\x00')
         cmdline_file = ProcPIDCmdline(path)
-        self.assertEqual(cmdline_file.read(), '/bin/foo bar baz')
+        self.assertEqual(cmdline_file.read(), ['/bin/foo', 'bar', 'baz'])
+
+    def test_parse_with_spaces(self):
+        '''Command or arguments can contain spaces.'''
+        path = self.mkfile(content='/bin/foo bar\x00baz bza\x00')
+        cmdline_file = ProcPIDCmdline(path)
+        self.assertEqual(cmdline_file.read(), ['/bin/foo bar', 'baz bza'])
 
 
 class ProcPIDStatTests(TestCase):
@@ -76,6 +82,17 @@ class ProcPIDStatTests(TestCase):
              'delayacct_blkio_ticks': 41,
              'guest_time': 42,
              'cguest_time': 43})
+
+    def test_comm_with_spaces(self):
+        '''The comm field can contain spaces..'''
+        fields = [str(i) for i in range(45)]
+        # Set a comm field with spaces
+        fields[1] = '(cmd with spaces)'
+        content = ' '.join(fields)
+        path = self.mkfile(content=content)
+        stat_file = ProcPIDStat(path)
+        stats = stat_file.read()
+        self.assertEqual(stats['comm'], 'cmd with spaces')
 
 
 class ProcPIDStatmTests(TestCase):

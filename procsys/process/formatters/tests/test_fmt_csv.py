@@ -33,20 +33,20 @@ class CSVFormatterTests(TestCase):
 
     def test_format(self):
         '''CSVFormatter outputs CSV file with processes data.'''
-        formatter = CSVFormatter(self.stream, ['pid', 'cmdline'])
+        formatter = CSVFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
-            'pid,cmdline\r\n'
+            'pid,cmd\r\n'
             '10,/bin/foo\r\n'
             '20,/bin/bar\r\n')
 
     def test_format_tabs(self):
         '''CSVFormatter can use tabs as field separators.'''
-        formatter = CSVFormatter(self.stream, ['pid', 'cmdline'], tabs=True)
+        formatter = CSVFormatter(self.stream, ['pid', 'cmd'], tabs=True)
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
-            'pid\tcmdline\r\n'
+            'pid\tcmd\r\n'
             '10\t/bin/foo\r\n'
             '20\t/bin/bar\r\n')

@@ -34,25 +34,25 @@ class JSONFormatterTests(TestCase):
 
     def test_format(self):
         '''JSONFormatter formats process info in JSON format.'''
-        formatter = JSONFormatter(self.stream, ['pid', 'cmdline'])
+        formatter = JSONFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
             json.dumps(
-                {'fields': ['pid', 'cmdline'],
+                {'fields': ['pid', 'cmd'],
                  'processes': [
-                     {'pid': 10, 'cmdline': '/bin/foo'},
-                     {'pid': 20, 'cmdline': '/bin/bar'}]}))
+                     {'pid': 10, 'cmd': '/bin/foo'},
+                     {'pid': 20, 'cmd': '/bin/bar'}]}))
 
     def test_format_indent(self):
         '''The indent parameter is passed to the JSON encoder.'''
-        formatter = JSONFormatter(self.stream, ['pid', 'cmdline'], indent=3)
+        formatter = JSONFormatter(self.stream, ['pid', 'cmd'], indent=3)
         formatter.format(self.collection)
         self.assertEqual(
             self.stream.getvalue(),
             json.dumps(
-                {'fields': ['pid', 'cmdline'],
+                {'fields': ['pid', 'cmd'],
                  'processes': [
-                     {'pid': 10, 'cmdline': '/bin/foo'},
-                     {'pid': 20, 'cmdline': '/bin/bar'}]},
+                     {'pid': 10, 'cmd': '/bin/foo'},
+                     {'pid': 20, 'cmd': '/bin/bar'}]},
                 indent=3))

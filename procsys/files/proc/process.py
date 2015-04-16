@@ -15,14 +15,15 @@
 
 '''Parsers for per-process files under /proc/[pid]/.'''
 
+import re
+
 from procsys.files.text import ParsedFile, SingleLineFile
 
 
-class ProcPIDCmdline(ParsedFile):
+class ProcPIDCmdline(SingleLineFile):
     '''Parse /proc/[pid]/cmdline.'''
 
-    def parser(self, content):
-        return content.replace('\x00', ' ').strip()
+    separator = '\x00'
 
 
 class ProcPIDStat(SingleLineFile):
@@ -73,6 +74,23 @@ class ProcPIDStat(SingleLineFile):
         ('delayacct_blkio_ticks', int),
         ('guest_time', int),
         ('cguest_time', int))
+
+    _re = re.compile('\((.+)\)')
+
+    def separator(self, content):
+        '''Custom separator to handle spaces in the process commandline.'''
+
+        content = content.strip(' ')
+        match = self._re.search(content)
+        if match is None:
+            return content.split()
+
+        # Replace with a version without spaces so split works
+        content = self._re.sub('comm', content)
+        split = content.split()
+        # Replace the original comm value
+        split[1] = match.groups()[0]
+        return split
 
 
 class ProcPIDStatm(SingleLineFile):

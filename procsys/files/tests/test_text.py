@@ -39,6 +39,12 @@ class ParsedFileTests(TestCase):
 
 class SingleLineFileTests(TestCase):
 
+    def test_read_only_first_line(self):
+        '''Only the first line of the file is parsed.'''
+        path = self.mkfile(content='foo\nbar\nbaz\n')
+        single_line_file = SingleLineFile(path)
+        self.assertEqual(single_line_file.read(), ['foo'])
+
     def test_read_default_separator(self):
         '''By default the file content is split on spaces.'''
         path = self.mkfile(content='foo bar baz')
