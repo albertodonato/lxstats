@@ -39,6 +39,19 @@ class ParsedFileTests(TestCase):
 
 class SingleLineFileTests(TestCase):
 
+    def test_read_empty_file(self):
+        '''If the file is empty, an empty list is returned.'''
+        path = self.mkfile()
+        single_line_file = SingleLineFile(path)
+        self.assertEqual(single_line_file.read(), [])
+
+    def test_read_empty_file_with_fields(self):
+        '''If the file is empty and fields are set, return an empty dict.'''
+        path = self.mkfile()
+        single_line_file = SingleLineFile(path)
+        single_line_file.fields = ('foo', 'bar')
+        self.assertEqual(single_line_file.read(), {})
+
     def test_read_only_first_line(self):
         '''Only the first line of the file is parsed.'''
         path = self.mkfile(content='foo\nbar\nbaz\n')

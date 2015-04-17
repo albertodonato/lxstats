@@ -92,6 +92,9 @@ class SingleLineFile(ParsedFile):
         return fields
 
     def _split(self, content):
+        if not content:
+            return []
+
         if callable(self.separator):
             return self.separator(content)
 
