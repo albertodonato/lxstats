@@ -15,8 +15,9 @@
 
 '''Files for parsing Linux /sys files.'''
 
-from procsys.fs import Directory
-from procsys.files.types import OptionsFile, ValueFile, ToggleFile
+from procsys.fs import Directory, File
+from procsys.files.types import (
+    OptionsFile, ValueFile, ToggleFile, TogglableOptionsFile)
 
 
 class TracingDirectory(Directory):
@@ -25,5 +26,7 @@ class TracingDirectory(Directory):
     files = {
         'available_tracers': OptionsFile,
         'current_tracer': ValueFile,
+        'trace_options': TogglableOptionsFile,
+        'trace_marker': File,
         'tracing_on': ToggleFile
     }
