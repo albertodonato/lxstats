@@ -17,7 +17,8 @@
 
 from procsys.fs import Directory, File
 from procsys.files.types import (
-    OptionsFile, ValueFile, ToggleFile, TogglableOptionsFile)
+    OptionsFile, ValueFile, ToggleFile, SelectableOptionsFile,
+    TogglableOptionsFile)
 
 
 class TracingDirectory(Directory):
@@ -26,6 +27,7 @@ class TracingDirectory(Directory):
     files = {
         'available_tracers': OptionsFile,
         'current_tracer': ValueFile,
+        'trace_clock': SelectableOptionsFile,
         'trace_options': TogglableOptionsFile,
         'trace_marker': File,
         'tracing_on': ToggleFile
