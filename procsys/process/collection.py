@@ -18,7 +18,6 @@ Handle collection of processes, allowing filtering and sorting by attribute
 values.
 '''
 
-from itertools import ifilter
 from os import path
 from glob import iglob
 
@@ -95,7 +94,7 @@ class Collection(object):
         '''
         iterator = self._collector.collect()
         if self._filters:
-            iterator = ifilter(self._filter, iterator)
+            iterator = filter(self._filter, iterator)
 
         if self._sort_by is not None:
             key = lambda elem: elem.get(self._sort_by)

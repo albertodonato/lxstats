@@ -15,9 +15,8 @@
 
 '''Classes for parsable text files.'''
 
-from itertools import izip
-
 from procsys.fs import File
+from collections import Callable
 
 
 class ParsedFile(File):
@@ -77,7 +76,7 @@ class SingleLineFile(ParsedFile):
         # Map fields values to their name converting to the proper type
         return {
             key: field_type(value)
-            for (key, field_type), value in izip(fields, splitted)
+            for (key, field_type), value in zip(fields, splitted)
             if key is not None}
 
     def _get_fields(self):
@@ -95,7 +94,7 @@ class SingleLineFile(ParsedFile):
         if not content:
             return []
 
-        if callable(self.separator):
+        if isinstance(self.separator, Callable):
             return self.separator(content)
 
         content = content.strip(self.separator)

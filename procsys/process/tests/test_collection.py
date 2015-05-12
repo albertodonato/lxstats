@@ -29,7 +29,7 @@ class CollectorTests(TestCase):
         self.make_process_file(20, 'cmdline')
         self.make_process_file(30, 'cmdline')
         collector = Collector(proc=self.tempdir)
-        self.assertItemsEqual(
+        self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 20, 30])
 
@@ -39,7 +39,7 @@ class CollectorTests(TestCase):
         self.make_process_file(20, 'cmdline')
         self.make_process_file(30, 'cmdline')
         collector = Collector(proc=self.tempdir, pids=(10, 30))
-        self.assertItemsEqual(
+        self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 30])
 
@@ -48,7 +48,7 @@ class CollectorTests(TestCase):
         self.make_process_file(10, 'cmdline')
         self.make_process_file(20, 'cmdline')
         collector = Collector(proc=self.tempdir, pids=(20, 10))
-        self.assertItemsEqual(
+        self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 20])
 
@@ -79,7 +79,7 @@ class CollectionTests(TestCase):
     def test_iter(self):
         '''Collector is an iterable yielding Processes.'''
         collection = Collection(collector=self.collector)
-        self.assertItemsEqual(collection, self.process_list([10, 20, 30]))
+        self.assertCountEqual(collection, self.process_list([10, 20, 30]))
 
     def test_sort_by(self):
         '''Collector can sort by the specified Process stat.'''
@@ -95,18 +95,18 @@ class CollectionTests(TestCase):
         '''Collector.add_filter adds a filter for processes.'''
         collection = Collection(collector=self.collector)
         collection.add_filter(lambda proc: proc.pid != 20)
-        self.assertItemsEqual(collection, self.process_list([10, 30]))
+        self.assertCountEqual(collection, self.process_list([10, 30]))
 
     def test_filter_multiple(self):
         '''Multiple filters can be added.'''
         collection = Collection(collector=self.collector)
         collection.add_filter(lambda proc: proc.pid != 20)
         collection.add_filter(lambda proc: proc.pid != 30)
-        self.assertItemsEqual(collection, self.process_list([10]))
+        self.assertCountEqual(collection, self.process_list([10]))
 
     def test_filter_exclusive(self):
         '''Filters are applied in 'or'.'''
         collection = Collection(collector=self.collector)
         collection.add_filter(lambda proc: proc.pid == 10)
         collection.add_filter(lambda proc: proc.pid != 10)
-        self.assertItemsEqual(collection, [])
+        self.assertCountEqual(collection, [])

@@ -14,7 +14,7 @@
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
-from cStringIO import StringIO
+from io import StringIO
 
 from procsys.testing import TestCase
 

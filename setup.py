@@ -36,6 +36,7 @@ config = {
         "console_scripts": [
             "procs = procsys.scripts.procs:main"]},
     'test_suite': 'procsys',
+    'install_require': ['prettytable'],
     'tests_require': ['fixtures'],
     'keywords': 'linux proc sys performance monitoring system admin',
     'classifiers': [
@@ -46,7 +47,7 @@ config = {
          'GNU General Public License v3 or later (GPLv3+)'),
         'Operating System :: POSIX :: Linux'
         'Operating System :: Unix',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
         'Topic :: System :: Benchmark',
         'Topic :: System :: Monitoring',
         'Topic :: System :: Networking :: Monitoring',

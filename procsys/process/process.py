@@ -54,7 +54,7 @@ class Process(object):
             if isinstance(parsed_stats, dict):
                 self._stats.update(
                     ('{}.{}'.format(name, key), value)
-                    for key, value in parsed_stats.iteritems())
+                    for key, value in parsed_stats.items())
             else:
                 self._stats[name] = parsed_stats
 

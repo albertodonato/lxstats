@@ -15,7 +15,6 @@
 
 '''JSON formatter.'''
 
-from itertools import izip
 import json
 
 from procsys.process.formatter import Formatter
@@ -39,7 +38,7 @@ class JSONFormatter(Formatter):
 
     def _format_process(self, process):
         self._data['processes'].append(
-            dict(izip(self.fields, self._fields_values(process))))
+            dict(zip(self.fields, self._fields_values(process))))
 
     def _dump(self):
         json.dump(self._data, self._stream, indent=self._config['indent'])

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from cStringIO import StringIO
+from io import StringIO
 
 from procsys.testing import TestCase
 
