@@ -33,8 +33,7 @@ config = {
     'packages': find_packages(),
     'include_package_data': True,
     "entry_points": {
-        "console_scripts": [
-            "procs = procsys.scripts.procs:main"]},
+        "console_scripts": ["procs = procsys.scripts.procs:script"]},
     'test_suite': 'procsys',
     'install_require': ['prettytable'],
     'tests_require': ['fixtures'],
