@@ -33,8 +33,7 @@ config = {
     'packages': find_packages(),
     'include_package_data': True,
     "entry_points": {
-        "console_scripts": [
-            "procs = procsys.scripts.procs:main"]},
+        "console_scripts": ["procs = procsys.scripts.procs:script"]},
     'test_suite': 'procsys',
     'tests_require': ['fixtures'],
     'keywords': 'linux proc sys performance monitoring system admin',
