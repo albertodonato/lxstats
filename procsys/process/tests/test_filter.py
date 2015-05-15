@@ -22,7 +22,7 @@ from procsys.process.filter import CommandLineFilter
 class CommandLineFilterTests(TestCase):
 
     def setUp(self):
-        super(CommandLineFilterTests, self).setUp()
+        super().setUp()
         self.pid = 10
         self.process = Process(
             self.pid, proc_dir='{}/{}'.format(self.tempdir, self.pid))

@@ -43,7 +43,7 @@ class SampleFormatter(Formatter):
 class FormatterTests(TestCase):
 
     def setUp(self):
-        super(FormatterTests, self).setUp()
+        super().setUp()
         self.stream = StringIO()
 
     def test_format(self):

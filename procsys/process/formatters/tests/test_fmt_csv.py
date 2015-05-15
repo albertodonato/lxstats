@@ -24,7 +24,7 @@ from procsys.process.collection import Collector, Collection
 class CSVFormatterTests(TestCase):
 
     def setUp(self):
-        super(CSVFormatterTests, self).setUp()
+        super().setUp()
         self.stream = StringIO()
         collector = Collector(proc=self.tempdir, pids=(10, 20))
         self.collection = Collection(collector=collector)

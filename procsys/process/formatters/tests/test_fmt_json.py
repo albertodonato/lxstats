@@ -25,7 +25,7 @@ from procsys.process.collection import Collector, Collection
 class JSONFormatterTests(TestCase):
 
     def setUp(self):
-        super(JSONFormatterTests, self).setUp()
+        super().setUp()
         self.stream = StringIO()
         collector = Collector(proc=self.tempdir, pids=(10, 20))
         self.collection = Collection(collector=collector)

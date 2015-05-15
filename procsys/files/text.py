@@ -31,7 +31,7 @@ class ParsedFile(File):
         if not self.exists():
             return
 
-        return self.parser(super(ParsedFile, self).read())
+        return self.parser(super().read())
 
     def parser(self, content):
         '''Parse the content of the file.

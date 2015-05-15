@@ -25,7 +25,7 @@ class TestCase(TestWithFixtures):
     '''Base class for tests.'''
 
     def setUp(self):
-        super(TestCase, self).setUp()
+        super().setUp()
         # A base temporary directory
         self.tempdir = self.useFixture(TempDir()).path
 

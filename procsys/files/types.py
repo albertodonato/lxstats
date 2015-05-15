@@ -64,7 +64,7 @@ class TogglableOptionsFile(OptionsFile):
     def options(self):
         '''Return a dict with options and their current values.'''
         options = OrderedDict()
-        for option in super(TogglableOptionsFile, self).options:
+        for option in super().options:
             value = not option.startswith('no')
             if not value:
                 option = option[2:]

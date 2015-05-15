@@ -33,7 +33,7 @@ class JSONFormatter(Formatter):
     config = {'indent': None}
 
     def __init__(self, stream, fields, **kwargs):
-        super(JSONFormatter, self).__init__(stream, fields, **kwargs)
+        super().__init__(stream, fields, **kwargs)
         self._data = {'fields': self.fields, 'processes': []}
 
     def _format_process(self, process):

@@ -23,7 +23,7 @@ from procsys.files.types import (
 class OptionsFileTests(TestCase):
 
     def setUp(self):
-        super(OptionsFileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.options_file = OptionsFile(self.path)
 
@@ -41,7 +41,7 @@ class OptionsFileTests(TestCase):
 class SelectableOptionsFileTests(TestCase):
 
     def setUp(self):
-        super(SelectableOptionsFileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.select_file = SelectableOptionsFile(self.path)
 
@@ -77,7 +77,7 @@ class SelectableOptionsFileTests(TestCase):
 class TogglableOptionsFileTests(TestCase):
 
     def setUp(self):
-        super(TogglableOptionsFileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.toggle_options_file = TogglableOptionsFile(self.path)
 
@@ -113,7 +113,7 @@ class TogglableOptionsFileTests(TestCase):
 class ValueFileTests(TestCase):
 
     def setUp(self):
-        super(ValueFileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.value_file = ValueFile(self.path)
 
@@ -131,7 +131,7 @@ class ValueFileTests(TestCase):
 class ToggleFileTests(TestCase):
 
     def setUp(self):
-        super(ToggleFileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.toggle_file = ToggleFile(self.path)
 

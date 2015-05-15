@@ -21,7 +21,7 @@ from procsys.process.process import Process
 class ProcessTests(TestCase):
 
     def setUp(self):
-        super(ProcessTests, self).setUp()
+        super().setUp()
         self.pid = 10
         self.process = Process(
             self.pid, '{}/{}'.format(self.tempdir, self.pid))

@@ -33,7 +33,7 @@ class TableFormatter(Formatter):
     config = {'borders': False}
 
     def __init__(self, stream, fields, **kwargs):
-        super(TableFormatter, self).__init__(stream, fields, **kwargs)
+        super().__init__(stream, fields, **kwargs)
         self._table = PrettyTable()
 
     def _format_header(self):

@@ -63,7 +63,7 @@ class CollectorTests(TestCase):
 class CollectionTests(TestCase):
 
     def setUp(self):
-        super(CollectionTests, self).setUp()
+        super().setUp()
         pids = (10, 30, 20)  # Not ordered so tests can sort
         self.collector = Collector(proc=self.tempdir, pids=pids)
         self.make_process_file(10, 'comm', content='foo')

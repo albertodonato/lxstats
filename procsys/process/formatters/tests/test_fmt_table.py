@@ -24,7 +24,7 @@ from procsys.process.collection import Collector, Collection
 class TableFormatterTests(TestCase):
 
     def setUp(self):
-        super(TableFormatterTests, self).setUp()
+        super().setUp()
         self.stream = StringIO()
         collector = Collector(proc=self.tempdir, pids=(10, 20))
         self.collection = Collection(collector=collector)

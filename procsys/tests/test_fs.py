@@ -22,7 +22,7 @@ from procsys.fs import Entity, File, Directory
 class EntityTests(TestCase):
 
     def setUp(self):
-        super(EntityTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.entity = Entity(self.path)
 
@@ -59,7 +59,7 @@ class EntityTests(TestCase):
 class FileTests(TestCase):
 
     def setUp(self):
-        super(FileTests, self).setUp()
+        super().setUp()
         self.path = self.mktemp()
         self.file = File(self.path)
 
@@ -77,7 +77,7 @@ class FileTests(TestCase):
 class DirectoryTests(TestCase):
 
     def setUp(self):
-        super(DirectoryTests, self).setUp()
+        super().setUp()
         self.path = self.mkdir()
         self.dir = Directory(self.path)
         self.dir.files = {'foo': File, 'bar': File}

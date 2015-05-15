@@ -33,7 +33,7 @@ class CSVFormatter(Formatter):
     config = {'tabs': False}
 
     def __init__(self, stream, fields, **kwargs):
-        super(CSVFormatter, self).__init__(stream, fields, **kwargs)
+        super().__init__(stream, fields, **kwargs)
         dialect = 'excel-tab' if self._config['tabs'] else 'excel'
         self._writer = writer(self._stream, dialect=dialect)
 
