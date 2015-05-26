@@ -19,7 +19,7 @@
 import os
 
 
-class Entity(object):
+class Entity:
     '''Base class for File and Directory.'''
 
     def __init__(self, path):

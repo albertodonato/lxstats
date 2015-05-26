@@ -16,7 +16,7 @@
 '''Write field values for a collection of processes in a specific format.'''
 
 
-class Formatter(object):
+class Formatter:
     '''Format a Process Collection.
 
     Parameters:

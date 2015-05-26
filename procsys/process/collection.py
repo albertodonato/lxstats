@@ -24,7 +24,7 @@ from glob import iglob
 from procsys.process.process import Process
 
 
-class Collector(object):
+class Collector:
     '''Process collector.
 
     An iterable with PIDs can be passed, otherwise all PIDs found scanning
@@ -55,7 +55,7 @@ class Collector(object):
                 yield process
 
 
-class Collection(object):
+class Collection:
     '''A Process collection.
 
     Parameters:

@@ -18,7 +18,7 @@
 import re
 
 
-class CommandLineFilter(object):
+class CommandLineFilter:
     '''Filter Processes based on the command line.
 
     Parameters:

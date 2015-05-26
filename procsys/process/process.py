@@ -18,7 +18,7 @@
 from procsys.files.proc import ProcPIDDirectory
 
 
-class Process(object):
+class Process:
     '''Retrieve and hold information about a given process.'''
 
     def __init__(self, pid, proc_dir):
