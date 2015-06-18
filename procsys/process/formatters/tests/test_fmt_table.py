@@ -26,7 +26,7 @@ class TableFormatterTests(TestCase):
     def setUp(self):
         super().setUp()
         self.stream = StringIO()
-        collector = Collector(proc=self.tempdir, pids=(10, 20))
+        collector = Collector(proc=self.tempdir.path, pids=(10, 20))
         self.collection = Collection(collector=collector)
         self.make_process_file(10, 'cmdline', content='/bin/foo')
         self.make_process_file(20, 'cmdline', content='/bin/bar')

@@ -16,51 +16,19 @@
 '''Base unittest classes.'''
 
 import os
-from tempfile import mktemp
 
-from fixtures import TestWithFixtures, TempDir
+from toolrack.testing import TestCase as ToolRackTestCase, TempDirFixture
 
 
-class TestCase(TestWithFixtures):
+class TestCase(ToolRackTestCase):
     '''Base class for tests.'''
 
     def setUp(self):
         super().setUp()
         # A base temporary directory
-        self.tempdir = self.useFixture(TempDir()).path
-
-    def mktemp(self, suffix='', prefix='procsys-test'):
-        '''Wrap tempfile.mktemp.'''
-        return mktemp(suffix=suffix, prefix=prefix, dir=self.tempdir)
-
-    def mkdir(self):
-        '''Create a temporary directory and return the path.'''
-        fixture = self.useFixture(TempDir(rootdir=self.tempdir))
-        return fixture.path
-
-    def mkfile(self, path=None, content='', mode=None):
-        '''Create a temporary file and return its path.'''
-        if path is None:
-            path = self.mktemp()
-
-        # Create missing path elements as needed
-        dirname = os.path.dirname(path)
-        if dirname and not os.path.isdir(dirname):
-            os.makedirs(dirname)
-
-        with open(path, 'w') as fh:
-            fh.write(content)
-
-        if mode is not None:
-            os.chmod(path, mode)
-        return path
-
-    def readfile(self, path):
-        '''Return the content of the specified file.'''
-        with open(path) as fh:
-            return fh.read()
+        self.tempdir = self.useFixture(TempDirFixture())
 
     def make_process_file(self, pid, name, content='', mode=None):
         '''Create a /proc file for the process with the specified content.'''
-        path = os.path.join(self.tempdir, str(pid), name)
-        self.mkfile(path=path, content=content, mode=mode)
+        path = os.path.join(str(pid), name)
+        return self.tempdir.mkfile(path=path, content=content, mode=mode)

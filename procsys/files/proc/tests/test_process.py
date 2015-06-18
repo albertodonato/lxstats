@@ -25,13 +25,13 @@ class ProcPIDCmdlineTests(TestCase):
 
     def test_parse(self):
         '''Command line tokens are parsed and split into a list.'''
-        path = self.mkfile(content='/bin/foo\x00bar\x00baz\x00')
+        path = self.tempdir.mkfile(content='/bin/foo\x00bar\x00baz\x00')
         cmdline_file = ProcPIDCmdline(path)
         self.assertEqual(cmdline_file.read(), ['/bin/foo', 'bar', 'baz'])
 
     def test_parse_with_spaces(self):
         '''Command or arguments can contain spaces.'''
-        path = self.mkfile(content='/bin/foo bar\x00baz bza\x00')
+        path = self.tempdir.mkfile(content='/bin/foo bar\x00baz bza\x00')
         cmdline_file = ProcPIDCmdline(path)
         self.assertEqual(cmdline_file.read(), ['/bin/foo bar', 'baz bza'])
 
@@ -41,7 +41,7 @@ class ProcPIDStatTests(TestCase):
     def test_fields(self):
         '''Fields and values from /proc/[pid]/stat files are reported.'''
         content = ' '.join(str(i) for i in range(45))
-        path = self.mkfile(content=content)
+        path = self.tempdir.mkfile(content=content)
         stat_file = ProcPIDStat(path)
         self.assertEqual(
             stat_file.read(),
@@ -89,7 +89,7 @@ class ProcPIDStatTests(TestCase):
         # Set a comm field with spaces
         fields[1] = '(cmd with spaces)'
         content = ' '.join(fields)
-        path = self.mkfile(content=content)
+        path = self.tempdir.mkfile(content=content)
         stat_file = ProcPIDStat(path)
         stats = stat_file.read()
         self.assertEqual(stats['comm'], 'cmd with spaces')
@@ -99,7 +99,7 @@ class ProcPIDStatmTests(TestCase):
 
     def test_fields(self):
         '''Fields and values from /proc/[pid]/statm files are reported.'''
-        path = self.mkfile(content='1 2 3 4 5 6 7')
+        path = self.tempdir.mkfile(content='1 2 3 4 5 6 7')
         statm_file = ProcPIDStatm(path)
         self.assertEqual(
             statm_file.read(),
@@ -121,7 +121,7 @@ class ProcPIDIOTests(TestCase):
             write_bytes: 600
             cancelled_write_bytes: 700
             ''')
-        path = self.mkfile(content=content)
+        path = self.tempdir.mkfile(content=content)
         io_file = ProcPIDIo(path)
         self.assertEqual(
             io_file.read(),

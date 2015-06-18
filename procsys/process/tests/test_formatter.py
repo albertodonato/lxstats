@@ -50,7 +50,7 @@ class FormatterTests(TestCase):
         '''Formatter.format outputs process info with header and footer.'''
         self.make_process_file(10, 'cmdline', content='cmd1')
         self.make_process_file(20, 'cmdline', content='cmd2')
-        collector = Collector(proc=self.tempdir, pids=(10, 20))
+        collector = Collector(proc=self.tempdir.path, pids=(10, 20))
         collection = Collection(collector=collector)
         formatter = SampleFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(collection)
@@ -66,7 +66,7 @@ class FormatterTests(TestCase):
         '''Formatter._fields_values returns a list with Process values.'''
         self.make_process_file(10, 'cmdline', '/bin/foo')
         formatter = SampleFormatter(self.stream, ['pid', 'cmd'])
-        process = Process(10, proc_dir='{}/10'.format(self.tempdir))
+        process = Process(10, proc_dir='{}/10'.format(self.tempdir.path))
         process.collect_stats()
         self.assertEqual(
             formatter._fields_values(process), [10, '/bin/foo'])

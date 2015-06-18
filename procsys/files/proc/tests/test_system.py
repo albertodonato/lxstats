@@ -23,7 +23,7 @@ class ProcStatTests(TestCase):
 
     def test_cpu_fields(self):
         '''Time counters are reported as percentage per-CPU.'''
-        path = self.mkfile(
+        path = self.tempdir.mkfile(
             content=(
                 'cpu0 2.0 0.0 3.0 5.0 7.0 3.0 10.0 20.0 30.0 20.0\n'
                 'cpu1 10.0 7.0 5.0 3.0 0.0 3.0 2.0 30.0 20.0 20.0\n'))
@@ -41,7 +41,7 @@ class ProcStatTests(TestCase):
 
     def test_not_all_cpu_fields(self):
         '''Some CPU fields may be missing.'''
-        path = self.mkfile(
+        path = self.tempdir.mkfile(
             content='cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\n')
         stat_file = ProcStat(path)
         self.assertEqual(
@@ -52,7 +52,7 @@ class ProcStatTests(TestCase):
 
     def test_ignore_non_cpu_fields(self):
         '''Extra fields after CPU ones are ignored.'''
-        path = self.mkfile(
+        path = self.tempdir.mkfile(
             content=(
                 'cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\nanother row\n'))
         stat_file = ProcStat(path)
@@ -67,7 +67,7 @@ class ProcUptimeTests(TestCase):
 
     def test_fields(self):
         '''Uptime and idle times are reported.'''
-        path = self.mkfile(content='67569.47 106913.77')
+        path = self.tempdir.mkfile(content='67569.47 106913.77')
         uptime_file = ProcUptime(path)
         self.assertEqual(
             uptime_file.read(), {'uptime': 67569.47, 'idle': 106913.77})
@@ -77,7 +77,7 @@ class ProcLoadavgTests(TestCase):
 
     def test_fields(self):
         '''Load average over 1, 5, and 15 minutes is reported.'''
-        path = self.mkfile(content='0.40 0.30 0.20')
+        path = self.tempdir.mkfile(content='0.40 0.30 0.20')
         loadavg_file = ProcLoadavg(path)
         self.assertEqual(
             loadavg_file.read(),
@@ -88,7 +88,7 @@ class ProcVmstatTests(TestCase):
 
     def test_fields(self):
         '''Fields and values from the /proc/vmstat file are reported.'''
-        path = self.mkfile(content='foo 123\nbar 456')
+        path = self.tempdir.mkfile(content='foo 123\nbar 456')
         vmstat_file = ProcVmstat(path)
         self.assertEqual(vmstat_file.read(), {'foo': 123, 'bar': 456})
 
@@ -97,7 +97,7 @@ class ProcDiskstatsTests(TestCase):
 
     def test_fields(self):
         '''Fields for each device/partition are reported.'''
-        path = self.mkfile(
+        path = self.tempdir.mkfile(
             content=(
                 '8 0 sda 10 20 30 40 50 60 70 80 90 100 110\n'
                 '8 1 sda1 1 2 3 4 5 6 7 8 9 10 11\n'))
@@ -119,7 +119,7 @@ class ProcMeminfoTests(TestCase):
 
     def test_fields(self):
         '''Each line in the file /proc/meminfo file is reported.'''
-        path = self.mkfile(
+        path = self.tempdir.mkfile(
             content=(
                 'MemTotal:       1000 kB\n'
                 'MemFree:         200 kB\n'

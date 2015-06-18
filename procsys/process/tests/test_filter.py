@@ -25,7 +25,7 @@ class CommandLineFilterTests(TestCase):
         super().setUp()
         self.pid = 10
         self.process = Process(
-            self.pid, proc_dir='{}/{}'.format(self.tempdir, self.pid))
+            self.pid, proc_dir='{}/{}'.format(self.tempdir.path, self.pid))
 
     def test_filter_matching_process(self):
         '''CommandLineFilter matches a process.'''

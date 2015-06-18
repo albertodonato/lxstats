@@ -24,7 +24,7 @@ class ProcessTests(TestCase):
         super().setUp()
         self.pid = 10
         self.process = Process(
-            self.pid, '{}/{}'.format(self.tempdir, self.pid))
+            self.pid, '{}/{}'.format(self.tempdir.path, self.pid))
 
     def test_exists(self):
         '''It's possible to check whether a process exists.'''
@@ -122,8 +122,8 @@ class ProcessTests(TestCase):
     def test_equal(self):
         '''Two Processes are equal if they have the same pid.'''
         other = Process(
-            self.pid, '{}/{}'.format(self.tempdir, self.pid))
+            self.pid, '{}/{}'.format(self.tempdir.path, self.pid))
         different = Process(
-            self.pid + 1, '{}/{}'.format(self.tempdir, self.pid))
+            self.pid + 1, '{}/{}'.format(self.tempdir.path, self.pid))
         self.assertEqual(self.process, other)
         self.assertNotEqual(self.process, different)

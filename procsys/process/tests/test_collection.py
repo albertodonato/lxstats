@@ -28,7 +28,7 @@ class CollectorTests(TestCase):
         self.make_process_file(10, 'cmdline')
         self.make_process_file(20, 'cmdline')
         self.make_process_file(30, 'cmdline')
-        collector = Collector(proc=self.tempdir)
+        collector = Collector(proc=self.tempdir.path)
         self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 20, 30])
@@ -38,7 +38,7 @@ class CollectorTests(TestCase):
         self.make_process_file(10, 'cmdline')
         self.make_process_file(20, 'cmdline')
         self.make_process_file(30, 'cmdline')
-        collector = Collector(proc=self.tempdir, pids=(10, 30))
+        collector = Collector(proc=self.tempdir.path, pids=(10, 30))
         self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 30])
@@ -47,7 +47,7 @@ class CollectorTests(TestCase):
         '''Processes are listed in PID order.'''
         self.make_process_file(10, 'cmdline')
         self.make_process_file(20, 'cmdline')
-        collector = Collector(proc=self.tempdir, pids=(20, 10))
+        collector = Collector(proc=self.tempdir.path, pids=(20, 10))
         self.assertCountEqual(
             (process.pid for process in collector.collect()),
             [10, 20])
@@ -55,7 +55,7 @@ class CollectorTests(TestCase):
     def test_collector_skip_non_existing(self):
         '''Collector skips non-existing processes.'''
         self.make_process_file(10, 'cmdline')
-        collector = Collector(proc=self.tempdir, pids=(10, 20))
+        collector = Collector(proc=self.tempdir.path, pids=(10, 20))
         self.assertEqual(
             [process.pid for process in collector.collect()], [10])
 
@@ -65,7 +65,7 @@ class CollectionTests(TestCase):
     def setUp(self):
         super().setUp()
         pids = (10, 30, 20)  # Not ordered so tests can sort
-        self.collector = Collector(proc=self.tempdir, pids=pids)
+        self.collector = Collector(proc=self.tempdir.path, pids=pids)
         self.make_process_file(10, 'comm', content='foo')
         self.make_process_file(20, 'comm', content='zza')
         self.make_process_file(30, 'comm', content='bar')
@@ -73,7 +73,7 @@ class CollectionTests(TestCase):
     def process_list(self, pids):
         '''Return a list of processes with specified pids.'''
         return [
-            Process(pid, path.join(self.tempdir, str(pid)))
+            Process(pid, path.join(self.tempdir.path, str(pid)))
             for pid in pids]
 
     def test_iter(self):

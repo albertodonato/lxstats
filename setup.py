@@ -35,7 +35,7 @@ config = {
     "entry_points": {
         "console_scripts": ["procs = procsys.scripts.procs:script"]},
     'test_suite': 'procsys',
-    'install_require': ['prettytable'],
+    'install_requires': ['prettytable'],
     'tests_require': ['fixtures'],
     'keywords': 'linux proc sys performance monitoring system admin',
     'classifiers': [
