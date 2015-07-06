@@ -16,7 +16,7 @@
 from os import path
 
 from procsys.testing import TestCase
-from procsys.tracing.tracer import Tracing, Tracer
+from procsys.tracing.tracer import UnsupportedTracer, Tracing, Tracer
 
 
 class TracingTests(TestCase):
@@ -78,9 +78,13 @@ class TracerTests(TestCase):
 
     def test_set_type(self):
         '''The Tracer type can be set.'''
-        self.tempdir.mkfile(path='current_tracer', content='nop')
-        self.tracer.set_type('func')
-        self.assertEqual(self.tracer.type, 'func')
+        self.tempdir.mkfile(path='current_tracer', content='func')
+        self.tracer.set_type('nop')
+        self.assertEqual(self.tracer.type, 'nop')
+
+    def test_set_type_unsupported(self):
+        '''If the Tracer type is unsupported, an error is raised.'''
+        self.assertRaises(UnsupportedTracer, self.tracer.set_type, 'unknown')
 
     def test_enabled_true(self):
         '''The Tracer is enabled if the corresponding flag is set.'''

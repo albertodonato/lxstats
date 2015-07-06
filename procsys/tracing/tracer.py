@@ -21,6 +21,14 @@ from procsys.files.sys import TracingDirectory
 from procsys.tracing.types import TRACER_TYPES
 
 
+class UnsupportedTracer(Exception):
+    '''Unsupported tracer type specified.'''
+
+    def __init__(self, tracer_type):
+        self.type = tracer_type
+        super().__init__('Unsupported tracer type: {}'.format(tracer_type))
+
+
 class Tracing:
     '''Interface to kernel tracing.'''
 
@@ -55,9 +63,15 @@ class Tracing:
 class Tracer:
     '''A kernel tracing instance.'''
 
+    _tracer_types = TRACER_TYPES
+
     def __init__(self, path):
         self.path = path
         self._dir = TracingDirectory(path)
+
+    def __getattr__(self, attr):
+        '''Proxy TracerType-specific attributes.'''
+        return getattr(self._tracer, attr)
 
     @property
     def name(self):
@@ -71,6 +85,8 @@ class Tracer:
 
     def set_type(self, tracer_type):
         '''Set the type of the tracer.'''
+        if tracer_type not in self._tracer_types:
+            raise UnsupportedTracer(tracer_type)
         self._dir['current_tracer'].set(tracer_type)
 
     @property
@@ -93,8 +109,5 @@ class Tracer:
 
     @property
     def _tracer(self):
-        '''Return a TracerType for the current tracer.'''
-        try:
-            return TRACER_TYPES.get(self.type)
-        except KeyError:
-            return None
+        '''TracerType for the current tracer.'''
+        return self._tracer_types.get(self.type)
