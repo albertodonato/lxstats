@@ -17,7 +17,8 @@
 
 import os
 
-from toolrack.testing import TestCase as ToolRackTestCase, TempDirFixture
+from toolrack.testing import TestCase as ToolRackTestCase
+from toolrack.testing.fixtures import TempDirFixture
 
 
 class TestCase(ToolRackTestCase):
