@@ -34,9 +34,10 @@ class TableFormatter(Formatter):
 
     def __init__(self, stream, fields, **kwargs):
         super().__init__(stream, fields, **kwargs)
-        self._table = PrettyTable()
+        self._table = None
 
     def _format_header(self):
+        self._table = PrettyTable()
         for field in self.fields:
             self._table.add_column(field, [], align='l')
 
@@ -46,3 +47,4 @@ class TableFormatter(Formatter):
     def _dump(self):
         content = self._table.get_string(border=self._config['borders'])
         self._write(content + '\n')
+        self._table = None
