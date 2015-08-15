@@ -13,8 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from procsys.testing import TestCase
+from datetime import datetime
 
+from procsys.testing import TestCase
 from procsys.process.process import Process
 
 
@@ -81,6 +82,19 @@ class ProcessTests(TestCase):
         '''If cmdline and cmd are not found, an empty string is returned.'''
         self.process.collect_stats()
         self.assertEqual(self.process.cmd, '')
+
+    def test_timestamp_empty(self):
+        '''The timestamp is None when stats have not been collected.'''
+        self.make_process_file(self.pid, 'cmdline', content='cmd')
+        self.assertIsNone(self.process.timestamp)
+
+    def test_timestamp(self):
+        '''The timestamp is None when stats have not been collected.'''
+        self.make_process_file(self.pid, 'cmdline', content='cmd')
+        now = datetime.utcnow()
+        self.process._utcnow = lambda: now
+        self.process.collect_stats()
+        self.assertEqual(self.process.timestamp, now)
 
     def test_available_stats(self):
         '''Available Process stats can be listed.'''

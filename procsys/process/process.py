@@ -15,16 +15,29 @@
 
 '''Hold information about a running process.'''
 
+from datetime import datetime
+
 from procsys.files.proc import ProcPIDDirectory
 
 
 class Process:
     '''Retrieve and hold information about a given process.'''
 
+    _utcnow = datetime.utcnow  # For testing
+
     def __init__(self, pid, proc_dir):
         self.pid = pid
         self._dir = ProcPIDDirectory(proc_dir)
-        self._stats = {}
+        self._reset()
+
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__, self.pid)
+
+    def __eq__(self, other):
+        return self.pid == other.pid
+
+    def __hash__(self):
+        return hash((self.__class__, self.pid))
 
     @property
     def cmd(self):
@@ -41,10 +54,12 @@ class Process:
 
     def collect_stats(self):
         '''Collect stats about the process from /proc files.'''
-        self._stats = {}  # Reset
+        self._reset()
 
         if not self._dir.readable():
             return
+
+        self._timestamp = self._utcnow()
 
         for name in self._dir.list():
             if not self._dir[name].readable():
@@ -66,18 +81,19 @@ class Process:
         '''Return a dict with process stats.'''
         return self._stats.copy()
 
+    @property
+    def timestamp(self):
+        '''Return the timestamp for stat collection.'''
+        return self._timestamp
+
     def get(self, stat):
         '''Return the stat with the name name, or None if not available.'''
-        if stat in ('pid', 'cmd'):
+        if stat in ('pid', 'cmd', 'timestamp'):
             return getattr(self, stat)
 
         return self._stats.get(stat)
 
-    def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, self.pid)
-
-    def __eq__(self, other):
-        return self.pid == other.pid
-
-    def __hash__(self):
-        return hash((self.__class__, self.pid))
+    def _reset(self):
+        '''Reset stats.'''
+        self._stats = {}
+        self._timestamp = None
