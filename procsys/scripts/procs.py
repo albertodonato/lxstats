@@ -16,6 +16,7 @@
 '''ps-like script to dump processes information.'''
 
 import sys
+from itertools import repeat
 from time import sleep
 from argparse import ArgumentParser, ArgumentTypeError
 
@@ -56,11 +57,13 @@ class ProcsScript(Script):
             '--format', '-F', help='output format', choices=get_formats(),
             default='table')
         parser.add_argument(
-            '--interval', '-i', help='sample interval in seconds', type=int,
+            '--interval', '-i',
+            help='sample interval in seconds (default %(default)s)', type=int,
             default=5)
         parser.add_argument(
-            '--count', '-c', help='number of samples to collect', type=int,
-            default=1)
+            '--count', '-c',
+            help='number of samples to collect (default unlimited)', type=int,
+            default=0)
         return parser
 
     def main(self, args):
@@ -72,9 +75,13 @@ class ProcsScript(Script):
             collection.add_filter(CommandLineFilter(args.regexp))
         formatter_class = get_formatter(args.format)
         formatter = formatter_class(sys.stdout, fields)
-        for _ in range(args.count + 1):
+
+        count_iter = range(args.count) if args.count else repeat(None)
+        for n in count_iter:
             formatter.format(collection)
-            sleep(args.interval)
+            if n != args.count - 1:
+                # don't sleep after last iteration
+                sleep(args.interval)
 
 
 script = ProcsScript()
