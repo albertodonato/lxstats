@@ -17,7 +17,7 @@
 
 from datetime import datetime
 
-from procsys.files.proc import ProcPIDDirectory
+from ..files.proc import ProcPIDDirectory
 
 
 class Process:

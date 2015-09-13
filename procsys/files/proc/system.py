@@ -17,7 +17,7 @@
 
 import re
 
-from procsys.files.text import ParsedFile, SingleLineFile
+from ..text import ParsedFile, SingleLineFile
 
 
 class ProcStat(ParsedFile):

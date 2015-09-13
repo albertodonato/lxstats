@@ -15,8 +15,8 @@
 
 import os
 
-from procsys.testing import TestCase
-from procsys.fs import Entity, File, Directory
+from ..testing import TestCase
+from ..fs import Entity, File, Directory
 
 
 class EntityTests(TestCase):

@@ -15,9 +15,9 @@
 
 '''Formatter subclasses for different formats.'''
 
-from procsys.process.formatters.fmt_csv import CSVFormatter
-from procsys.process.formatters.fmt_json import JSONFormatter
-from procsys.process.formatters.fmt_table import TableFormatter
+from .fmt_csv import CSVFormatter
+from .fmt_json import JSONFormatter
+from .fmt_table import TableFormatter
 
 
 _FORMATTERS = {

@@ -13,10 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from procsys.testing import TestCase
-
-from procsys.process.process import Process
-from procsys.process.filter import CommandLineFilter
+from ...testing import TestCase
+from ..process import Process
+from ..filter import CommandLineFilter
 
 
 class CommandLineFilterTests(TestCase):

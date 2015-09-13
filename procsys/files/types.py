@@ -18,7 +18,7 @@
 
 from collections import OrderedDict
 
-from procsys.files.text import SplittedFile, SingleLineFile
+from .text import SplittedFile, SingleLineFile
 
 
 class OptionsFile(SplittedFile):

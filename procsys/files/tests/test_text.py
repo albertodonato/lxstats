@@ -13,9 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with ProcSys.  If not, see <http://www.gnu.org/licenses/>.
 
-from procsys.testing import TestCase
-
-from procsys.files.text import ParsedFile, SingleLineFile, SplittedFile
+from ...testing import TestCase
+from ..text import ParsedFile, SingleLineFile, SplittedFile
 
 
 class ParsedFileTests(TestCase):

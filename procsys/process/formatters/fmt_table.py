@@ -17,7 +17,7 @@
 
 from prettytable import PrettyTable
 
-from procsys.process.formatter import Formatter
+from ..formatter import Formatter
 
 
 class TableFormatter(Formatter):

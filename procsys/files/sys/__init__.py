@@ -15,8 +15,8 @@
 
 '''Files for parsing Linux /sys files.'''
 
-from procsys.fs import Directory, File
-from procsys.files.types import (
+from ...fs import Directory, File
+from ..types import (
     OptionsFile, ValueFile, ToggleFile, SelectableOptionsFile,
     TogglableOptionsFile)
 

@@ -15,8 +15,9 @@
 
 '''Classes for parsable text files.'''
 
-from procsys.fs import File
 from collections import Callable
+
+from ..fs import File
 
 
 class ParsedFile(File):

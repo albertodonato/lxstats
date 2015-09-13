@@ -16,10 +16,9 @@
 import json
 from io import StringIO
 
-from procsys.testing import TestCase
-
-from procsys.process.formatters import JSONFormatter
-from procsys.process.collection import Collector, Collection
+from ....testing import TestCase
+from .. import JSONFormatter
+from ...collection import Collector, Collection
 
 
 class JSONFormatterTests(TestCase):

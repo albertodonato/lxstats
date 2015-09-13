@@ -21,7 +21,7 @@ values.
 from os import path
 from glob import iglob
 
-from procsys.process.process import Process
+from .process import Process
 
 
 class Collector:

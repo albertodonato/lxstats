@@ -22,9 +22,9 @@ from argparse import ArgumentParser, ArgumentTypeError
 
 from toolrack.script import Script
 
-from procsys.process.collection import Collection, Collector
-from procsys.process.filter import CommandLineFilter
-from procsys.process.formatters import get_formats, get_formatter
+from ..process.collection import Collection, Collector
+from ..process.filter import CommandLineFilter
+from ..process.formatters import get_formats, get_formatter
 
 
 class ProcsScript(Script):

@@ -15,10 +15,9 @@
 
 from os import path
 
-from procsys.testing import TestCase
-
-from procsys.process.process import Process
-from procsys.process.collection import Collector, Collection
+from ...testing import TestCase
+from ..process import Process
+from ..collection import Collector, Collection
 
 
 class CollectorTests(TestCase):

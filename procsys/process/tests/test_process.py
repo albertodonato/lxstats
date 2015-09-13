@@ -15,8 +15,8 @@
 
 from datetime import datetime
 
-from procsys.testing import TestCase
-from procsys.process.process import Process
+from ...testing import TestCase
+from ..process import Process
 
 
 class ProcessTests(TestCase):

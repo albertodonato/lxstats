@@ -17,7 +17,7 @@
 
 import json
 
-from procsys.process.formatter import Formatter
+from ..formatter import Formatter
 
 
 class JSONFormatter(Formatter):

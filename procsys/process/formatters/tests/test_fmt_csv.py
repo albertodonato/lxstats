@@ -15,10 +15,9 @@
 
 from io import StringIO
 
-from procsys.testing import TestCase
-
-from procsys.process.formatters import CSVFormatter
-from procsys.process.collection import Collector, Collection
+from ....testing import TestCase
+from .. import CSVFormatter
+from ...collection import Collector, Collection
 
 
 class CSVFormatterTests(TestCase):

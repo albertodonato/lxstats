@@ -17,7 +17,7 @@
 
 from toolrack.collect import Collection
 
-from procsys.files.sys import TracingDirectory
+from ..files.sys import TracingDirectory
 
 # Available tracer types
 TRACER_TYPES = Collection('TracerType', 'name')

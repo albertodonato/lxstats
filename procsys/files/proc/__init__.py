@@ -15,13 +15,11 @@
 
 '''Files for parsing Linux /proc files.'''
 
-from procsys.fs import Directory
-
-from procsys.files.types import ValueFile
-from procsys.files.proc.system import (
+from ...fs import Directory
+from ..types import ValueFile
+from .system import (
     ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
-from procsys.files.proc.process import (
-    ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm)
+from .process import ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm
 
 
 class ProcDirectory(Directory):

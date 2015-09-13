@@ -15,11 +15,11 @@
 
 from io import StringIO
 
-from procsys.testing import TestCase
+from ...testing import TestCase
 
-from procsys.process.formatter import Formatter
-from procsys.process.collection import Collection, Collector
-from procsys.process.process import Process
+from ..formatter import Formatter
+from ..collection import Collection, Collector
+from ..process import Process
 
 
 class SampleFormatter(Formatter):

@@ -17,8 +17,8 @@
 
 import os
 
-from procsys.files.sys import TracingDirectory
-from procsys.tracing.types import TRACER_TYPES
+from ..files.sys import TracingDirectory
+from .types import TRACER_TYPES
 
 
 class UnsupportedTracer(Exception):

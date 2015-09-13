@@ -17,7 +17,7 @@
 
 from csv import writer
 
-from procsys.process.formatter import Formatter
+from ..formatter import Formatter
 
 
 class CSVFormatter(Formatter):

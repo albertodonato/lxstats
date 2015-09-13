@@ -15,8 +15,8 @@
 
 from os import path
 
-from procsys.testing import TestCase
-from procsys.tracing.tracer import UnsupportedTracer, Tracing, Tracer
+from ...testing import TestCase
+from ...tracing.tracer import UnsupportedTracer, Tracing, Tracer
 
 
 class TracingTests(TestCase):
