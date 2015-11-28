@@ -58,7 +58,7 @@ class Directory(Entity):
     files = {}
 
     def list(self):
-        '''Return a list of names in the directory.'''
+        '''Return a list of names in the Directory.'''
         return sorted(
             name for name in self.files if os.path.exists(self._path(name)))
 
