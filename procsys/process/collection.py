@@ -97,7 +97,9 @@ class Collection:
             iterator = filter(self._filter, iterator)
 
         if self._sort_by is not None:
-            key = lambda elem: elem.get(self._sort_by)
+            def key(elem):
+                return elem.get(self._sort_by)
+
             iterator = iter(sorted(
                 iterator, key=key, reverse=self._sort_reverse))
 
