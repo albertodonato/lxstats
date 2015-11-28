@@ -15,7 +15,6 @@
 
 '''Classes mapping file and directories.'''
 
-
 import os
 
 
