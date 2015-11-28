@@ -19,6 +19,7 @@ from toolrack.collect import Collection
 
 from ..files.sys import TracingDirectory
 
+
 # Available tracer types
 TRACER_TYPES = Collection('TracerType', 'name')
 
