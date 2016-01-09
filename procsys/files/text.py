@@ -23,8 +23,9 @@ from ..fs import File
 class ParsedFile(File):
     '''A file whose content is parsed when read.
 
-    Subclasses must implement the parser() method which receives the content of
+    Subclasses must implement the _parse() method which receives the content of
     the file and returns the parsed information.
+
     '''
 
     def read(self):
@@ -32,9 +33,9 @@ class ParsedFile(File):
         if not self.exists():
             return
 
-        return self.parser(super().read())
+        return self._parse(super().read())
 
-    def parser(self, content):
+    def _parse(self, content):
         '''Parse the content of the file.
 
         Subclasses must implment this method to provide parsing.
@@ -62,7 +63,7 @@ class SingleLineFile(ParsedFile):
     # field should not be parsed and included.
     fields = None
 
-    def parser(self, content):
+    def _parse(self, content):
         # Take just fhe first line
         content = content.split('\n')[0]
         if self.separator is None:
@@ -110,7 +111,7 @@ class SplittedFile(ParsedFile):
 
     '''
 
-    def parser(self, content):
+    def _parse(self, content):
         lines = content.splitlines()
         if len(lines) == 1:
             return lines[0].split()

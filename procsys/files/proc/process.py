@@ -109,7 +109,7 @@ class ProcPIDStatm(SingleLineFile):
 class ProcPIDIo(ParsedFile):
     '''Parse /proc/[pid]/io.'''
 
-    def parser(self, content):
+    def _parse(self, content):
         # Each line is in the form 'name: count'.
         result = {}
         for line in content.splitlines():
@@ -121,7 +121,7 @@ class ProcPIDIo(ParsedFile):
 class ProcPIDEnviron(ParsedFile):
     '''Parse /proc/[pid]/environ.'''
 
-    def parser(self, content):
+    def _parse(self, content):
         # Return a dict with the environment.
         return dict(
             line.split('=', 1)

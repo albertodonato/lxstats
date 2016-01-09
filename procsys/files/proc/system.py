@@ -27,7 +27,7 @@ class ProcStat(ParsedFile):
         'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal',
         'guest', 'guest-nice']
 
-    def parser(self, content):
+    def _parse(self, content):
         result = {}
 
         for line in content.splitlines():
@@ -61,7 +61,7 @@ class ProcLoadavg(SingleLineFile):
 class ProcVmstat(ParsedFile):
     '''Parse /proc/vmstat.'''
 
-    def parser(self, content):
+    def _parse(self, content):
         items = (line.split() for line in content.splitlines())
         return dict((key, int(value)) for key, value in items)
 
@@ -73,7 +73,7 @@ class ProcDiskstats(ParsedFile):
         'read', 'read-merged', 'read-sect', 'read-ms', 'write', 'write-merged',
         'write-sect', 'write-ms', 'io-curr', 'io-ms', 'io-ms-weighted']
 
-    def parser(self, content):
+    def _parse(self, content):
         result = {}
         for line in content.splitlines():
             split = line.split()[2:]  # Ignore major/minor fields
@@ -88,7 +88,7 @@ class ProcMeminfo(ParsedFile):
 
     _parse_re = re.compile(r'(?P<name>.+):\s+(?P<value>[0-9]+)')
 
-    def parser(self, content):
+    def _parse(self, content):
         return dict(self._parse_line(line) for line in content.splitlines())
 
     def _parse_line(self, line):

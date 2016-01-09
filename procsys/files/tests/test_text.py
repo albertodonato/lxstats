@@ -24,14 +24,13 @@ class ParsedFileTests(TestCase):
         content = 'line 1\nline 2'
         path = self.tempdir.mkfile(content=content)
         parsed_file = ParsedFile(path)
-        parsed_file.parser = lambda content: content
+        parsed_file._parse = lambda content: content
         self.assertEqual(parsed_file.read(), content)
 
     def test_read_not_existent(self):
         '''FileParser.read returns None if file doesn't exist.'''
         path = self.tempdir.join('file')
         parsed_file = ParsedFile(path)
-        parsed_file.parser = lambda content: content
         # The parser method is not called
         self.assertIsNone(parsed_file.read())
 
