@@ -19,7 +19,8 @@ from ...fs import Directory
 from ..types import ValueFile
 from .system import (
     ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
-from .process import ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm
+from .process import (
+    ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron)
 
 
 class ProcDirectory(Directory):
@@ -41,6 +42,7 @@ class ProcPIDDirectory(Directory):
     files = {
         'cmdline': ProcPIDCmdline,
         'comm': ValueFile,
+        'environ': ProcPIDEnviron,
         'io': ProcPIDIo,
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,

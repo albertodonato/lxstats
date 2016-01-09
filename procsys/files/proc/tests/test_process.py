@@ -17,7 +17,7 @@ from textwrap import dedent
 
 from ....testing import TestCase
 from ..process import (
-    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo)
+    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo, ProcPIDEnviron)
 
 
 class ProcPIDCmdlineTests(TestCase):
@@ -131,3 +131,12 @@ class ProcPIDIOTests(TestCase):
              'read_bytes': 500,
              'write_bytes': 600,
              'cancelled_write_bytes': 700})
+
+
+class ProcPIDEnvironTests(TestCase):
+
+    def test_parse(self):
+        '''Environment variables are returned as a dict.'''
+        path = self.tempdir.mkfile(content='FOO=foo\x00BAR=bar\x00')
+        environ_file = ProcPIDEnviron(path)
+        self.assertEqual(environ_file.read(), {'FOO': 'foo', 'BAR': 'bar'})

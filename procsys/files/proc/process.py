@@ -116,3 +116,13 @@ class ProcPIDIo(ParsedFile):
             key, value = line.split(': ', 1)
             result[key] = int(value)
         return result
+
+
+class ProcPIDEnviron(ParsedFile):
+    '''Parse /proc/[pid]/environ.'''
+
+    def parser(self, content):
+        # Return a dict with the environment.
+        return dict(
+            line.split('=', 1)
+            for line in content.split('\x00') if line)
