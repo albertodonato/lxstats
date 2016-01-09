@@ -72,7 +72,8 @@ class ProcsScript(Script):
         collector = Collector(pids=args.pids)
         collection = Collection(collector=collector)
         if args.regexp:
-            collection.add_filter(CommandLineFilter(args.regexp))
+            collection.add_filter(
+                CommandLineFilter(args.regexp, include_args=True))
         formatter_class = get_formatter(args.format)
         formatter = formatter_class(sys.stdout, fields)
 
