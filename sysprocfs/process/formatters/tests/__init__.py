@@ -12,31 +12,3 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
-
-PYTHON = python3
-SETUP = $(PYTHON) setup.py
-LINT = flake8
-
-
-all: build
-
-build:
-	$(SETUP) build
-
-devel:
-	$(SETUP) develop
-
-clean:
-	rm -rf build html *.egg-info _trial_temp
-	find . -type d -name __pycache__ | xargs rm -rf
-
-test:
-	@$(SETUP) test
-
-lint:
-	@$(LINT) setup.py sysprocfs
-
-html:
-	sphinx-build -b html docs html
-
-.PHONY: build html

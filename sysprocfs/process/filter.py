@@ -13,30 +13,26 @@
 # You should have received a copy of the GNU General Public License along with
 # SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
 
-PYTHON = python3
-SETUP = $(PYTHON) setup.py
-LINT = flake8
+'''Filter classes for process Collection.'''
+
+import re
 
 
-all: build
+class CommandLineFilter:
+    '''Filter Processes based on the command line.
 
-build:
-	$(SETUP) build
+    Parameters:
+      regexp: a regexp to match the commandline.
+      include_args: whether include args in match.
 
-devel:
-	$(SETUP) develop
+    '''
 
-clean:
-	rm -rf build html *.egg-info _trial_temp
-	find . -type d -name __pycache__ | xargs rm -rf
+    def __init__(self, regexp, include_args=False):
+        self._re = re.compile(regexp)
+        self._include_args = include_args
 
-test:
-	@$(SETUP) test
-
-lint:
-	@$(LINT) setup.py sysprocfs
-
-html:
-	sphinx-build -b html docs html
-
-.PHONY: build html
+    def __call__(self, process):
+        cmd = process.cmd
+        if not self._include_args:
+            cmd = cmd.split()[0]
+        return bool(self._re.findall(cmd))

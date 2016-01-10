@@ -13,30 +13,23 @@
 # You should have received a copy of the GNU General Public License along with
 # SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
 
-PYTHON = python3
-SETUP = $(PYTHON) setup.py
-LINT = flake8
+'''Base unittest classes.'''
+
+import os
+
+from toolrack.testing import TestCase as ToolRackTestCase
+from toolrack.testing.fixtures import TempDirFixture
 
 
-all: build
+class TestCase(ToolRackTestCase):
+    '''Base class for tests.'''
 
-build:
-	$(SETUP) build
+    def setUp(self):
+        super().setUp()
+        # A base temporary directory
+        self.tempdir = self.useFixture(TempDirFixture())
 
-devel:
-	$(SETUP) develop
-
-clean:
-	rm -rf build html *.egg-info _trial_temp
-	find . -type d -name __pycache__ | xargs rm -rf
-
-test:
-	@$(SETUP) test
-
-lint:
-	@$(LINT) setup.py sysprocfs
-
-html:
-	sphinx-build -b html docs html
-
-.PHONY: build html
+    def make_process_file(self, pid, name, content='', mode=None):
+        '''Create a /proc file for the process with the specified content.'''
+        path = os.path.join(str(pid), name)
+        return self.tempdir.mkfile(path=path, content=content, mode=mode)

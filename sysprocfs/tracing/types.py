@@ -13,30 +13,29 @@
 # You should have received a copy of the GNU General Public License along with
 # SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
 
-PYTHON = python3
-SETUP = $(PYTHON) setup.py
-LINT = flake8
+'''Linux kernel tracer types.'''
+
+from toolrack.collect import Collection
+
+from ..files.sys import TracingDirectory
 
 
-all: build
+# Available tracer types
+TRACER_TYPES = Collection('TracerType', 'name')
 
-build:
-	$(SETUP) build
 
-devel:
-	$(SETUP) develop
+class TracerType:
+    '''Base class for tracer types.'''
 
-clean:
-	rm -rf build html *.egg-info _trial_temp
-	find . -type d -name __pycache__ | xargs rm -rf
+    name = None
 
-test:
-	@$(SETUP) test
+    def __init__(self, path):
+        self.path = path
+        self._dir = TracingDirectory(path)
 
-lint:
-	@$(LINT) setup.py sysprocfs
 
-html:
-	sphinx-build -b html docs html
+@TRACER_TYPES.add
+class NopTracer(TracerType):
+    '''No-op tracer.'''
 
-.PHONY: build html
+    name = 'nop'

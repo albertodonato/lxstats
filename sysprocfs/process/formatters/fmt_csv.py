@@ -13,30 +13,32 @@
 # You should have received a copy of the GNU General Public License along with
 # SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
 
-PYTHON = python3
-SETUP = $(PYTHON) setup.py
-LINT = flake8
+'''CSV formatter.'''
+
+from csv import writer
+
+from ..formatter import Formatter
 
 
-all: build
+class CSVFormatter(Formatter):
+    '''Format fields in CSV.
 
-build:
-	$(SETUP) build
+    Config parameters:
 
-devel:
-	$(SETUP) develop
+    - tabs: use tabs as separators
+    '''
 
-clean:
-	rm -rf build html *.egg-info _trial_temp
-	find . -type d -name __pycache__ | xargs rm -rf
+    fmt = 'csv'
 
-test:
-	@$(SETUP) test
+    config = {'tabs': False}
 
-lint:
-	@$(LINT) setup.py sysprocfs
+    def __init__(self, stream, fields, **kwargs):
+        super().__init__(stream, fields, **kwargs)
+        dialect = 'excel-tab' if self._config['tabs'] else 'excel'
+        self._writer = writer(self._stream, dialect=dialect)
 
-html:
-	sphinx-build -b html docs html
+    def _format_header(self):
+        self._writer.writerow(self.fields)
 
-.PHONY: build html
+    def _format_process(self, process):
+        self._writer.writerow(self._fields_values(process))
