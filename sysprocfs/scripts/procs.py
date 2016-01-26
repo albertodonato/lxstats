@@ -50,7 +50,10 @@ class ProcsScript(Script):
             help='comma-separated list of fields to display',
             default='pid,stat.state,comm')
         parser.add_argument(
-            '--regexp', '-r', help='regexp to filter commandline')
+            '--regexp', '-r', help='regexp to filter by process name')
+        parser.add_argument(
+            '--cmdline-regexp', '-R',
+            help='regexp to filter by full command line')
         parser.add_argument(
             '--pids', '-p', help='list specific PIDs', type=pids)
         parser.add_argument(
@@ -72,8 +75,10 @@ class ProcsScript(Script):
         collector = Collector(pids=args.pids)
         collection = Collection(collector=collector)
         if args.regexp:
+            collection.add_filter(CommandLineFilter(args.regexp))
+        if args.cmdline_regexp:
             collection.add_filter(
-                CommandLineFilter(args.regexp, include_args=True))
+                CommandLineFilter(args.cmdline_regexp, include_args=True))
         formatter_class = get_formatter(args.format)
         formatter = formatter_class(sys.stdout, fields)
 
