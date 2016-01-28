@@ -118,6 +118,23 @@ class ProcPIDIo(ParsedFile):
         return result
 
 
+class ProcPIDSched(ParsedFile):
+    '''Parse /proc/[pid]/sched.'''
+
+    _re = re.compile(r'^(\S+)\s+:\s+(\S+)$')
+
+    def _parse(self, content):
+        stats = {}
+        for line in content.split('\n'):
+            match = self._re.match(line)
+            if match:
+                key, value = match.groups()
+                value = float(value) if '.' in value else int(value)
+                stats[key] = value
+
+        return stats
+
+
 class ProcPIDEnviron(ParsedFile):
     '''Parse /proc/[pid]/environ.'''
 

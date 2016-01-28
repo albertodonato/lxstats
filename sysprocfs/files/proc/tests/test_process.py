@@ -17,7 +17,8 @@ from textwrap import dedent
 
 from ....testing import TestCase
 from ..process import (
-    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo, ProcPIDEnviron)
+    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo, ProcPIDSched,
+    ProcPIDEnviron)
 
 
 class ProcPIDCmdlineTests(TestCase):
@@ -131,6 +132,33 @@ class ProcPIDIOTests(TestCase):
              'read_bytes': 500,
              'write_bytes': 600,
              'cancelled_write_bytes': 700})
+
+
+class ProcPIDSchedTests(TestCase):
+
+    def test_fields(self):
+        '''Fields and values from /proc/[pid]/stat files are parsed.'''
+        content = dedent(
+            '''\
+            process (1234, #threads: 1)
+            -------------------------------------------------------------------
+            se.exec_start                                :     123456789.123456
+            se.exec_start                                :     987654321.654321
+            se.vruntime                                  :       1234567.123456
+            se.sum_exec_runtime                          :             0.123456
+            se.statistics.sum_sleep_runtime              :             1.234567
+            current_node=0, numa_group_id=0
+            numa_faults node=0 task_private=0 task_shared=0 group_private=0
+            ''')
+        path = self.tempdir.mkfile(content=content)
+        io_file = ProcPIDSched(path)
+        self.assertEqual(
+            io_file.read(),
+            {'se.exec_start': 123456789.123456,
+             'se.exec_start': 987654321.654321,
+             'se.vruntime': 1234567.123456,
+             'se.sum_exec_runtime': 0.123456,
+             'se.statistics.sum_sleep_runtime': 1.234567})
 
 
 class ProcPIDEnvironTests(TestCase):
