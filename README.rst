@@ -2,7 +2,8 @@
 LxStats
 =======
 
-LxStats provides access to statistics and metrics about Linux systems and processes.
+LxStats provides access to system and processes statistics and metrics on Linux
+systems.
 
-It provides easy parsing of information available in various files in the /proc
-and /sys filesystems under Linux.
+It provides easy access and parsing of information from various files under
+the /proc and /sys filesystems.

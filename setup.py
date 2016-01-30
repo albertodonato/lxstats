@@ -35,7 +35,7 @@ config = {
     "entry_points": {
         "console_scripts": ["procs = lxstats.scripts.procs:script"]},
     'test_suite': 'lxstats',
-    'install_requires': ['toolrack >= 1.0.1', 'prettytable'],
+    'install_requires': ['prettytable', 'toolrack >= 1.0.1'],
     'keywords': 'linux proc sys performance monitoring system admin',
     'classifiers': [
         'Development Status :: 4 - Beta',
