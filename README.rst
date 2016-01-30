@@ -1,9 +1,8 @@
-=========
-SysProcFS
-=========
+=======
+LxStats
+=======
 
-SysProcFS is a library to access file files under /proc and /sys on Linux.
+LxStats provides access to statistics and metrics about Linux systems and processes.
 
-It provides parsing of information and metrics about the system and running
-processes, as well as read/write access to /sys files for system configuration
-and debugging.
+It provides easy parsing of information available in various files in the /proc
+and /sys filesystems under Linux.

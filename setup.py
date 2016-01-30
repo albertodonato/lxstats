@@ -1,25 +1,25 @@
 #
-# This file is part of SysProcFS.
+# This file is part of LxStats.
 #
-# SysProcFS is free software: you can redistribute it and/or modify it under
+# LxStats is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
 # version.
 #
-# SysProcFS is distributed in the hope that it will be useful, but WITHOUT ANY
+# LxStats is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 # A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along with
-# SysProcFS.  If not, see <http://www.gnu.org/licenses/>.
+# LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup, find_packages
 
-from sysprocfs import __version__, __doc__ as description
+from lxstats import __version__, __doc__ as description
 
 
 config = {
-    'name': 'sysprocfs',
+    'name': 'lxstats',
     'version': __version__,
     'license': 'GPLv3+',
     'description': description,
@@ -28,13 +28,13 @@ config = {
     'author_email': 'alberto.donato@gmail.com',
     'maintainer': 'Alberto Donato',
     'maintainer_email': 'alberto.donato@gmail.com',
-    'url': 'https://bitbucket.org/ack/sysprocfs',
-    'download_url': 'https://bitbucket.org/ack/sysprocfs/downloads',
+    'url': 'https://bitbucket.org/ack/lxstats',
+    'download_url': 'https://bitbucket.org/ack/lxstats/downloads',
     'packages': find_packages(),
     'include_package_data': True,
     "entry_points": {
-        "console_scripts": ["procs = sysprocfs.scripts.procs:script"]},
-    'test_suite': 'sysprocfs',
+        "console_scripts": ["procs = lxstats.scripts.procs:script"]},
+    'test_suite': 'lxstats',
     'install_requires': ['toolrack >= 1.0.1', 'prettytable'],
     'keywords': 'linux proc sys performance monitoring system admin',
     'classifiers': [
