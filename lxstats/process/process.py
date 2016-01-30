@@ -48,21 +48,22 @@ class Process:
         comm = self._stats.get('comm')
         return '[{}]'.format(comm) if comm else ''
 
+    @property
     def exists(self):
         '''Whether the process exists.'''
-        return self._dir.exists()
+        return self._dir.exists
 
     def collect_stats(self):
         '''Collect stats about the process from /proc files.'''
         self._reset()
 
-        if not self._dir.readable():
+        if not self._dir.readable:
             return
 
         self._timestamp = self._utcnow()
 
         for name in self._dir.list():
-            if not self._dir[name].readable():
+            if not self._dir[name].readable:
                 continue
 
             parsed_stats = self._dir[name].read()

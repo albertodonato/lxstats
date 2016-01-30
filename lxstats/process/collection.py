@@ -47,7 +47,7 @@ class Collector:
         for proc_dir in proc_dirs:
             process = Process(int(proc_dir[l:]), proc_dir)
             process.collect_stats()
-            if process.exists():
+            if process.exists:
                 # Don't return non-existing processes. Check this after trying
                 # collecting stats, since doing the opposite there's a chance
                 # the process might go away bewteen the check and the

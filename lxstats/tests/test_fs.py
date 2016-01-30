@@ -32,33 +32,33 @@ class EntityTests(TestCase):
             self.entity.path, os.path.join(self.tempdir.path, self.filename))
 
     def test_exists_false(self):
-        '''The exists method returns False if the entity doesn't exist.'''
-        self.assertFalse(self.entity.exists())
+        '''The exists property is False if the entity doesn't exist.'''
+        self.assertFalse(self.entity.exists)
 
     def test_exists_true(self):
-        '''The exists method returns True if the entity exists.'''
+        '''The exists property is True if the entity exists.'''
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.exists())
+        self.assertTrue(self.entity.exists)
 
     def test_readable_false(self):
-        '''The readable method returns False if the path is not readable.'''
+        '''The readable property is False if the path is not readable.'''
         self.tempdir.mkfile(self.filename, mode=0o200)
-        self.assertFalse(self.entity.readable())
+        self.assertFalse(self.entity.readable)
 
     def test_readable_true(self):
-        '''The readable method returns True if the path is readable.'''
+        '''The readable property is True if the path is readable.'''
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.readable())
+        self.assertTrue(self.entity.readable)
 
     def test_writable_false(self):
-        '''The writable method returns False if the path is not writable.'''
+        '''The writable property is False if the path is not writable.'''
         self.tempdir.mkfile(path=self.filename, mode=0o400)
-        self.assertFalse(self.entity.writable())
+        self.assertFalse(self.entity.writable)
 
     def test_writable_true(self):
-        '''The writable method returns True if the path is writable.'''
+        '''The writable property is True if the path is writable.'''
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.writable())
+        self.assertTrue(self.entity.writable)
 
 
 class FileTests(TestCase):

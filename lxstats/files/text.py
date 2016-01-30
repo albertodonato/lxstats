@@ -30,7 +30,7 @@ class ParsedFile(File):
 
     def read(self):
         '''Read the file and preturn the parsed content.'''
-        if not self.exists():
+        if not self.exists:
             return
 
         return self._parse(super().read())

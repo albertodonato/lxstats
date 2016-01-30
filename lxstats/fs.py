@@ -13,25 +13,33 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Classes mapping file and directories.'''
+'''Files and directories access.
+
+The :class:`File` and :class:`Directory` classes provide abstractions to access
+filesytem entities.
+
+'''
 
 import os
 
 
 class Entity:
-    '''Base class for File and Directory.'''
+    '''A filesystem entity such as a file or directory.'''
 
     def __init__(self, path):
         self.path = path
 
+    @property
     def exists(self):
         '''Whether the path exists.'''
         return os.path.exists(self.path)
 
+    @property
     def readable(self):
         '''Whether the path is readable.'''
         return os.access(self.path, os.R_OK)
 
+    @property
     def writable(self):
         '''Whether the path is writable.'''
         return os.access(self.path, os.W_OK)
@@ -46,31 +54,36 @@ class File(Entity):
             return fh.read()
 
     def write(self, content):
-        '''Write content to file.'''
+        '''Write content to file, replacing the content if it exists.'''
         with open(self.path, 'w') as fh:
             fh.write(content)
 
 
 class Directory(Entity):
-    '''Exposes a collection of Files with a dict-like interface.'''
+    '''Access  files in a directory with a :class:`dict`-like interface.'''
 
-    # Subclasses should define this as dict mapping file names to File type
+    #: Map names of files under the directory to their corresponding
+    #: :class:`File` type.  Subclasses should define this.
     files = {}
 
     def list(self):
-        '''Return a list of names in the Directory.'''
+        '''Return a list of names in the directory.
+
+        Only existing files that match names listed in `files` are returned.
+
+        '''
         return sorted(
             name for name in self.files if os.path.exists(self._path(name)))
 
     def listdir(self):
-        '''Return all existing names in the Directory.'''
+        '''Return all existing names in a directory.'''
         return os.listdir(self.path)
 
     def __getitem__(self, name):
-        '''Return the File instance for a name.'''
+        '''Return the :class:`File` instance for a name.'''
         path = self._path(name)
         item = self.files[name](path)
-        if not item.exists():
+        if not item.exists:
             raise KeyError(name)
         return item
 

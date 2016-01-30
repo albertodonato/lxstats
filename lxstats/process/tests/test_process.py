@@ -29,9 +29,9 @@ class ProcessTests(TestCase):
 
     def test_exists(self):
         '''It's possible to check whether a process exists.'''
-        self.assertFalse(self.process.exists())
+        self.assertFalse(self.process.exists)
         self.make_process_file(self.pid, 'cmdline', content='cmd')
-        self.assertTrue(self.process.exists())
+        self.assertTrue(self.process.exists)
 
     def test_collect_stats(self):
         '''Stats are collected from proc when collect_stats is called.'''
