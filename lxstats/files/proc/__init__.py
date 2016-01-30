@@ -20,7 +20,8 @@ from ..types import ValueFile
 from .system import (
     ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
 from .process import (
-    ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron)
+    ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron,
+    ProcPIDSched)
 
 
 class ProcDirectory(Directory):
@@ -44,6 +45,7 @@ class ProcPIDDirectory(Directory):
         'comm': ValueFile,
         'environ': ProcPIDEnviron,
         'io': ProcPIDIo,
+        'sched': ProcPIDSched,
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,
         'wchan': ValueFile}
