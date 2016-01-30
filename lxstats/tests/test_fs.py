@@ -104,6 +104,15 @@ class DirectoryTests(TestCase):
         self.tempdir.mkfile(path='bar')
         self.assertEqual(self.dir.listdir(), ['bar', 'foo'])
 
+    def test_iterable(self):
+        '''The Directory is iterable and returns Files in the directory.'''
+        self.tempdir.mkfile(path='foo')
+        self.tempdir.mkfile(path='bar')
+        file_list = list(self.dir)
+        for elem in file_list:
+            self.assertIsInstance(elem, File)
+        self.assertEqual([elem.name for elem in file_list], ['bar', 'foo'])
+
     def test_get_file(self):
         '''File items can be accessed.'''
         self.tempdir.mkfile(path='foo', content='foo text')

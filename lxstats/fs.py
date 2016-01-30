@@ -28,6 +28,7 @@ class Entity:
 
     def __init__(self, path):
         self.path = path
+        self.name = os.path.basename(self.path)
 
     @property
     def exists(self):
@@ -86,6 +87,11 @@ class Directory(Entity):
         if not item.exists:
             raise KeyError(name)
         return item
+
+    def __iter__(self):
+        '''Return an iterator yielding :class:`File`s in the directory.'''
+        for name in self.list():
+            yield self[name]
 
     def _path(self, name):
         return os.path.join(self.path, name)
