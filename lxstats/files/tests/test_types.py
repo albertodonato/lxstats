@@ -39,7 +39,7 @@ class OptionsFileTests(TestCase):
     def test_options_selected(self):
         '''The selected option is included.'''
         self.tempdir.mkfile(path=self.filename, content='foo [bar] baz')
-        self.assertEqual(self.select_file.options, ['foo', 'bar', 'baz'])
+        self.assertEqual(self.options_file.options, ['foo', 'bar', 'baz'])
 
 
 class SelectableOptionsFileTests(TestCase):
