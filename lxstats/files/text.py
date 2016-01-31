@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Classes for parsable text files.'''
+'''Base classes for reading and writing text files.'''
 
 from collections import Callable
 
@@ -23,8 +23,11 @@ from ..fs import File
 class ParsedFile(File):
     '''A file whose content is parsed when read.
 
-    Subclasses must implement the _parse() method which receives the content of
-    the file and returns the parsed information.
+    This class is intended to be subclassed to provide parsers for specific
+    types of files.
+
+    Subclasses must implement the :func:`_parse` method which is called with
+    the content of the file and returns the parsed information.
 
     '''
 
@@ -38,7 +41,8 @@ class ParsedFile(File):
     def _parse(self, content):
         '''Parse the content of the file.
 
-        Subclasses must implment this method to provide parsing.
+        .. note::
+            Subclasses must implement this method.
 
         '''
         raise NotImplementedError('The parser method must be implemented.')
@@ -47,20 +51,31 @@ class ParsedFile(File):
 class SingleLineFile(ParsedFile):
     '''A single-line file that can be split into fields.
 
-    The line is split into fields based on a separator (space by default).  If
-    the separator is set to None, the stripped content of the file is returned.
-    If separator is a callable, it's used to split the field (it gets passed
+    The line is split into fields based on a :attr:`separator` (space by
+    default).
+
+    If the separator is set to None, the stripped content of the file is
+    returned.
+
+    If separator is a callable, it's used to split the field (it's called with
     the line and must return a list of fields).
 
-    Subclasses can define a list of fields and a different separator.
+    Subclasses can define a list of :attr:`fields` and a different
+    :attr:`separator`.
 
     '''
 
+    #: The separator to use when splitting the content. If set to :data:`None`,
+    #: content is not split.  It can also be set to a `callable` that splits
+    #: content.
     separator = ' '
 
-    # If provided it must be a list of keys or (key, type) tuples. In the
-    # latter case, the value is converted to the type. None can be used if the
-    # field should not be parsed and included.
+    #: If set, it must be a list, where each element can be
+    #:
+    #: - a string: the key to use for the value.
+    #: - a list of (key, type) tuples:  the value is  converted to the type by
+    #:   calling :samp:`type(value)`.
+    #: - :data:`None`: the field is ignored.
     fields = None
 
     def _parse(self, content):
@@ -108,6 +123,18 @@ class SplittedFile(ParsedFile):
 
     It's meant to work with files that have one word per line or a single
     space-separated line.
+
+    Example of content::
+
+      foo
+      bar
+      baz
+
+    or::
+
+      foo bar baz
+
+    In both cases the result is :samp:`['foo', 'bar', 'baz']`.
 
     '''
 

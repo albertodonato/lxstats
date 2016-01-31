@@ -36,6 +36,11 @@ class OptionsFileTests(TestCase):
         self.tempdir.mkfile(path=self.filename, content='foo\nbar\nbaz')
         self.assertEqual(self.options_file.options, ['foo', 'bar', 'baz'])
 
+    def test_options_selected(self):
+        '''The selected option is included.'''
+        self.tempdir.mkfile(path=self.filename, content='foo [bar] baz')
+        self.assertEqual(self.select_file.options, ['foo', 'bar', 'baz'])
+
 
 class SelectableOptionsFileTests(TestCase):
 
@@ -44,11 +49,6 @@ class SelectableOptionsFileTests(TestCase):
         self.filename = 'file'
         self.select_file = SelectableOptionsFile(
             self.tempdir.join(self.filename))
-
-    def test_options_selected(self):
-        '''The selected option is included.'''
-        self.tempdir.mkfile(path=self.filename, content='foo [bar] baz')
-        self.assertEqual(self.select_file.options, ['foo', 'bar', 'baz'])
 
     def test_selected(self):
         '''The selected option can be returned.'''

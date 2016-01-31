@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Classes mapping different file types used in /proc and /sys filesytems.'''
+'''Perse types of files used in /proc and /sys filesytems.'''
 
 
 from collections import OrderedDict
@@ -22,7 +22,20 @@ from .text import SplittedFile, SingleLineFile
 
 
 class OptionsFile(SplittedFile):
-    '''File listing a set of options.'''
+    '''File listing a set of options.
+
+    It returns available options for a file, including the selected one, if
+    present.
+
+    For example, for a file containing::
+
+      foo [bar] baz
+
+    :meth:`options` returns::
+
+      ['foo', 'bar', 'baz']
+
+    '''
 
     @property
     def options(self):
@@ -34,7 +47,13 @@ class OptionsFile(SplittedFile):
 
 
 class SelectableOptionsFile(OptionsFile):
-    '''File listing a set of options with a single selected one.'''
+    '''File listing a set of options with a single selected one.
+
+
+    It works like :class:`OptionsFile`, but also allow getting and setting the
+    selected option.
+
+    '''
 
     @property
     def selected(self):
@@ -46,7 +65,7 @@ class SelectableOptionsFile(OptionsFile):
     def select(self, value):
         '''Set the specified option value.
 
-        ValueError is raised if the value is not valid.'''
+        :class:`ValueError` is raised if the value is not valid.'''
 
         if value not in self.options:
             raise ValueError(value)
@@ -56,7 +75,19 @@ class SelectableOptionsFile(OptionsFile):
 class TogglableOptionsFile(OptionsFile):
     '''A file with a list of options that can be individually enabled.
 
-    Disabled options have names prefixed by 'no'.
+    Disabled options have names prefixed by :data:`no`.
+
+    For example, for a file containing::
+
+      foo
+      nobar
+      baz
+
+    :meth:`options` returns::
+
+      {'foo': True,
+       'bar': False,
+       'baz': True}
 
     '''
 
@@ -82,7 +113,7 @@ class TogglableOptionsFile(OptionsFile):
 
 
 class ValueFile(SingleLineFile):
-    '''File to read or set a value.'''
+    '''File containing a single value that can be read or set.'''
 
     separator = None
 
@@ -96,7 +127,11 @@ class ValueFile(SingleLineFile):
 
 
 class ToggleFile(SingleLineFile):
-    '''File to enable or disable an option.'''
+    '''File to enable or disable an option.
+
+    The file contains a boolean value expressed as :data:`0` or :data:`1`.
+
+    '''
 
     separator = None
 
@@ -106,6 +141,6 @@ class ToggleFile(SingleLineFile):
         return self.read() == '1'
 
     def toggle(self, value):
-        '''Enable or disable the value.'''
+        '''Enable or disable the value based on the passed :class:`bool`.'''
         content = '1' if value else '0'
         self.write(content)
