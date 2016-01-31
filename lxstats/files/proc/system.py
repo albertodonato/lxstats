@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Parsers for /proc files containing system information.'''
+'''Parsers for :file:`/proc` files containing system information.'''
 
 import re
 
@@ -21,7 +21,7 @@ from ..text import ParsedFile, SingleLineFile
 
 
 class ProcStat(ParsedFile):
-    '''Parse /proc/stat.'''
+    '''Parse :file:`/proc/stat`.'''
 
     stat_fields = [
         'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal',
@@ -47,19 +47,19 @@ class ProcStat(ParsedFile):
 
 
 class ProcUptime(SingleLineFile):
-    '''Parse /proc/uptime.'''
+    '''Parse :file:`/proc/uptime`.'''
 
     fields = (('uptime', float), ('idle', float))
 
 
 class ProcLoadavg(SingleLineFile):
-    '''Parse /proc/loadavg.'''
+    '''Parse :file:`/proc/loadavg`.'''
 
     fields = (('load1', float), ('load5', float), ('load15', float))
 
 
 class ProcVmstat(ParsedFile):
-    '''Parse /proc/vmstat.'''
+    '''Parse :file:`/proc/vmstat`.'''
 
     def _parse(self, content):
         items = (line.split() for line in content.splitlines())
@@ -67,7 +67,7 @@ class ProcVmstat(ParsedFile):
 
 
 class ProcDiskstats(ParsedFile):
-    '''Parse /proc/diskstats.'''
+    '''Parse :file:`/proc/diskstats`.'''
 
     diskstat_fields = [
         'read', 'read-merged', 'read-sect', 'read-ms', 'write', 'write-merged',
@@ -84,7 +84,7 @@ class ProcDiskstats(ParsedFile):
 
 
 class ProcMeminfo(ParsedFile):
-    '''Parse /proc/meminfo.'''
+    '''Parse :file:`/proc/meminfo`.'''
 
     _parse_re = re.compile(r'(?P<name>.+):\s+(?P<value>[0-9]+)')
 

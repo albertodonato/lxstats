@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Parsers for per-process files under /proc/[pid]/.'''
+'''Parsers for per-process files under :file:`/proc/[pid]/`.'''
 
 import re
 
@@ -21,13 +21,13 @@ from ..text import ParsedFile, SingleLineFile
 
 
 class ProcPIDCmdline(SingleLineFile):
-    '''Parse /proc/[pid]/cmdline.'''
+    '''Parse :file:`/proc/[pid]/cmdline`.'''
 
     separator = '\x00'
 
 
 class ProcPIDStat(SingleLineFile):
-    '''Parse /proc/[pid]/stat and /proc/[pid]/tasks/[tid]/stat.'''
+    '''Parse :file:`/proc/[pid]/stat`, :file:`/proc/[pid]/tasks/[tid]/stat`.'''
 
     fields = (
         ('pid', int),
@@ -94,7 +94,7 @@ class ProcPIDStat(SingleLineFile):
 
 
 class ProcPIDStatm(SingleLineFile):
-    '''Parse /proc/[pid]/statm.'''
+    '''Parse :file:`/proc/[pid]/statm`.'''
 
     fields = (
         ('size', int),
@@ -107,7 +107,7 @@ class ProcPIDStatm(SingleLineFile):
 
 
 class ProcPIDIo(ParsedFile):
-    '''Parse /proc/[pid]/io.'''
+    '''Parse :file:`/proc/[pid]/io`.'''
 
     def _parse(self, content):
         # Each line is in the form 'name: count'.
@@ -119,7 +119,7 @@ class ProcPIDIo(ParsedFile):
 
 
 class ProcPIDSched(ParsedFile):
-    '''Parse /proc/[pid]/sched.'''
+    '''Parse :file:`/proc/[pid]/sched`.'''
 
     _re = re.compile(r'^(\S+)\s+:\s+(\S+)$')
 
@@ -136,7 +136,7 @@ class ProcPIDSched(ParsedFile):
 
 
 class ProcPIDEnviron(ParsedFile):
-    '''Parse /proc/[pid]/environ.'''
+    '''Parse :file:`/proc/[pid]/environ`.'''
 
     def _parse(self, content):
         # Return a dict with the environment.

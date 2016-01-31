@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Access files under the /sys filesytem.
+'''Access files under the :file:`/sys` filesytem.
 
 This module currently allows to access and configure tracing options via
 :class:`TracingDirectory`.
@@ -27,7 +27,7 @@ from ..types import (
 
 
 class TracingDirectory(Directory):
-    '''A /sys/kernel/debug/tracing/instance/[tracer] directory.'''
+    '''A :file:`/sys/kernel/debug/tracing/instance/[tracer]` directory.'''
 
     files = {
         'available_tracers': OptionsFile,

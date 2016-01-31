@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Access system and process statistics through files under /proc.
+'''Access system and process statistics through files under :file:`/proc`.
 
 System statistics, such as load, uptime, memory and disk information can be
 read through the :class:`ProcDirectory`. For example::
@@ -40,7 +40,7 @@ from .process import (
 
 
 class ProcDirectory(Directory):
-    '''The /proc directory.'''
+    '''The :file:`/proc` directory.'''
 
     files = {
         'diskstats': ProcDiskstats,
@@ -53,7 +53,7 @@ class ProcDirectory(Directory):
 
 
 class ProcPIDDirectory(Directory):
-    '''A /proc/[pid] directory for a process.'''
+    '''A :file:`/proc/[pid]` directory for a process.'''
 
     files = {
         'cmdline': ProcPIDCmdline,
