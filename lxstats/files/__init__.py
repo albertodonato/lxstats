@@ -24,6 +24,11 @@ Submodules are structured as follows:
  - :mod:`lxstats.files.text`: base classes for reading and writing text files.
 
  - :mod:`lxstats.files.types`: classes for reading and writing different types
-   of files, mostly used in the /sys filesystem
+   of files, mostly used in the /sys filesystem.
 
+ - :mod:`lxstats.files.proc`: classes for accessing system-wide and per-process
+   statistics.
+
+ - :mod:`lxstats.files.sys`: classes for accessing files under /sys, such as
+    debug tracing.
 '''

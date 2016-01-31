@@ -13,7 +13,22 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Files for parsing Linux /proc files.'''
+'''Access system and process statistics through files under /proc.
+
+System statistics, such as load, uptime, memory and disk information can be
+read through the :class:`ProcDirectory`. For example::
+
+  >>> ProcDirectory('/proc')['uptime'].read()
+  {'uptime': 695283.06, 'idle': 1376159.44}
+
+Process-specific stats, like used memory, IO, etc. can be accessed through
+:class:`ProcPIDDirectory`, such as::
+
+  >>> ProcPIDDirectory('/proc/self')['io'].read()
+  {'rchar': 405786, 'syscr': 415, 'cancelled_write_bytes': 0, 'syscw': 256,
+   'write_bytes': 20480, 'read_bytes': 32768, 'wchar': 14790}
+
+'''
 
 from ...fs import Directory
 from ..types import ValueFile

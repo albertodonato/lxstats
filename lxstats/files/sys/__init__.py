@@ -13,7 +13,12 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Files for parsing Linux /sys files.'''
+'''Access files under the /sys filesytem.
+
+This module currently allows to access and configure tracing options via
+:class:`TracingDirectory`.
+
+'''
 
 from ...fs import Directory, File
 from ..types import (
