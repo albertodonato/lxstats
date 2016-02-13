@@ -94,3 +94,19 @@ class ProcMeminfo(ParsedFile):
     def _parse_line(self, line):
         match = self._parse_re.match(line).groupdict()
         return match['name'], int(match['value'])
+
+
+class ProcCgroups(ParsedFile):
+    '''Parse :file:`/proc/cgroups`.'''
+
+    def _parse(self, content):
+        result = {}
+        for line in content.splitlines():
+            if line.startswith('#'):
+                continue
+            subsys, hier_id, num_cgroups, enabled = line.split()
+            result[subsys] = {
+                'hierarchy-id': int(hier_id),
+                'num-cgroups': int(num_cgroups),
+                'enabled': enabled == '1'}
+        return result

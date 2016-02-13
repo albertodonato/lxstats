@@ -186,8 +186,8 @@ class ProcPIDCgroupTests(TestCase):
         cgroup_file = ProcPIDCgroup(path)
         self.assertEqual(
             cgroup_file.read(),
-            {'6': (['hugetlb'], '/group2'),
-             '5': (['net_cls', 'net_prio'], '/group1'),
-             '4': (['blkio'], '/group2'),
-             '3': (['cpu', 'cpuacct'], '/group1'),
-             '2': (['devices'], '/group1')})
+            {6: (['hugetlb'], '/group2'),
+             5: (['net_cls', 'net_prio'], '/group1'),
+             4: (['blkio'], '/group2'),
+             3: (['cpu', 'cpuacct'], '/group1'),
+             2: (['devices'], '/group1')})

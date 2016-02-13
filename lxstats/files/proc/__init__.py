@@ -33,7 +33,8 @@ Process-specific stats, like used memory, IO, etc. can be accessed through
 from ...fs import Directory
 from ..types import ValueFile
 from .system import (
-    ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
+    ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime,
+    ProcCgroups)
 from .process import (
     ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron,
     ProcPIDSched, ProcPIDCgroup)
@@ -43,6 +44,7 @@ class ProcDirectory(Directory):
     '''The :file:`/proc` directory.'''
 
     files = {
+        'cgroups': ProcCgroups,
         'diskstats': ProcDiskstats,
         'loadavg': ProcLoadavg,
         'meminfo': ProcMeminfo,

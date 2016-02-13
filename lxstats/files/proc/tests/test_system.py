@@ -13,9 +13,12 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
+from textwrap import dedent
+
 from ....testing import TestCase
 from ..system import (
-    ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats, ProcMeminfo)
+    ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats, ProcMeminfo,
+    ProcCgroups)
 
 
 class ProcStatTests(TestCase):
@@ -97,9 +100,11 @@ class ProcDiskstatsTests(TestCase):
     def test_fields(self):
         '''Fields for each device/partition are reported.'''
         path = self.tempdir.mkfile(
-            content=(
-                '8 0 sda 10 20 30 40 50 60 70 80 90 100 110\n'
-                '8 1 sda1 1 2 3 4 5 6 7 8 9 10 11\n'))
+            content=dedent(
+                '''\
+                8 0 sda 10 20 30 40 50 60 70 80 90 100 110
+                8 1 sda1 1 2 3 4 5 6 7 8 9 10 11
+                '''))
         diskstats_file = ProcDiskstats(path)
         self.assertEqual(
             diskstats_file.read(),
@@ -119,11 +124,36 @@ class ProcMeminfoTests(TestCase):
     def test_fields(self):
         '''Each line in the file /proc/meminfo file is reported.'''
         path = self.tempdir.mkfile(
-            content=(
-                'MemTotal:       1000 kB\n'
-                'MemFree:         200 kB\n'
-                'HugePages_Total:   0\n'))
+            content=dedent(
+                '''\
+                MemTotal:       1000 kB
+                MemFree:         200 kB
+                HugePages_Total:   0
+                '''))
         meminfo_file = ProcMeminfo(path)
         self.assertEqual(
             meminfo_file.read(),
             {'MemTotal': 1000, 'MemFree': 200, 'HugePages_Total': 0})
+
+
+class ProcCgroupsTests(TestCase):
+
+    def test_fields(self):
+        '''Each line in the file /proc/cgroups file is reported.'''
+        path = self.tempdir.mkfile(
+            content=dedent(
+                '''\
+                #subsys_name    hierarchy       num_cgroups     enabled
+                cpuset  10      200     1
+                cpu     3       100     0
+                cpuacct 3       300     1
+                '''))
+        cgroups_file = ProcCgroups(path)
+        self.assertEqual(
+            cgroups_file.read(),
+            {'cpuset': {
+                'hierarchy-id': 10, 'num-cgroups': 200, 'enabled': True},
+             'cpu': {
+                 'hierarchy-id': 3, 'num-cgroups': 100, 'enabled': False},
+             'cpuacct': {
+                'hierarchy-id': 3, 'num-cgroups': 300,  'enabled': True}})

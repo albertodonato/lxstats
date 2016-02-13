@@ -152,6 +152,6 @@ class ProcPIDCgroup(ParsedFile):
         result = {}
         for line in content.splitlines():
             hier_id, subsys, control_group = line.split(':')
-            result[hier_id] = (subsys.split(','), control_group)
+            result[int(hier_id)] = (subsys.split(','), control_group)
 
         return result
