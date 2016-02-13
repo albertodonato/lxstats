@@ -143,3 +143,15 @@ class ProcPIDEnviron(ParsedFile):
         return dict(
             line.split('=', 1)
             for line in content.split('\x00') if line)
+
+
+class ProcPIDCgroup(ParsedFile):
+    '''Parse :file:`/proc/[pid]/cgroup`.'''
+
+    def _parse(self, content):
+        result = {}
+        for line in content.splitlines():
+            hier_id, subsys, control_group = line.split(':')
+            result[hier_id] = (subsys.split(','), control_group)
+
+        return result

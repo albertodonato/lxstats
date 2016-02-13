@@ -18,7 +18,7 @@ from textwrap import dedent
 from ....testing import TestCase
 from ..process import (
     ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo, ProcPIDSched,
-    ProcPIDEnviron)
+    ProcPIDEnviron, ProcPIDCgroup)
 
 
 class ProcPIDCmdlineTests(TestCase):
@@ -168,3 +168,26 @@ class ProcPIDEnvironTests(TestCase):
         path = self.tempdir.mkfile(content='FOO=foo\x00BAR=bar\x00')
         environ_file = ProcPIDEnviron(path)
         self.assertEqual(environ_file.read(), {'FOO': 'foo', 'BAR': 'bar'})
+
+
+class ProcPIDCgroupTests(TestCase):
+
+    def test_parse(self):
+        '''A dict is returned with hierarchy id as key.'''
+        content = dedent(
+            '''\
+            6:hugetlb:/group2
+            5:net_cls,net_prio:/group1
+            4:blkio:/group2
+            3:cpu,cpuacct:/group1
+            2:devices:/group1
+            ''')
+        path = self.tempdir.mkfile(content=content)
+        cgroup_file = ProcPIDCgroup(path)
+        self.assertEqual(
+            cgroup_file.read(),
+            {'6': (['hugetlb'], '/group2'),
+             '5': (['net_cls', 'net_prio'], '/group1'),
+             '4': (['blkio'], '/group2'),
+             '3': (['cpu', 'cpuacct'], '/group1'),
+             '2': (['devices'], '/group1')})

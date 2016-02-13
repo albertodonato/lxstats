@@ -36,7 +36,7 @@ from .system import (
     ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime)
 from .process import (
     ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron,
-    ProcPIDSched)
+    ProcPIDSched, ProcPIDCgroup)
 
 
 class ProcDirectory(Directory):
@@ -56,6 +56,7 @@ class ProcPIDDirectory(Directory):
     '''A :file:`/proc/[pid]` directory for a process.'''
 
     files = {
+        'cgroup': ProcPIDCgroup,
         'cmdline': ProcPIDCmdline,
         'comm': ValueFile,
         'environ': ProcPIDEnviron,
