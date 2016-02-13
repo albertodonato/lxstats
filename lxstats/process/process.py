@@ -66,7 +66,7 @@ class Process:
             if not self._dir[name].readable:
                 continue
 
-            parsed_stats = self._dir[name].read()
+            parsed_stats = self._dir[name].parse()
             if isinstance(parsed_stats, dict):
                 self._stats.update(
                     ('{}.{}'.format(name, key), value)

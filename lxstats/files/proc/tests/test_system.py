@@ -31,7 +31,7 @@ class ProcStatTests(TestCase):
                 'cpu1 10.0 7.0 5.0 3.0 0.0 3.0 2.0 30.0 20.0 20.0\n'))
         stat_file = ProcStat(path)
         self.assertEqual(
-            stat_file.read(),
+            stat_file.parse(),
             {'cpu0': {
                 'user': 0.02, 'nice': 0.0, 'system': 0.03, 'idle': 0.05,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1, 'steal': 0.2,
@@ -47,7 +47,7 @@ class ProcStatTests(TestCase):
             content='cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\n')
         stat_file = ProcStat(path)
         self.assertEqual(
-            stat_file.read(),
+            stat_file.parse(),
             {'cpu0': {
                 'user': 0.2, 'nice': 0.1, 'system': 0.3, 'idle': 0.2,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1}})
@@ -59,7 +59,7 @@ class ProcStatTests(TestCase):
                 'cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\nanother row\n'))
         stat_file = ProcStat(path)
         self.assertEqual(
-            stat_file.read(),
+            stat_file.parse(),
             {'cpu0': {
                 'user': 0.2, 'nice': 0.1, 'system': 0.3, 'idle': 0.2,
                 'iowait': 0.07, 'irq': 0.03, 'softirq': 0.1}})
@@ -72,7 +72,7 @@ class ProcUptimeTests(TestCase):
         path = self.tempdir.mkfile(content='67569.47 106913.77')
         uptime_file = ProcUptime(path)
         self.assertEqual(
-            uptime_file.read(), {'uptime': 67569.47, 'idle': 106913.77})
+            uptime_file.parse(), {'uptime': 67569.47, 'idle': 106913.77})
 
 
 class ProcLoadavgTests(TestCase):
@@ -82,7 +82,7 @@ class ProcLoadavgTests(TestCase):
         path = self.tempdir.mkfile(content='0.40 0.30 0.20')
         loadavg_file = ProcLoadavg(path)
         self.assertEqual(
-            loadavg_file.read(),
+            loadavg_file.parse(),
             {'load1': 0.40, 'load5': 0.30, 'load15': 0.20})
 
 
@@ -92,7 +92,7 @@ class ProcVmstatTests(TestCase):
         '''Fields and values from the /proc/vmstat file are reported.'''
         path = self.tempdir.mkfile(content='foo 123\nbar 456')
         vmstat_file = ProcVmstat(path)
-        self.assertEqual(vmstat_file.read(), {'foo': 123, 'bar': 456})
+        self.assertEqual(vmstat_file.parse(), {'foo': 123, 'bar': 456})
 
 
 class ProcDiskstatsTests(TestCase):
@@ -107,7 +107,7 @@ class ProcDiskstatsTests(TestCase):
                 '''))
         diskstats_file = ProcDiskstats(path)
         self.assertEqual(
-            diskstats_file.read(),
+            diskstats_file.parse(),
             {'sda': {
                 'read': 10, 'read-merged': 20, 'read-sect': 30, 'read-ms': 40,
                 'write': 50, 'write-merged': 60, 'write-sect': 70,
@@ -132,7 +132,7 @@ class ProcMeminfoTests(TestCase):
                 '''))
         meminfo_file = ProcMeminfo(path)
         self.assertEqual(
-            meminfo_file.read(),
+            meminfo_file.parse(),
             {'MemTotal': 1000, 'MemFree': 200, 'HugePages_Total': 0})
 
 
@@ -150,7 +150,7 @@ class ProcCgroupsTests(TestCase):
                 '''))
         cgroups_file = ProcCgroups(path)
         self.assertEqual(
-            cgroups_file.read(),
+            cgroups_file.parse(),
             {'cpuset': {
                 'hierarchy-id': 10, 'num-cgroups': 200, 'enabled': True},
              'cpu': {

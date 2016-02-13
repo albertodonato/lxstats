@@ -27,13 +27,13 @@ class ProcPIDCmdlineTests(TestCase):
         '''Command line tokens are parsed and split into a list.'''
         path = self.tempdir.mkfile(content='/bin/foo\x00bar\x00baz\x00')
         cmdline_file = ProcPIDCmdline(path)
-        self.assertEqual(cmdline_file.read(), ['/bin/foo', 'bar', 'baz'])
+        self.assertEqual(cmdline_file.parse(), ['/bin/foo', 'bar', 'baz'])
 
     def test_parse_with_spaces(self):
         '''Command or arguments can contain spaces.'''
         path = self.tempdir.mkfile(content='/bin/foo bar\x00baz bza\x00')
         cmdline_file = ProcPIDCmdline(path)
-        self.assertEqual(cmdline_file.read(), ['/bin/foo bar', 'baz bza'])
+        self.assertEqual(cmdline_file.parse(), ['/bin/foo bar', 'baz bza'])
 
 
 class ProcPIDStatTests(TestCase):
@@ -44,7 +44,7 @@ class ProcPIDStatTests(TestCase):
         path = self.tempdir.mkfile(content=content)
         stat_file = ProcPIDStat(path)
         self.assertEqual(
-            stat_file.read(),
+            stat_file.parse(),
             {'pid': 0,
              'comm': '1',
              'state': '2',
@@ -91,7 +91,7 @@ class ProcPIDStatTests(TestCase):
         content = ' '.join(fields)
         path = self.tempdir.mkfile(content=content)
         stat_file = ProcPIDStat(path)
-        stats = stat_file.read()
+        stats = stat_file.parse()
         self.assertEqual(stats['comm'], 'cmd with spaces')
 
 
@@ -102,7 +102,7 @@ class ProcPIDStatmTests(TestCase):
         path = self.tempdir.mkfile(content='1 2 3 4 5 6 7')
         statm_file = ProcPIDStatm(path)
         self.assertEqual(
-            statm_file.read(),
+            statm_file.parse(),
             {'size': 1, 'resident': 2, 'share': 3, 'text': 4, 'lib': 5,
              'data': 6, 'dt': 7})
 
@@ -124,7 +124,7 @@ class ProcPIDIOTests(TestCase):
         path = self.tempdir.mkfile(content=content)
         io_file = ProcPIDIo(path)
         self.assertEqual(
-            io_file.read(),
+            io_file.parse(),
             {'rchar': 100,
              'wchar': 200,
              'syscr': 300,
@@ -153,7 +153,7 @@ class ProcPIDSchedTests(TestCase):
         path = self.tempdir.mkfile(content=content)
         io_file = ProcPIDSched(path)
         self.assertEqual(
-            io_file.read(),
+            io_file.parse(),
             {'se.exec_start': 123456789.123456,
              'se.exec_start': 987654321.654321,
              'se.vruntime': 1234567.123456,
@@ -167,7 +167,7 @@ class ProcPIDEnvironTests(TestCase):
         '''Environment variables are returned as a dict.'''
         path = self.tempdir.mkfile(content='FOO=foo\x00BAR=bar\x00')
         environ_file = ProcPIDEnviron(path)
-        self.assertEqual(environ_file.read(), {'FOO': 'foo', 'BAR': 'bar'})
+        self.assertEqual(environ_file.parse(), {'FOO': 'foo', 'BAR': 'bar'})
 
 
 class ProcPIDCgroupTests(TestCase):
@@ -185,7 +185,7 @@ class ProcPIDCgroupTests(TestCase):
         path = self.tempdir.mkfile(content=content)
         cgroup_file = ProcPIDCgroup(path)
         self.assertEqual(
-            cgroup_file.read(),
+            cgroup_file.parse(),
             {6: (['hugetlb'], '/group2'),
              5: (['net_cls', 'net_prio'], '/group1'),
              4: (['blkio'], '/group2'),

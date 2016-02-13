@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Base classes for reading and writing text files.'''
+'''Base classes for reading and parsing text files.'''
 
 from collections import Callable
 
@@ -21,22 +21,22 @@ from ..fs import File
 
 
 class ParsedFile(File):
-    '''A file whose content is parsed when read.
+    '''A file whose content is parsed.
 
-    This class is intended to be subclassed to provide parsers for specific
-    types of files.
+    It's intended to be subclassed to provide parsers for specific types of
+    files.
 
     Subclasses must implement the :func:`_parse` method which is called with
     the content of the file and returns the parsed information.
 
     '''
 
-    def read(self):
+    def parse(self):
         '''Read the file and preturn the parsed content.'''
         if not self.exists:
             return
 
-        return self._parse(super().read())
+        return self._parse(self.read())
 
     def _parse(self, content):
         '''Parse the content of the file.

@@ -18,13 +18,13 @@
 System statistics, such as load, uptime, memory and disk information can be
 read through the :class:`ProcDirectory`. For example::
 
-  >>> ProcDirectory('/proc')['uptime'].read()
+  >>> ProcDirectory('/proc')['uptime'].parse()
   {'uptime': 695283.06, 'idle': 1376159.44}
 
 Process-specific stats, like used memory, IO, etc. can be accessed through
 :class:`ProcPIDDirectory`, such as::
 
-  >>> ProcPIDDirectory('/proc/self')['io'].read()
+  >>> ProcPIDDirectory('/proc/self')['io'].parse()
   {'rchar': 405786, 'syscr': 415, 'cancelled_write_bytes': 0, 'syscw': 256,
    'write_bytes': 20480, 'read_bytes': 32768, 'wchar': 14790}
 

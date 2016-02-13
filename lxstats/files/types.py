@@ -40,7 +40,7 @@ class OptionsFile(SplittedFile):
     @property
     def options(self):
         '''Return a list with avalilable options.'''
-        return [self._strip_selected(value) for value in self.read()]
+        return [self._strip_selected(value) for value in self.parse()]
 
     def _strip_selected(self, value):
         return value[1:-1] if value.startswith('[') else value
@@ -58,7 +58,7 @@ class SelectableOptionsFile(OptionsFile):
     @property
     def selected(self):
         '''Return the selected option.'''
-        for value in self.read():
+        for value in self.parse():
             if value.startswith('['):
                 return self._strip_selected(value)
 
@@ -120,7 +120,7 @@ class ValueFile(SingleLineFile):
     @property
     def value(self):
         '''Return the current value in the file.'''
-        return self.read()
+        return self.parse()
 
     def set(self, value):
         self.write(value)
@@ -138,7 +138,7 @@ class ToggleFile(SingleLineFile):
     @property
     def enabled(self):
         '''Return whether the toggle value is enabled.'''
-        return self.read() == '1'
+        return self.parse() == '1'
 
     def toggle(self, value):
         '''Enable or disable the value based on the passed :class:`bool`.'''
