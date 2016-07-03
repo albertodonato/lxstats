@@ -102,7 +102,7 @@ class DirectoryTests(TestCase):
         '''All names in the directory are returned.'''
         self.tempdir.mkfile(path='foo')
         self.tempdir.mkfile(path='bar')
-        self.assertEqual(self.dir.listdir(), ['bar', 'foo'])
+        self.assertCountEqual(self.dir.listdir(), ['bar', 'foo'])
 
     def test_iterable(self):
         '''The Directory is iterable and returns Files in the directory.'''
