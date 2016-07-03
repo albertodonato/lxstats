@@ -89,6 +89,15 @@ class Tracer:
             raise UnsupportedTracer(tracer_type)
         self._dir['current_tracer'].set(tracer_type)
 
+    def trace(self):
+        '''Return content from tracer.'''
+        with open(os.path.join(self.path, 'trace')) as fd:
+            return fd.read()
+
+    def trace_pipe(self):
+        '''Return an open file descript for the tracing output pipe.'''
+        return open(os.path.join(self.path, 'trace_pipe'))
+
     @property
     def enabled(self):
         '''Whether the tracer is enabled.'''

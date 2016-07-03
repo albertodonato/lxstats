@@ -117,3 +117,14 @@ class TracerTests(TestCase):
         self.assertEqual({'hex': True}, self.tracer.options)
         self.tracer.set_option('hex', False)
         self.assertEqual({'hex': False}, self.tracer.options)
+
+    def test_trace_content(self):
+        '''The trace file content can be returned.'''
+        self.tempdir.mkfile(path='trace', content='some trace content')
+        self.assertEqual('some trace content', self.tracer.trace())
+
+    def test_trace_pipe(self):
+        '''The trace_pipe file cam be returned and read.'''
+        self.tempdir.mkfile(path='trace_pipe', content='some trace content')
+        with self.tracer.trace_pipe() as pipe:
+            self.assertEqual('some trace content', pipe.read())
