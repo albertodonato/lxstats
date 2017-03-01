@@ -70,6 +70,7 @@ class Process:
                 parsed_stats = self._dir[name].parse()
             except IOError:
                 continue
+
             if isinstance(parsed_stats, dict):
                 self._stats.update(
                     ('{}.{}'.format(name, key), value)
