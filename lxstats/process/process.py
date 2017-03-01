@@ -66,7 +66,10 @@ class Process:
             if not self._dir[name].readable:
                 continue
 
-            parsed_stats = self._dir[name].parse()
+            try:
+                parsed_stats = self._dir[name].parse()
+            except IOError:
+                continue
             if isinstance(parsed_stats, dict):
                 self._stats.update(
                     ('{}.{}'.format(name, key), value)
