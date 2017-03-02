@@ -17,7 +17,7 @@
 
 from datetime import datetime
 
-from ..files.proc import ProcPIDDirectory
+from ..files.proc import ProcProcessDirectory
 
 
 class Process:
@@ -27,7 +27,7 @@ class Process:
 
     def __init__(self, pid, proc_dir):
         self.pid = pid
-        self._dir = ProcPIDDirectory(proc_dir)
+        self._dir = ProcProcessDirectory(proc_dir)
         self._reset()
 
     def __repr__(self):
