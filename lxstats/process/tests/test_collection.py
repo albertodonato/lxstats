@@ -75,6 +75,11 @@ class CollectionTests(TestCase):
             Process(pid, path.join(self.tempdir.path, str(pid)))
             for pid in pids]
 
+    def test_default_collector(self):
+        '''If a collector is not specified, one that looks at /proc is set.'''
+        collection = Collection()
+        self.assertEqual(collection._collector._proc, '/proc/')
+
     def test_iter(self):
         '''Collector is an iterable yielding Processes.'''
         collection = Collection(collector=self.collector)

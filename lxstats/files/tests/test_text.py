@@ -19,6 +19,12 @@ from ..text import ParsedFile, SingleLineFile, SplittedFile
 
 class ParsedFileTests(TestCase):
 
+    def test_parse_not_implemented(self):
+        '''Parsedfile._parse must be implemented by subclasses.'''
+        path = self.tempdir.mkfile()
+        parsed_file = ParsedFile(path)
+        self.assertRaises(NotImplementedError, parsed_file.parse)
+
     def test_parse(self):
         '''ParsedFile.parse calls the parser with the file content.'''
         content = 'line 1\nline 2'

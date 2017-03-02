@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # LxStats.  If not, see <http://www.gnu.org/licenses/>.
 
+from unittest import mock
 from datetime import datetime
 
 from ...testing import TestCase
@@ -26,6 +27,10 @@ class ProcessTests(TestCase):
         self.pid = 10
         self.process = Process(
             self.pid, '{}/{}'.format(self.tempdir.path, self.pid))
+
+    def test_repr(self):
+        '''__repr__ includes the process PID.'''
+        self.assertEqual(repr(self.process), 'Process(10)')
 
     def test_exists(self):
         '''It's possible to check whether a process exists.'''
@@ -58,6 +63,15 @@ class ProcessTests(TestCase):
     def test_collect_stats_unreadable_file(self):
         '''Unreadable files are skipped when reading stats.'''
         self.make_process_file(self.pid, 'cmdline', content='cmd', mode=0o200)
+        self.process.collect_stats()
+        self.assertEqual(self.process.available_stats(), [])
+
+    @mock.patch('lxstats.files.text.ParsedFile.parse')
+    def test_collect_stats_ioerror(self, mock_file):
+        '''If reading a file raises an IOError, the stat is skipped.'''
+        self.make_process_file(self.pid, 'cmdline', content='cmd')
+        mock_file.side_effect = IOError()
+
         self.process.collect_stats()
         self.assertEqual(self.process.available_stats(), [])
 
