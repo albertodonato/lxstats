@@ -15,10 +15,7 @@
 
 PYTHON = python3
 SETUP = $(PYTHON) setup.py
-LINT = flake8
 
-
-all: build
 
 build:
 	$(SETUP) build
@@ -27,16 +24,21 @@ devel:
 	$(SETUP) develop
 
 clean:
-	rm -rf build html *.egg-info _trial_temp
+	rm -rf build html *.egg-info
 	find . -type d -name __pycache__ | xargs rm -rf
 
 test:
-	@$(SETUP) test
+	@$(PYTHON) -m unittest
+
+coverage:
+	@coverage run -m unittest
+	@coverage report --show-missing --skip-covered --fail-under=100 \
+		--include=lxstats/\* --omit=\*\*/tests/\*
 
 lint:
-	@$(LINT) setup.py lxstats
+	@$(PYTHON) -m flake8 setup.py lxstats
 
 html:
 	sphinx-build -b html docs html
 
-.PHONY: build html
+.PHONY: build devel clean test coverage lint html
