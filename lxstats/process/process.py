@@ -38,6 +38,10 @@ class Process:
         '''Whether the process exists.'''
         return self._dir.exists
 
+    def tasks(self):
+        '''Return TIDs for process tasks.'''
+        return [int(tid) for tid in self._dir['task'].listdir()]
+
     def collect_stats(self):
         '''Collect stats about the process from /proc files.'''
         self._reset()

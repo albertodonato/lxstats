@@ -55,4 +55,5 @@ class ProcProcessDirectory(Directory):
         'sched': ProcPIDSched,
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,
+        'task': Directory,
         'wchan': ValueFile}

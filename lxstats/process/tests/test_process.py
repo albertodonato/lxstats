@@ -23,6 +23,12 @@ class ProcessTests(TestCase):
         self.make_process_file(self.pid, 'cmdline', content='cmd')
         self.assertTrue(self.process.exists)
 
+    def test_tasks(self):
+        '''The list of TIDs for process tasks can be returned.'''
+        self.make_process_dir(self.pid, 'task/123')
+        self.make_process_dir(self.pid, 'task/456')
+        self.assertCountEqual(self.process.tasks(), [123, 456])
+
     def test_collect_stats(self):
         '''Stats are collected from proc when collect_stats is called.'''
         self.assertEqual([], self.process.available_stats())
