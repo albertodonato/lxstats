@@ -65,6 +65,10 @@ class Directory(Entity):
         '''Return all existing names in a directory.'''
         return os.listdir(self.path)
 
+    def join(self, *paths):
+        '''Append the given path to the directory one.'''
+        return os.path.join(self.path, *paths)
+
     def __getitem__(self, name):
         '''Return the :class:`File` instance for a name.'''
         path = self._path(name)

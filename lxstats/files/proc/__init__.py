@@ -18,11 +18,21 @@ Process-specific stats, like used memory, IO, etc. can be accessed through
 from ...fs import Directory
 from ..types import ValueFile
 from .system import (
-    ProcDiskstats, ProcLoadavg, ProcMeminfo, ProcStat, ProcVmstat, ProcUptime,
+    ProcDiskstats,
+    ProcLoadavg,
+    ProcMeminfo,
+    ProcStat,
+    ProcVmstat,
+    ProcUptime,
     ProcCgroups)
 from .process import (
-    ProcPIDCmdline, ProcPIDIo, ProcPIDStat, ProcPIDStatm, ProcPIDEnviron,
-    ProcPIDSched, ProcPIDCgroup)
+    ProcPIDCmdline,
+    ProcPIDIo,
+    ProcPIDStat,
+    ProcPIDStatm,
+    ProcPIDEnviron,
+    ProcPIDSched,
+    ProcPIDCgroup)
 
 
 class ProcDirectory(Directory):
@@ -40,11 +50,7 @@ class ProcDirectory(Directory):
 
 
 class ProcProcessDirectory(Directory):
-    '''A directory for a process or task.
-
-    This can be :file:`/proc/[pid]` or :file:`/proc/[pid]/task/[tid]`.
-
-    '''
+    '''A directory for a process under :file:`/proc/[pid]`.'''
 
     files = {
         'cgroup': ProcPIDCgroup,
@@ -56,4 +62,19 @@ class ProcProcessDirectory(Directory):
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,
         'task': Directory,
+        'wchan': ValueFile}
+
+
+class ProcTaskDirectory(Directory):
+    '''A directory for a task under :file:`/proc/[pid]/task/[tid]`.'''
+
+    files = {
+        'cgroup': ProcPIDCgroup,
+        'cmdline': ProcPIDCmdline,
+        'comm': ValueFile,
+        'environ': ProcPIDEnviron,
+        'io': ProcPIDIo,
+        'sched': ProcPIDSched,
+        'stat': ProcPIDStat,
+        'statm': ProcPIDStatm,
         'wchan': ValueFile}

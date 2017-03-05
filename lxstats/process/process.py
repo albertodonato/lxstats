@@ -5,28 +5,30 @@ from datetime import datetime
 from ..files.proc import ProcProcessDirectory
 
 
-class Process:
-    '''Retrieve and hold information about a given process.'''
+class TaskBase:
+    '''Base class for tasks and processes.'''
 
     _utcnow = datetime.utcnow  # For testing
 
-    def __init__(self, pid, proc_dir):
-        self.pid = pid
+    _id_attr = '_id'
+
+    def __init__(self, id, proc_dir):
+        self._id = id
         self._dir = ProcProcessDirectory(proc_dir)
         self._reset()
 
     def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, self.pid)
+        return '{}({})'.format(self.__class__.__name__, self._id)
 
     def __eq__(self, other):
-        return self.pid == other.pid
+        return self._id == other._id
 
     def __hash__(self):
-        return hash((self.__class__, self.pid))
+        return hash((self.__class__, self._id))
 
     @property
     def cmd(self):
-        '''The process command line, with brackets for kernel processes.'''
+        '''The task command line, with brackets for kernel tasks.'''
         cmdline = self._stats.get('cmdline')
         if cmdline:
             return ' '.join(cmdline)
@@ -35,12 +37,8 @@ class Process:
 
     @property
     def exists(self):
-        '''Whether the process exists.'''
+        '''Whether the task exists.'''
         return self._dir.exists
-
-    def tasks(self):
-        '''Return TIDs for process tasks.'''
-        return [int(tid) for tid in self._dir['task'].listdir()]
 
     def collect_stats(self):
         '''Collect stats about the process from /proc files.'''
@@ -52,11 +50,12 @@ class Process:
         self._timestamp = self._utcnow()
 
         for name in self._dir.list():
-            if not self._dir[name].readable:
+            entry = self._dir[name]
+            if not entry.readable or not hasattr(entry, 'parse'):
                 continue
 
             try:
-                parsed_stats = self._dir[name].parse()
+                parsed_stats = entry.parse()
             except IOError:
                 continue
 
@@ -81,8 +80,8 @@ class Process:
         return self._timestamp
 
     def get(self, stat):
-        '''Return the stat with the name name, or None if not available.'''
-        if stat in ('pid', 'cmd', 'timestamp'):
+        '''Return the stat with the name, or None if not available.'''
+        if stat in (self._id_attr, 'cmd', 'timestamp'):
             return getattr(self, stat)
 
         return self._stats.get(stat)
@@ -91,3 +90,35 @@ class Process:
         '''Reset stats.'''
         self._stats = {}
         self._timestamp = None
+
+
+class Process(TaskBase):
+    '''Retrieve and hold information about a given process.'''
+
+    _utcnow = datetime.utcnow  # For testing
+
+    _id_attr = 'pid'
+
+    @property
+    def pid(self):
+        '''The process PID.'''
+        return self._id
+
+    def tasks(self):
+        '''Return a list of Tasks for the Process.'''
+        tasks = []
+        tasks_dir = self._dir['task']
+        for tid in tasks_dir.listdir():
+            tasks.append(Task(int(tid), tasks_dir.join(tid)))
+        return tasks
+
+
+class Task(TaskBase):
+    '''Retrieve and hold information about a given task.'''
+
+    _id_attr = 'tid'
+
+    @property
+    def tid(self):
+        '''The task TID.'''
+        return self._id

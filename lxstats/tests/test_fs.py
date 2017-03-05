@@ -126,3 +126,9 @@ class DirectoryTests(TestCase):
         self.assertEqual(self.dir.list(), ['subdir'])
         # The file is accessible through the tree
         self.assertEqual(self.dir['subdir']['foo'].read(), 'foo text')
+
+    def test_join(self):
+        '''It's possible to join a path with the Directory one.'''
+        self.assertEqual(
+            self.dir.join('append', 'path'),
+            os.path.join(self.tempdir.path, 'append', 'path'))
