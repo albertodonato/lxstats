@@ -1,7 +1,10 @@
 from os import path
 
+from toolrack.collect import Collection
+
 from ...testing import TestCase
 from ...tracing.tracer import UnsupportedTracer, Tracing, Tracer
+from ...tracing.types import TracerType
 
 
 class TracingTests(TestCase):
@@ -113,3 +116,19 @@ class TracerTests(TestCase):
         self.tempdir.mkfile(path='trace_pipe', content='some trace content')
         with self.tracer.trace_pipe() as pipe:
             self.assertEqual('some trace content', pipe.read())
+
+    def test_attribute_access(self):
+        '''Attribute specific to the tracer type can be accessed.'''
+
+        class SampleTracer(TracerType):
+
+            name = 'sample'
+
+            foo = 'a sample attribute'
+
+        self.tracer._tracer_types = Collection('TracerType', 'name')
+        self.tracer._tracer_types.add(SampleTracer)
+
+        self.tempdir.mkfile(path='current_tracer')
+        self.tracer.set_type('sample')
+        self.assertEqual(self.tracer.foo, 'a sample attribute')
