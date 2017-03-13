@@ -13,7 +13,7 @@ class Collector:
     '''Process collector.
 
     An iterable with PIDs can be passed, otherwise all PIDs found scanning
-    the /proc directory are returned.
+    the ``/proc`` directory are returned.
 
     '''
     def __init__(self, proc='/proc', pids=()):
@@ -46,8 +46,8 @@ class Collection:
     Parameters:
       collector: A ProcessCollector instance. If not provided, a default one
         will be created.
-      sort_by: The field to sort processes by. It can be prefixed with '-'
-        to invert sorting.
+      sort_by: The field to sort processes by. It can be prefixed with ``-``
+        to invert sorting (e.g. ``pid`` or ``-pid``).
 
     '''
 

@@ -1,4 +1,12 @@
-'''Hold information about a running process.'''
+'''Hold information about a running process.
+
+Stats for a process can be collected and accessed::
+
+p = Process(123, '/proc/123')
+p.collect_stats()
+p.get('statm.size')
+
+'''
 
 from datetime import datetime
 
@@ -41,7 +49,7 @@ class TaskBase:
         return self._dir.exists
 
     def collect_stats(self):
-        '''Collect stats about the process from /proc files.'''
+        '''Collect stats about the process from ``/proc`` files.'''
         self._reset()
 
         if not self._dir.readable:
