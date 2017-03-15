@@ -125,9 +125,15 @@ class ProcPIDEnviron(ParsedFile):
 
     def _parse(self, content):
         # Return a dict with the environment.
-        return dict(
-            line.split('=', 1)
-            for line in content.split('\x00') if line)
+        environ = {}
+        for line in content.split('\x00'):
+            if not line:
+                continue
+
+            split = line.split('=', 1)
+            environ[split[0]] = None if len(split) == 1 else split[1]
+
+        return environ
 
 
 class ProcPIDCgroup(ParsedFile):

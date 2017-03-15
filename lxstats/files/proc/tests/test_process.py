@@ -122,13 +122,12 @@ class ProcPIDIOTests(TestCase):
 class ProcPIDSchedTests(TestCase):
 
     def test_fields(self):
-        '''Fields and values from /proc/[pid]/stat files are parsed.'''
+        '''Fields and values from /proc/[pid]/sched files are parsed.'''
         content = dedent(
             '''\
             process (1234, #threads: 1)
             -------------------------------------------------------------------
             se.exec_start                                :     123456789.123456
-            se.exec_start                                :     987654321.654321
             se.vruntime                                  :       1234567.123456
             se.sum_exec_runtime                          :             0.123456
             se.statistics.sum_sleep_runtime              :             1.234567
@@ -140,7 +139,6 @@ class ProcPIDSchedTests(TestCase):
         self.assertEqual(
             io_file.parse(),
             {'se.exec_start': 123456789.123456,
-             'se.exec_start': 987654321.654321,
              'se.vruntime': 1234567.123456,
              'se.sum_exec_runtime': 0.123456,
              'se.statistics.sum_sleep_runtime': 1.234567})
@@ -153,6 +151,13 @@ class ProcPIDEnvironTests(TestCase):
         path = self.tempdir.mkfile(content='FOO=foo\x00BAR=bar\x00')
         environ_file = ProcPIDEnviron(path)
         self.assertEqual(environ_file.parse(), {'FOO': 'foo', 'BAR': 'bar'})
+
+    def test_parse_single_value(self):
+        '''If the = sign is not present, the line is used as key.'''
+        path = self.tempdir.mkfile(content='someline\x00BAR=bar\x00')
+        environ_file = ProcPIDEnviron(path)
+        self.assertEqual(
+            environ_file.parse(), {'someline': None, 'BAR': 'bar'})
 
 
 class ProcPIDCgroupTests(TestCase):
