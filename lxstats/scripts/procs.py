@@ -1,5 +1,6 @@
 '''ps-like script to dump processes information.'''
 
+import os
 import sys
 from itertools import repeat
 from time import sleep
@@ -31,6 +32,9 @@ class ProcsScript(Script):
                 raise ArgumentTypeError('Must specify a list of PIDs')
 
         parser.add_argument(
+            '--available-stats', help='Print a list of available stats.',
+            action='store_true')
+        parser.add_argument(
             '--fields', '-f',
             help='comma-separated list of fields to display',
             default='pid,stat.state,comm')
@@ -55,6 +59,10 @@ class ProcsScript(Script):
         return parser
 
     def main(self, args):
+        if args.available_stats:
+            self._print_available_stats()
+            self.exit()
+
         fields = [field.strip() for field in args.fields.split(',')]
 
         collector = Collector(pids=args.pids)
@@ -73,6 +81,13 @@ class ProcsScript(Script):
             if n != args.count - 1:
                 # don't sleep after last iteration
                 sleep(args.interval)
+
+    def _print_available_stats(self):
+        collector = Collector(pids=[os.getpid()])
+        collection = Collection(collector=collector)
+        [process] = collection
+        for stat in process.available_stats():
+            print(stat)
 
 
 script = ProcsScript()
