@@ -2,8 +2,14 @@ from textwrap import dedent
 
 from ....testing import TestCase
 from ..process import (
-    ProcPIDCmdline, ProcPIDStat, ProcPIDStatm, ProcPIDIo, ProcPIDSched,
-    ProcPIDEnviron, ProcPIDCgroup)
+    ProcPIDCmdline,
+    ProcPIDStat,
+    ProcPIDStatm,
+    ProcPIDIo,
+    ProcPIDSched,
+    ProcPIDEnviron,
+    ProcPIDCgroup,
+    ProcPIDStatus)
 
 
 class ProcPIDCmdlineTests(TestCase):
@@ -181,3 +187,66 @@ class ProcPIDCgroupTests(TestCase):
              4: (['blkio'], '/group2'),
              3: (['cpu', 'cpuacct'], '/group1'),
              2: (['devices'], '/group1')})
+
+
+class ProcPIDStatusTests(TestCase):
+
+    def test_parse(self):
+        """A dict with memory information for the file is returned."""
+        content = dedent(
+            '''\
+            VmPeak:\t 1132616 kB
+            VmSize:\t 1115196 kB
+            VmLck:\t       0 kB
+            VmPin:\t       0 kB
+            VmHWM:\t  246340 kB
+            VmRSS:\t  246340 kB
+            RssAnon:\t  210612 kB
+            RssFile:\t   35700 kB
+            RssShmem:\t      28 kB
+            VmData:\t  292668 kB
+            VmStk:\t     548 kB
+            VmExe:\t    2436 kB
+            VmLib:\t  136932 kB
+            VmPTE:\t    1272 kB
+            VmPMD:\t      16 kB
+            VmSwap:\t       0 kB
+            HugetlbPages:\t       0 kB
+            ''')
+        path = self.tempdir.mkfile(content=content)
+        status_file = ProcPIDStatus(path)
+        self.assertEqual(
+            status_file.parse(),
+            {'VmPeak': 1159798784,
+             'VmSize': 1141960704,
+             'VmLck': 0,
+             'VmPin': 0,
+             'VmHWM': 252252160,
+             'VmRSS': 252252160,
+             'RssAnon': 215666688,
+             'RssFile': 36556800,
+             'RssShmem': 28672,
+             'VmData': 299692032,
+             'VmStk': 561152,
+             'VmExe': 2494464,
+             'VmLib': 140218368,
+             'VmPTE': 1302528,
+             'VmPMD': 16384,
+             'VmSwap': 0,
+             'HugetlbPages': 0})
+
+    def test_parse_skip_extra(self):
+        """Non memory-related info is skipped."""
+        content = dedent(
+            '''\
+            Uid:\t1000	1000	1000	1000
+            Gid:\t1000	1000	1000	1000
+            VmPeak:\t 1132616 kB
+            VmSize:\t 1115196 kB
+            ''')
+        path = self.tempdir.mkfile(content=content)
+        status_file = ProcPIDStatus(path)
+        self.assertEqual(
+            status_file.parse(),
+            {'VmPeak': 1159798784,
+             'VmSize': 1141960704})

@@ -146,3 +146,15 @@ class ProcPIDCgroup(ParsedFile):
             result[int(hier_id)] = (subsys.split(','), control_group)
 
         return result
+
+
+class ProcPIDStatus(ParsedFile):
+    """Parse :file:`/proc/[pid]/status`."""
+
+    _re = re.compile(':\s+')
+
+    def _parse(self, content):
+        tokens = [self._re.split(line) for line in content.splitlines()]
+        return {
+            key: int(value[:-3]) * 1024 for key, value in tokens
+            if value.endswith(' kB')}
