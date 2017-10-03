@@ -30,6 +30,7 @@ from .process import (
     ProcPIDIo,
     ProcPIDStat,
     ProcPIDStatm,
+    ProcPIDStatus,
     ProcPIDEnviron,
     ProcPIDSched,
     ProcPIDCgroup)
@@ -61,6 +62,7 @@ class ProcProcessDirectory(Directory):
         'sched': ProcPIDSched,
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,
+        'status': ProcPIDStatus,
         'task': Directory,
         'wchan': ValueFile}
 
