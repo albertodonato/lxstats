@@ -1,4 +1,4 @@
-'''Access system and process statistics through files under :file:`/proc`.
+"""Access system and process statistics through files under :file:`/proc`.
 
 System statistics, such as load, uptime, memory and disk information can be
 read through the :class:`ProcDirectory`. For example::
@@ -13,7 +13,7 @@ Process-specific stats, like used memory, IO, etc. can be accessed through
   {'rchar': 405786, 'syscr': 415, 'cancelled_write_bytes': 0, 'syscw': 256,
    'write_bytes': 20480, 'read_bytes': 32768, 'wchar': 14790}
 
-'''
+"""
 
 from ...fs import Directory
 from ..types import ValueFile
@@ -36,7 +36,7 @@ from .process import (
 
 
 class ProcDirectory(Directory):
-    '''The :file:`/proc` directory.'''
+    """The :file:`/proc` directory."""
 
     files = {
         'cgroups': ProcCgroups,
@@ -50,7 +50,7 @@ class ProcDirectory(Directory):
 
 
 class ProcProcessDirectory(Directory):
-    '''A directory for a process under :file:`/proc/[pid]`.'''
+    """A directory for a process under :file:`/proc/[pid]`."""
 
     files = {
         'cgroup': ProcPIDCgroup,
@@ -66,7 +66,7 @@ class ProcProcessDirectory(Directory):
 
 
 class ProcTaskDirectory(Directory):
-    '''A directory for a task under :file:`/proc/[pid]/task/[tid]`.'''
+    """A directory for a task under :file:`/proc/[pid]/task/[tid]`."""
 
     files = {
         'cgroup': ProcPIDCgroup,

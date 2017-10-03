@@ -1,16 +1,16 @@
-'''Filter classes for process Collection.'''
+"""Filter classes for process Collection."""
 
 import re
 
 
 class CommandLineFilter:
-    '''Filter Processes based on the command line.
+    """Filter Processes based on the command line.
 
     Parameters:
       regexp: a regexp to match the commandline.
       include_args: whether include args in match.
 
-    '''
+    """
 
     def __init__(self, regexp, include_args=False):
         self._re = re.compile(regexp)

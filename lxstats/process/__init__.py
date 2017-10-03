@@ -1,1 +1,1 @@
-'''Access information about running processes.'''
+"""Access information about running processes."""

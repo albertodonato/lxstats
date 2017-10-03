@@ -1,1 +1,1 @@
-'''Interface to Linux kernel tracing facility.'''
+"""Interface to Linux kernel tracing facility."""

@@ -1,4 +1,4 @@
-'''Read and write files under :file:`/proc` and :file:`/sys` Linux filesystems.
+"""Read and write files under :file:`/proc` and :file:`/sys` Linux filesystems.
 
 This module and its submoduels contain specialized classes to read, parse and
 write content to different types of files under :file:`/proc` and :file:`/sys`
@@ -17,4 +17,4 @@ Submodules are structured as follows:
  - :mod:`lxstats.files.sys`: classes for accessing files under :file:`/sys`,
    such as debug tracing.
 
-'''
+"""

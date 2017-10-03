@@ -1,4 +1,4 @@
-'''Base classes for reading and parsing text files.'''
+"""Base classes for reading and parsing text files."""
 
 from collections import Callable
 
@@ -6,7 +6,7 @@ from ..fs import File
 
 
 class ParsedFile(File):
-    '''A file whose content is parsed.
+    """A file whose content is parsed.
 
     It's intended to be subclassed to provide parsers for specific types of
     files.
@@ -14,27 +14,27 @@ class ParsedFile(File):
     Subclasses must implement the :func:`_parse` method which is called with
     the content of the file and returns the parsed information.
 
-    '''
+    """
 
     def parse(self):
-        '''Read the file and preturn the parsed content.'''
+        """Read the file and preturn the parsed content."""
         if not self.exists:
             return
 
         return self._parse(self.read())
 
     def _parse(self, content):
-        '''Parse the content of the file.
+        """Parse the content of the file.
 
         .. note::
             Subclasses must implement this method.
 
-        '''
+        """
         raise NotImplementedError('The parser method must be implemented.')
 
 
 class SingleLineFile(ParsedFile):
-    '''A single-line file that can be split into fields.
+    """A single-line file that can be split into fields.
 
     The line is split into fields based on a :attr:`separator` (space by
     default).
@@ -48,7 +48,7 @@ class SingleLineFile(ParsedFile):
     Subclasses can define a list of :attr:`fields` and a different
     :attr:`separator`.
 
-    '''
+    """
 
     #: The separator to use when splitting the content. If set to :data:`None`,
     #: content is not split.  It can also be set to a `callable` that splits
@@ -104,7 +104,7 @@ class SingleLineFile(ParsedFile):
 
 
 class SplittedFile(ParsedFile):
-    '''A file that is parsed by splitting the content in words.
+    """A file that is parsed by splitting the content in words.
 
     It's meant to work with files that have one word per line or a single
     space-separated line.
@@ -121,7 +121,7 @@ class SplittedFile(ParsedFile):
 
     In both cases the result is :samp:`['foo', 'bar', 'baz']`.
 
-    '''
+    """
 
     def _parse(self, content):
         lines = content.splitlines()

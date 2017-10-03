@@ -16,7 +16,7 @@ class CSVFormatterTests(TestCase):
         self.make_process_file(20, 'cmdline', content='/bin/bar')
 
     def test_format(self):
-        '''CSVFormatter outputs CSV file with processes data.'''
+        """CSVFormatter outputs CSV file with processes data."""
         formatter = CSVFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
@@ -26,7 +26,7 @@ class CSVFormatterTests(TestCase):
             '20,/bin/bar\r\n')
 
     def test_format_tabs(self):
-        '''CSVFormatter can use tabs as field separators.'''
+        """CSVFormatter can use tabs as field separators."""
         formatter = CSVFormatter(self.stream, ['pid', 'cmd'], tabs=True)
         formatter.format(self.collection)
         self.assertEqual(

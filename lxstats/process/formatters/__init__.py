@@ -1,4 +1,4 @@
-'''Formatter subclasses for different formats.'''
+"""Formatter subclasses for different formats."""
 
 from .fmt_csv import CSVFormatter
 from .fmt_json import JSONFormatter
@@ -11,10 +11,10 @@ _FORMATTERS = {
 
 
 def get_formats():
-    '''Return a sorted list of available formatters names.'''
+    """Return a sorted list of available formatters names."""
     return sorted(_FORMATTERS)
 
 
 def get_formatter(name):
-    '''Return the formatter class for the specified format.'''
+    """Return the formatter class for the specified format."""
     return _FORMATTERS[name]

@@ -1,4 +1,4 @@
-'''Perse types of files used in /proc and /sys filesytems.'''
+"""Parse types of files used in /proc and /sys filesytems."""
 
 
 from collections import OrderedDict
@@ -7,7 +7,7 @@ from .text import SplittedFile, SingleLineFile
 
 
 class OptionsFile(SplittedFile):
-    '''File listing a set of options.
+    """File listing a set of options.
 
     It returns available options for a file, including the selected one, if
     present.
@@ -20,11 +20,11 @@ class OptionsFile(SplittedFile):
 
       ['foo', 'bar', 'baz']
 
-    '''
+    """
 
     @property
     def options(self):
-        '''Return a list with avalilable options.'''
+        """Return a list with avalilable options."""
         return [self._strip_selected(value) for value in self.parse()]
 
     def _strip_selected(self, value):
@@ -32,25 +32,25 @@ class OptionsFile(SplittedFile):
 
 
 class SelectableOptionsFile(OptionsFile):
-    '''File listing a set of options with a single selected one.
+    """File listing a set of options with a single selected one.
 
 
     It works like :class:`OptionsFile`, but also allow getting and setting the
     selected option.
 
-    '''
+    """
 
     @property
     def selected(self):
-        '''Return the selected option.'''
+        """Return the selected option."""
         for value in self.parse():
             if value.startswith('['):
                 return self._strip_selected(value)
 
     def select(self, value):
-        '''Set the specified option value.
+        """Set the specified option value.
 
-        :class:`ValueError` is raised if the value is not valid.'''
+        :class:`ValueError` is raised if the value is not valid."""
 
         if value not in self.options:
             raise ValueError(value)
@@ -58,7 +58,7 @@ class SelectableOptionsFile(OptionsFile):
 
 
 class TogglableOptionsFile(OptionsFile):
-    '''A file with a list of options that can be individually enabled.
+    """A file with a list of options that can be individually enabled.
 
     Disabled options have names prefixed by :data:`no`.
 
@@ -74,11 +74,11 @@ class TogglableOptionsFile(OptionsFile):
        'bar': False,
        'baz': True}
 
-    '''
+    """
 
     @property
     def options(self):
-        '''Return a dict with options and their current values.'''
+        """Return a dict with options and their current values."""
         options = OrderedDict()
         for option in super().options:
             value = not option.startswith('no')
@@ -89,7 +89,7 @@ class TogglableOptionsFile(OptionsFile):
         return options
 
     def toggle(self, option, value):
-        '''Change the value of the specified option.'''
+        """Change the value of the specified option."""
         if option not in self.options:
             raise ValueError(option)
 
@@ -98,13 +98,13 @@ class TogglableOptionsFile(OptionsFile):
 
 
 class ValueFile(SingleLineFile):
-    '''File containing a single value that can be read or set.'''
+    """File containing a single value that can be read or set."""
 
     separator = None
 
     @property
     def value(self):
-        '''Return the current value in the file.'''
+        """Return the current value in the file."""
         return self.parse()
 
     def set(self, value):
@@ -112,20 +112,20 @@ class ValueFile(SingleLineFile):
 
 
 class ToggleFile(SingleLineFile):
-    '''File to enable or disable an option.
+    """File to enable or disable an option.
 
     The file contains a boolean value expressed as :data:`0` or :data:`1`.
 
-    '''
+    """
 
     separator = None
 
     @property
     def enabled(self):
-        '''Return whether the toggle value is enabled.'''
+        """Return whether the toggle value is enabled."""
         return self.parse() == '1'
 
     def toggle(self, value):
-        '''Enable or disable the value based on the passed :class:`bool`.'''
+        """Enable or disable the value based on the passed :class:`bool`."""
         content = '1' if value else '0'
         self.write(content)

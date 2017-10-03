@@ -17,7 +17,7 @@ class JSONFormatterTests(TestCase):
         self.make_process_file(20, 'cmdline', content='/bin/bar')
 
     def test_format(self):
-        '''JSONFormatter formats process info in JSON format.'''
+        """JSONFormatter formats process info in JSON format."""
         formatter = JSONFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
@@ -29,7 +29,7 @@ class JSONFormatterTests(TestCase):
                      {'pid': 20, 'cmd': '/bin/bar'}]}))
 
     def test_format_indent(self):
-        '''The indent parameter is passed to the JSON encoder.'''
+        """The indent parameter is passed to the JSON encoder."""
         formatter = JSONFormatter(self.stream, ['pid', 'cmd'], indent=3)
         formatter.format(self.collection)
         self.assertEqual(

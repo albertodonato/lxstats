@@ -1,4 +1,4 @@
-'''Table formatter.'''
+"""Table formatter."""
 
 from prettytable import PrettyTable
 
@@ -6,12 +6,12 @@ from ..formatter import Formatter
 
 
 class TableFormatter(Formatter):
-    '''Format fields as a table.
+    """Format fields as a table.
 
     Config parameters:
 
     - borders: whether to print table borders
-    '''
+    """
 
     fmt = 'table'
 

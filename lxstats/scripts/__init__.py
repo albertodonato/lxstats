@@ -1,1 +1,1 @@
-'''CLI scripts.'''
+"""CLI scripts."""

@@ -1,4 +1,4 @@
-'''CSV formatter.'''
+"""CSV formatter."""
 
 from csv import writer
 
@@ -6,12 +6,12 @@ from ..formatter import Formatter
 
 
 class CSVFormatter(Formatter):
-    '''Format fields in CSV.
+    """Format fields in CSV.
 
     Config parameters:
 
     - tabs: use tabs as separators
-    '''
+    """
 
     fmt = 'csv'
 

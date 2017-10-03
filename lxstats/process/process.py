@@ -1,4 +1,4 @@
-'''Hold information about a running process.
+"""Hold information about a running process.
 
 Stats for a process can be collected and accessed::
 
@@ -6,7 +6,7 @@ p = Process(123, '/proc/123')
 p.collect_stats()
 p.get('statm.size')
 
-'''
+"""
 
 from datetime import datetime
 
@@ -14,7 +14,7 @@ from ..files.proc import ProcProcessDirectory
 
 
 class TaskBase:
-    '''Base class for tasks and processes.'''
+    """Base class for tasks and processes."""
 
     _utcnow = datetime.utcnow  # For testing
 
@@ -36,7 +36,7 @@ class TaskBase:
 
     @property
     def cmd(self):
-        '''The task command line, with brackets for kernel tasks.'''
+        """The task command line, with brackets for kernel tasks."""
         cmdline = self._stats.get('cmdline')
         if cmdline:
             return ' '.join(cmdline)
@@ -45,11 +45,11 @@ class TaskBase:
 
     @property
     def exists(self):
-        '''Whether the task exists.'''
+        """Whether the task exists."""
         return self._dir.exists
 
     def collect_stats(self):
-        '''Collect stats about the process from ``/proc`` files.'''
+        """Collect stats about the process from ``/proc`` files."""
         self._reset()
 
         if not self._dir.readable:
@@ -75,33 +75,33 @@ class TaskBase:
                 self._stats[name] = parsed_stats
 
     def available_stats(self):
-        '''Return a sorted list of available stats for the process.'''
+        """Return a sorted list of available stats for the process."""
         return sorted(self._stats)
 
     def stats(self):
-        '''Return a dict with process stats.'''
+        """Return a dict with process stats."""
         return self._stats.copy()
 
     @property
     def timestamp(self):
-        '''Return the timestamp for stat collection.'''
+        """Return the timestamp for stat collection."""
         return self._timestamp
 
     def get(self, stat):
-        '''Return the stat with the name, or None if not available.'''
+        """Return the stat with the name, or None if not available."""
         if stat in (self._id_attr, 'cmd', 'timestamp'):
             return getattr(self, stat)
 
         return self._stats.get(stat)
 
     def _reset(self):
-        '''Reset stats.'''
+        """Reset stats."""
         self._stats = {}
         self._timestamp = None
 
 
 class Process(TaskBase):
-    '''Retrieve and hold information about a given process.'''
+    """Retrieve and hold information about a given process."""
 
     _utcnow = datetime.utcnow  # For testing
 
@@ -109,11 +109,11 @@ class Process(TaskBase):
 
     @property
     def pid(self):
-        '''The process PID.'''
+        """The process PID."""
         return self._id
 
     def tasks(self):
-        '''Return a list of Tasks for the Process.'''
+        """Return a list of Tasks for the Process."""
         tasks = []
         tasks_dir = self._dir['task']
         for tid in tasks_dir.listdir():
@@ -122,11 +122,11 @@ class Process(TaskBase):
 
 
 class Task(TaskBase):
-    '''Retrieve and hold information about a given task.'''
+    """Retrieve and hold information about a given task."""
 
     _id_attr = 'tid'
 
     @property
     def tid(self):
-        '''The task TID.'''
+        """The task TID."""
         return self._id

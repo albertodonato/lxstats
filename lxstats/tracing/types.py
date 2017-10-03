@@ -1,4 +1,4 @@
-'''Linux kernel tracer types.'''
+"""Linux kernel tracer types."""
 
 from toolrack.collect import Collection
 
@@ -10,7 +10,7 @@ TRACER_TYPES = Collection('TracerType', 'name')
 
 
 class TracerType:
-    '''Base class for tracer types.'''
+    """Base class for tracer types."""
 
     name = None
 
@@ -21,6 +21,6 @@ class TracerType:
 
 @TRACER_TYPES.add
 class NopTracer(TracerType):
-    '''No-op tracer.'''
+    """No-op tracer."""
 
     name = 'nop'

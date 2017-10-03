@@ -1,4 +1,4 @@
-'''ps-like script to dump processes information.'''
+"""ps-like script to dump processes information."""
 
 import os
 import sys
@@ -14,18 +14,18 @@ from ..process.formatters import get_formats, get_formatter
 
 
 class ProcsScript(Script):
-    '''ps-like utility.
+    """ps-like utility.
 
     It supports commandline-based filtering and output in different formats.
 
-    '''
+    """
 
     def get_parser(self):
         parser = ArgumentParser(
             description='Dump info about running processes.')
 
         def pids(pid_list):
-            '''Comma-separated list of PIDs.'''
+            """Comma-separated list of PIDs."""
             try:
                 return [int(pid) for pid in pid_list.split(',')]
             except:

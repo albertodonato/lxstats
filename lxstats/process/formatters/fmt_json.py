@@ -1,4 +1,4 @@
-'''JSON formatter.'''
+"""JSON formatter."""
 
 import json
 
@@ -6,12 +6,12 @@ from ..formatter import Formatter
 
 
 class JSONFormatter(Formatter):
-    '''Format fields in JSON.
+    """Format fields in JSON.
 
     Config parameters:
 
       - indent: the amount of spaces for indentation (no indentation if None)
-    '''
+    """
 
     fmt = 'json'
 

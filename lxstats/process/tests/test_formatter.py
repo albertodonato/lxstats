@@ -32,7 +32,7 @@ class FormatterTests(TestCase):
         self.stream = StringIO()
 
     def test_format_no_op_default(self):
-        '''By default, format methods don't output anything.'''
+        """By default, format methods don't output anything."""
         self.make_process_file(10, 'cmdline', content='cmd1')
         self.make_process_file(20, 'cmdline', content='cmd2')
         collector = Collector(proc=self.tempdir.path, pids=(10, 20))
@@ -42,7 +42,7 @@ class FormatterTests(TestCase):
         self.assertEqual(self.stream.getvalue(), '')
 
     def test_format(self):
-        '''Formatter.format outputs process info with header and footer.'''
+        """Formatter.format outputs process info with header and footer."""
         self.make_process_file(10, 'cmdline', content='cmd1')
         self.make_process_file(20, 'cmdline', content='cmd2')
         collector = Collector(proc=self.tempdir.path, pids=(10, 20))
@@ -58,7 +58,7 @@ class FormatterTests(TestCase):
             'dump\n')
 
     def test_fields_values(self):
-        '''Formatter._fields_values returns a list with Process values.'''
+        """Formatter._fields_values returns a list with Process values."""
         self.make_process_file(10, 'cmdline', '/bin/foo')
         formatter = SampleFormatter(self.stream, ['pid', 'cmd'])
         process = Process(10, proc_dir='{}/10'.format(self.tempdir.path))
@@ -67,17 +67,17 @@ class FormatterTests(TestCase):
             formatter._fields_values(process), [10, '/bin/foo'])
 
     def test_config_default_value(self):
-        '''Formatter can have config options with default values.'''
+        """Formatter can have config options with default values."""
         formatter = SampleFormatter(self.stream, ['pid', 'cmdline'])
         self.assertEqual(formatter._config, {'option': 10})
 
     def test_config_set_value(self):
-        '''It's possible to specify config options to Formatter.'''
+        """It's possible to specify config options to Formatter."""
         formatter = SampleFormatter(self.stream, ['pid', 'cmdline'], option=30)
         self.assertEqual(formatter._config, {'option': 30})
 
     def test_unknown_option(self):
-        '''If an unknown option is specified, an error is raised.'''
+        """If an unknown option is specified, an error is raised."""
         self.assertRaises(
             TypeError, SampleFormatter, self.stream, ['pid', 'cmdline'],
             unknown_option=30)

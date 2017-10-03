@@ -9,13 +9,13 @@ from ..process import (
 class ProcPIDCmdlineTests(TestCase):
 
     def test_parse(self):
-        '''Command line tokens are parsed and split into a list.'''
+        """Command line tokens are parsed and split into a list."""
         path = self.tempdir.mkfile(content='/bin/foo\x00bar\x00baz\x00')
         cmdline_file = ProcPIDCmdline(path)
         self.assertEqual(cmdline_file.parse(), ['/bin/foo', 'bar', 'baz'])
 
     def test_parse_with_spaces(self):
-        '''Command or arguments can contain spaces.'''
+        """Command or arguments can contain spaces."""
         path = self.tempdir.mkfile(content='/bin/foo bar\x00baz bza\x00')
         cmdline_file = ProcPIDCmdline(path)
         self.assertEqual(cmdline_file.parse(), ['/bin/foo bar', 'baz bza'])
@@ -24,7 +24,7 @@ class ProcPIDCmdlineTests(TestCase):
 class ProcPIDStatTests(TestCase):
 
     def test_fields(self):
-        '''Fields and values from /proc/[pid]/stat files are reported.'''
+        """Fields and values from /proc/[pid]/stat files are reported."""
         content = ' '.join(str(i) for i in range(45))
         path = self.tempdir.mkfile(content=content)
         stat_file = ProcPIDStat(path)
@@ -69,7 +69,7 @@ class ProcPIDStatTests(TestCase):
              'cguest_time': 43})
 
     def test_comm_with_spaces(self):
-        '''The comm field can contain spaces..'''
+        """The comm field can contain spaces.."""
         fields = [str(i) for i in range(45)]
         # Set a comm field with spaces
         fields[1] = '(cmd with spaces)'
@@ -83,7 +83,7 @@ class ProcPIDStatTests(TestCase):
 class ProcPIDStatmTests(TestCase):
 
     def test_fields(self):
-        '''Fields and values from /proc/[pid]/statm files are reported.'''
+        """Fields and values from /proc/[pid]/statm files are reported."""
         path = self.tempdir.mkfile(content='1 2 3 4 5 6 7')
         statm_file = ProcPIDStatm(path)
         self.assertEqual(
@@ -95,7 +95,7 @@ class ProcPIDStatmTests(TestCase):
 class ProcPIDIOTests(TestCase):
 
     def test_fields(self):
-        '''Fields and values from /proc/[pid]/io files are reported.'''
+        """Fields and values from /proc/[pid]/io files are reported."""
         content = dedent(
             '''\
             rchar: 100
@@ -122,7 +122,7 @@ class ProcPIDIOTests(TestCase):
 class ProcPIDSchedTests(TestCase):
 
     def test_fields(self):
-        '''Fields and values from /proc/[pid]/sched files are parsed.'''
+        """Fields and values from /proc/[pid]/sched files are parsed."""
         content = dedent(
             '''\
             process (1234, #threads: 1)
@@ -147,13 +147,13 @@ class ProcPIDSchedTests(TestCase):
 class ProcPIDEnvironTests(TestCase):
 
     def test_parse(self):
-        '''Environment variables are returned as a dict.'''
+        """Environment variables are returned as a dict."""
         path = self.tempdir.mkfile(content='FOO=foo\x00BAR=bar\x00')
         environ_file = ProcPIDEnviron(path)
         self.assertEqual(environ_file.parse(), {'FOO': 'foo', 'BAR': 'bar'})
 
     def test_parse_single_value(self):
-        '''If the = sign is not present, the line is used as key.'''
+        """If the = sign is not present, the line is used as key."""
         path = self.tempdir.mkfile(content='someline\x00BAR=bar\x00')
         environ_file = ProcPIDEnviron(path)
         self.assertEqual(
@@ -163,7 +163,7 @@ class ProcPIDEnvironTests(TestCase):
 class ProcPIDCgroupTests(TestCase):
 
     def test_parse(self):
-        '''A dict is returned with hierarchy id as key.'''
+        """A dict is returned with hierarchy id as key."""
         content = dedent(
             '''\
             6:hugetlb:/group2

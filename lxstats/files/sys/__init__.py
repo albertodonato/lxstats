@@ -1,9 +1,9 @@
-'''Access files under the :file:`/sys` filesytem.
+"""Access files under the :file:`/sys` filesytem.
 
 This module currently allows to access and configure tracing options via
 :class:`TracingDirectory`.
 
-'''
+"""
 
 from ...fs import Directory, File
 from ..types import (
@@ -12,7 +12,7 @@ from ..types import (
 
 
 class TracingDirectory(Directory):
-    '''A :file:`/sys/kernel/debug/tracing/instance/[tracer]` directory.'''
+    """A :file:`/sys/kernel/debug/tracing/instance/[tracer]` directory."""
 
     files = {
         'available_tracers': OptionsFile,

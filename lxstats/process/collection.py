@@ -1,7 +1,7 @@
-'''
+"""
 Handle collection of processes, allowing filtering and sorting by attribute
 values.
-'''
+"""
 
 from os import path
 from glob import iglob
@@ -10,18 +10,18 @@ from .process import Process
 
 
 class Collector:
-    '''Process collector.
+    """Process collector.
 
     An iterable with PIDs can be passed, otherwise all PIDs found scanning
     the ``/proc`` directory are returned.
 
-    '''
+    """
     def __init__(self, proc='/proc', pids=()):
         self._proc = '{}/'.format(path.normpath(proc))
         self._pids = pids
 
     def collect(self):
-        '''Return an iterator yielding Process objects.'''
+        """Return an iterator yielding Process objects."""
         if self._pids:
             proc_dirs = (
                 '{}{}'.format(self._proc, pid) for pid in sorted(self._pids))
@@ -41,7 +41,7 @@ class Collector:
 
 
 class Collection:
-    '''A Process collection.
+    """A Process collection.
 
     Parameters:
       collector: A ProcessCollector instance. If not provided, a default one
@@ -49,7 +49,7 @@ class Collection:
       sort_by: The field to sort processes by. It can be prefixed with ``-``
         to invert sorting (e.g. ``pid`` or ``-pid``).
 
-    '''
+    """
 
     def __init__(self, collector=None, sort_by=None):
         if collector is None:
@@ -60,7 +60,7 @@ class Collection:
         self._set_sort_by(sort_by)
 
     def add_filter(self, filter_function):
-        '''Add a filtering function to the collection.
+        """Add a filtering function to the collection.
 
         Processes not matching the filter are not returned.
 
@@ -68,15 +68,15 @@ class Collection:
           filter_function: A callable accepting a Process and returning a
             boolean value (whether the process should be included).
 
-        '''
+        """
         self._filters.append(filter_function)
 
     def __iter__(self):
-        '''Return an iterator yielding Process objects.
+        """Return an iterator yielding Process objects.
 
         Processes are filtered and sorted as configured.
 
-        '''
+        """
         iterator = self._collector.collect()
         if self._filters:
             iterator = filter(self._filter, iterator)
@@ -91,7 +91,7 @@ class Collection:
         return iterator
 
     def _filter(self, proc):
-        '''Apply filters to a Process.'''
+        """Apply filters to a Process."""
         return all(ffunc(proc) for ffunc in self._filters)
 
     def _set_sort_by(self, sort_by):

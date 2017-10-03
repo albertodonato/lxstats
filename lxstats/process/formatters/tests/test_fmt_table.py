@@ -16,7 +16,7 @@ class TableFormatterTests(TestCase):
         self.make_process_file(20, 'cmdline', content='/bin/bar')
 
     def test_format(self):
-        '''TableFormatter outputs a table with processes data.'''
+        """TableFormatter outputs a table with processes data."""
         formatter = TableFormatter(self.stream, ['pid', 'cmd'])
         formatter.format(self.collection)
         self.assertEqual(
@@ -26,7 +26,7 @@ class TableFormatterTests(TestCase):
             ' 20   /bin/bar \n')
 
     def test_format_border(self):
-        '''TableFormatter can add borders to the table.'''
+        """TableFormatter can add borders to the table."""
         formatter = TableFormatter(
             self.stream, ['pid', 'cmd'], borders=True)
         formatter.format(self.collection)
