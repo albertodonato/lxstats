@@ -171,23 +171,30 @@ class ProcessTests(TestCase):
         self.make_process_dir(self.pid, 'task/456')
         self.assertCountEqual(
             self.process.tasks(),
-            [Task(123, os.path.join(self.tempdir.path, 'task', '123')),
-             Task(456, os.path.join(self.tempdir.path, 'task', '456'))])
+            [Task(123, self, os.path.join(self.tempdir.path, 'task', '123')),
+             Task(456, self, os.path.join(self.tempdir.path, 'task', '456'))])
 
 
 class TaskTests(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.tid = 10
+        self.id = 10
+        self.process = Process(
+            self.id, '{}/{}'.format(self.tempdir.path, self.id))
         self.task = Task(
-            self.tid, os.path.join(self.tempdir.path, str(self.tid)))
+            self.id, self.process,
+            '{}/{}/task/{}'.format(self.tempdir.path, self.id, self.id))
 
     def test_pid(self):
         """The tid attribute returns the TID."""
-        self.assertEqual(self.task.tid, self.tid)
+        self.assertEqual(self.task.tid, self.id)
+
+    def test_process(self):
+        """The parent attribute returns the task parent process."""
+        self.assertEqual(self.task.parent, self.process)
 
     def test_get_pid(self):
         """The get() method can return the PID."""
         self.task.collect_stats()
-        self.assertEqual(self.task.get('tid'), self.tid)
+        self.assertEqual(self.task.get('tid'), self.id)

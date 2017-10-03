@@ -117,7 +117,7 @@ class Process(TaskBase):
         tasks = []
         tasks_dir = self._dir['task']
         for tid in tasks_dir.listdir():
-            tasks.append(Task(int(tid), tasks_dir.join(tid)))
+            tasks.append(Task(int(tid), self, tasks_dir.join(tid)))
         return tasks
 
 
@@ -125,6 +125,10 @@ class Task(TaskBase):
     """Retrieve and hold information about a given task."""
 
     _id_attr = 'tid'
+
+    def __init__(self, id, parent, proc_dir):
+        super().__init__(id, proc_dir)
+        self.parent = parent
 
     @property
     def tid(self):

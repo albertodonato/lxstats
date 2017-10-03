@@ -154,7 +154,8 @@ class ProcPIDStatus(ParsedFile):
     _re = re.compile(':\s+')
 
     def _parse(self, content):
-        tokens = [self._re.split(line) for line in content.splitlines()]
+        tokens = [
+            self._re.split(line, maxsplit=1) for line in content.splitlines()]
         return {
             key: int(value[:-3]) * 1024 for key, value in tokens
             if value.endswith(' kB')}

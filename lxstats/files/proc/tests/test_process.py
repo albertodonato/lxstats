@@ -250,3 +250,18 @@ class ProcPIDStatusTests(TestCase):
             status_file.parse(),
             {'VmPeak': 1159798784,
              'VmSize': 1141960704})
+
+    def test_parse_split_in_two(self):
+        """Lines containing more than one ':' are split in two."""
+        content = dedent(
+            '''\
+            VmPeak:\t 1132616 kB
+            Line: with more: semicolons
+            VmSize:\t 1115196 kB
+            ''')
+        path = self.tempdir.mkfile(content=content)
+        status_file = ProcPIDStatus(path)
+        self.assertEqual(
+            status_file.parse(),
+            {'VmPeak': 1159798784,
+             'VmSize': 1141960704})
