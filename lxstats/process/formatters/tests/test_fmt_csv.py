@@ -2,7 +2,9 @@ from io import StringIO
 
 from ....testing import TestCase
 from .. import CSVFormatter
-from ...collection import Collector, Collection
+from ...collection import (
+    Collector,
+    Collection)
 
 
 class CSVFormatterTests(TestCase):

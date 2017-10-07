@@ -3,7 +3,10 @@ from os import path
 from toolrack.collect import Collection
 
 from ...testing import TestCase
-from ...tracing.tracer import UnsupportedTracer, Tracing, Tracer
+from ...tracing.tracer import (
+    UnsupportedTracer,
+    Tracing,
+    Tracer)
 from ...tracing.types import TracerType
 
 

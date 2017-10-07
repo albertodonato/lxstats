@@ -5,9 +5,14 @@ This module currently allows to access and configure tracing options via
 
 """
 
-from ...fs import Directory, File
+from ...fs import (
+    Directory,
+    File)
 from ..types import (
-    OptionsFile, ValueFile, ToggleFile, SelectableOptionsFile,
+    OptionsFile,
+    ValueFile,
+    ToggleFile,
+    SelectableOptionsFile,
     TogglableOptionsFile)
 
 

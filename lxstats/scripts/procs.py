@@ -4,13 +4,19 @@ import os
 import sys
 from itertools import repeat
 from time import sleep
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import (
+    ArgumentParser,
+    ArgumentTypeError)
 
 from toolrack.script import Script
 
-from ..process.collection import Collection, Collector
+from ..process.collection import (
+    Collection,
+    Collector)
 from ..process.filter import CommandLineFilter
-from ..process.formatters import get_formats, get_formatter
+from ..process.formatters import (
+    get_formats,
+    get_formatter)
 
 
 class ProcsScript(Script):

@@ -3,7 +3,9 @@ from io import StringIO
 from ...testing import TestCase
 
 from ..formatter import Formatter
-from ..collection import Collection, Collector
+from ..collection import (
+    Collection,
+    Collector)
 from ..process import Process
 
 

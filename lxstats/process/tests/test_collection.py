@@ -2,7 +2,9 @@ from os import path
 
 from ...testing import TestCase
 from ..process import Process
-from ..collection import Collector, Collection
+from ..collection import (
+    Collector,
+    Collection)
 
 
 class CollectorTests(TestCase):

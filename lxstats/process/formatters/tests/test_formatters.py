@@ -1,6 +1,8 @@
 from unittest import TestCase
 
-from .. import get_formats, get_formatter
+from .. import (
+    get_formats,
+    get_formatter)
 from ..fmt_table import TableFormatter
 
 

@@ -3,7 +3,9 @@
 
 from collections import OrderedDict
 
-from .text import SplittedFile, SingleLineFile
+from .text import (
+    SplittedFile,
+    SingleLineFile)
 
 
 class OptionsFile(SplittedFile):

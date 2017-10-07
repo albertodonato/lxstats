@@ -1,7 +1,10 @@
 from unittest import TestCase
 
 from ...files.sys import TracingDirectory
-from ...tracing.types import TracerType, TRACER_TYPES, NopTracer
+from ...tracing.types import (
+    TracerType,
+    TRACER_TYPES,
+    NopTracer)
 
 
 class TracerTypeTests(TestCase):

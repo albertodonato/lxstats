@@ -2,7 +2,9 @@
 
 import re
 
-from ..text import ParsedFile, SingleLineFile
+from ..text import (
+    ParsedFile,
+    SingleLineFile)
 
 
 class ProcPIDCmdline(SingleLineFile):

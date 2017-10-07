@@ -1,6 +1,9 @@
 from ...testing import TestCase
 from ..types import (
-    OptionsFile, SelectableOptionsFile, TogglableOptionsFile, ValueFile,
+    OptionsFile,
+    SelectableOptionsFile,
+    TogglableOptionsFile,
+    ValueFile,
     ToggleFile)
 
 

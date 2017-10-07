@@ -19,7 +19,6 @@ class CommandNameFilter:
         if cmdline:
             return cmdline[0] == self._name
 
-        print(repr(process.get('comm')))
         return process.get('comm') == self._name
 
 

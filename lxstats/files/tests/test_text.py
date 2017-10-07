@@ -1,5 +1,8 @@
 from ...testing import TestCase
-from ..text import ParsedFile, SingleLineFile, SplittedFile
+from ..text import (
+    ParsedFile,
+    SingleLineFile,
+    SplittedFile)
 
 
 class ParsedFileTests(TestCase):

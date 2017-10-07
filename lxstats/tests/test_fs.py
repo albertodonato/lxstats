@@ -1,7 +1,10 @@
 import os
 
 from ..testing import TestCase
-from ..fs import Entity, File, Directory
+from ..fs import (
+    Entity,
+    File,
+    Directory)
 
 
 class EntityTests(TestCase):

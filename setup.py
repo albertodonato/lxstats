@@ -1,6 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import (
+    setup,
+    find_packages)
 
-from lxstats import __version__, __doc__ as description
+from lxstats import (
+    __version__,
+    __doc__ as description)
 
 
 config = {

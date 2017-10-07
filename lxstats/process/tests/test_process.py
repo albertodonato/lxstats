@@ -3,7 +3,10 @@ from unittest import mock
 from datetime import datetime
 
 from ...testing import TestCase
-from ..process import TaskBase, Process, Task
+from ..process import (
+    TaskBase,
+    Process,
+    Task)
 
 
 class TaskBaseTests(TestCase):

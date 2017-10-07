@@ -3,7 +3,9 @@ from io import StringIO
 
 from ....testing import TestCase
 from .. import JSONFormatter
-from ...collection import Collector, Collection
+from ...collection import (
+    Collector,
+    Collection)
 
 
 class JSONFormatterTests(TestCase):

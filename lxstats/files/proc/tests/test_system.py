@@ -2,7 +2,12 @@ from textwrap import dedent
 
 from ....testing import TestCase
 from ..system import (
-    ProcStat, ProcUptime, ProcLoadavg, ProcVmstat, ProcDiskstats, ProcMeminfo,
+    ProcStat,
+    ProcUptime,
+    ProcLoadavg,
+    ProcVmstat,
+    ProcDiskstats,
+    ProcMeminfo,
     ProcCgroups)
 
 
