@@ -27,9 +27,9 @@ config = {
         'Intended Audience :: System Administrators',
         ('License :: OSI Approved :: '
          'GNU Lesser General Public License v3 or later (LGPLv3+)'),
-        'Operating System :: POSIX :: Linux'
-        'Operating System :: Unix',
+        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: System :: Benchmark',
         'Topic :: System :: Monitoring',
         'Topic :: System :: Networking :: Monitoring',
