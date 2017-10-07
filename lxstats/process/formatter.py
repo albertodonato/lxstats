@@ -2,7 +2,7 @@
 
 
 class Formatter:
-    """Format a Process Collection.
+    """Format a :class:`Process` :class:`Collection`.
 
     Parameters:
       stream: a file-like stream to write the formatted output to.
@@ -30,11 +30,11 @@ class Formatter:
         self._config.update(kwargs)
 
     def _fields_values(self, process):
-        """Return a list of fields values for a L{Process}."""
+        """Return a list of fields values for a :class:`Process`."""
         return [process.get(field) for field in self.fields]
 
     def format(self, collection):
-        """Write the formatted output of the Collection."""
+        """Write the formatted output of the :class:`Collection`."""
         self._format_header()
         for process in collection:
             self._format_process(process)
@@ -50,7 +50,7 @@ class Formatter:
         pass
 
     def _format_process(self, process):
-        """Format data for a Process.
+        """Format data for a :class:`Process`.
 
         Subclasses can implement this.
 
