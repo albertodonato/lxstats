@@ -2,6 +2,10 @@
 LxStats
 =======
 
+.. image:: https://img.shields.io/pypi/v/lxstats.svg
+   :target: https://pypi.python.org/pypi/lxstats
+   :alt: Latest Version
+
 .. image:: https://travis-ci.org/albertodonato/lxstats.svg?branch=master
    :target: https://travis-ci.org/albertodonato/lxstats
    :alt: Build Status
