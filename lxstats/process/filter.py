@@ -3,6 +3,26 @@
 import re
 
 
+class CommandNameFilter:
+    """Filter processes based on the command name.
+
+    Parameters:
+      name: the name of the command.
+
+    """
+
+    def __init__(self, name):
+        self._name = name
+
+    def __call__(self, process):
+        cmdline = process.get('cmdline')
+        if cmdline:
+            return cmdline[0] == self._name
+
+        print(repr(process.get('comm')))
+        return process.get('comm') == self._name
+
+
 class CommandLineFilter:
     """Filter Processes based on the command line.
 
