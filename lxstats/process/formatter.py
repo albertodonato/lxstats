@@ -4,10 +4,9 @@
 class Formatter:
     """Format a :class:`Process` :class:`Collection`.
 
-    Parameters:
-      stream: a file-like stream to write the formatted output to.
-      fields: a list of Process attributes to print.
-      Kwargs: filter configuration parameters.
+    :param stream: A file-like stream to write the formatted output to.
+    :param list fields: Process attributes to print.
+    :param dict kwargs: Filter configuration parameters.
 
     """
 

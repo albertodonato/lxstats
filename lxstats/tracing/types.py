@@ -1,5 +1,7 @@
 """Linux kernel tracer types."""
 
+from pathlib import Path
+
 from toolrack.collect import Collection
 
 from ..files.sys import TracingDirectory
@@ -15,7 +17,7 @@ class TracerType:
     name = None
 
     def __init__(self, path):
-        self.path = path
+        self.path = Path(path)
         self._dir = TracingDirectory(path)
 
 

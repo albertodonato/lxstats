@@ -1,12 +1,11 @@
-from os import path
-
 from toolrack.collect import Collection
 
 from ...testing import TestCase
 from ...tracing.tracer import (
-    UnsupportedTracer,
+    Tracer,
     Tracing,
-    Tracer)
+    UnsupportedTracer,
+)
 from ...tracing.types import TracerType
 
 
@@ -40,15 +39,13 @@ class TracingTests(TestCase):
     def test_get_tracer_create(self):
         """If the requested tracing instance doesn't exist, it's created."""
         self.tracing.get_tracer('tracer')
-        instance_path = path.join(self.tempdir.path, 'instances/tracer')
-        self.assertTrue(path.exists(instance_path))
+        self.assertTrue((self.tempdir.path / 'instances/tracer').exists())
 
     def test_remove_tracer(self):
         """A Tracer can be removed."""
         self.tempdir.mkdir(path='instances/tracer')
-        instance_path = path.join(self.tempdir.path, 'instances/tracer')
         self.tracing.remove_tracer('tracer')
-        self.assertFalse(path.exists(instance_path))
+        self.assertFalse((self.tempdir.path / 'instances/tracer').exists())
 
 
 class TracerTests(TestCase):
@@ -59,8 +56,7 @@ class TracerTests(TestCase):
 
     def test_name(self):
         """The Tracer name is the name of the tracer directory."""
-        name = path.basename(self.tempdir.path)
-        self.assertEqual(self.tracer.name, name)
+        self.assertEqual(self.tracer.name, self.tempdir.path.name)
 
     def test_type(self):
         """The Tracer type can be returned."""

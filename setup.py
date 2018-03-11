@@ -23,7 +23,7 @@ config = {
     "entry_points": {
         "console_scripts": ["procs = lxstats.scripts.procs:script"]},
     'test_suite': 'lxstats',
-    'install_requires': ['prettytable', 'toolrack'],
+    'install_requires': ['prettytable', 'toolrack >= 2.0.1'],
     'keywords': 'linux proc sys performance monitoring system admin',
     'classifiers': [
         'Development Status :: 4 - Beta',
@@ -32,8 +32,7 @@ config = {
         ('License :: OSI Approved :: '
          'GNU Lesser General Public License v3 or later (LGPLv3+)'),
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3 :: Only',
         'Topic :: System :: Benchmark',
         'Topic :: System :: Monitoring',
         'Topic :: System :: Networking :: Monitoring',

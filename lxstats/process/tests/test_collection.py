@@ -1,10 +1,10 @@
-from os import path
+from pathlib import Path
 
-from ...testing import TestCase
 from ..process import Process
 from ..collection import (
     Collector,
     Collection)
+from ...testing import TestCase
 
 
 class CollectorTests(TestCase):
@@ -59,13 +59,13 @@ class CollectionTests(TestCase):
     def process_list(self, pids):
         """Return a list of processes with specified pids."""
         return [
-            Process(pid, path.join(self.tempdir.path, str(pid)))
+            Process(pid, self.tempdir.path / str(pid))
             for pid in pids]
 
     def test_default_collector(self):
         """If a collector is not specified, one that looks at /proc is set."""
         collection = Collection()
-        self.assertEqual(collection._collector._proc, '/proc/')
+        self.assertEqual(collection._collector._proc, Path('/proc'))
 
     def test_iter(self):
         """Collector is an iterable yielding Processes."""

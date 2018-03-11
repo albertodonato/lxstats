@@ -6,8 +6,7 @@ import re
 class CommandNameFilter:
     """Filter processes based on the command name.
 
-    Parameters:
-      name: the name of the command.
+    :param str name: The name of the command.
 
     """
 
@@ -25,9 +24,8 @@ class CommandNameFilter:
 class CommandLineFilter:
     """Filter Processes based on the command line.
 
-    Parameters:
-      regexp: a regexp to match the commandline.
-      include_args: whether include args in match.
+    :param str regexp: A regexp to match the commandline.
+    :param bool include_args: Whether include args in match.
 
     """
 

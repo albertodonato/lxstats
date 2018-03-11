@@ -1,6 +1,6 @@
 """Interface to kernel tracing."""
 
-import os
+from pathlib import Path
 
 from ..files.sys import TracingDirectory
 from .types import TRACER_TYPES
@@ -17,13 +17,13 @@ class UnsupportedTracer(Exception):
 class Tracing:
     """Interface to kernel tracing."""
 
-    def __init__(self, path='/sys/kernel/debug/tracing'):
-        self.path = path
+    def __init__(self, path=Path('/sys/kernel/debug/tracing')):
+        self.path = Path(path)
 
     @property
     def tracers(self):
         """List of current tracing instances in alphabetical order."""
-        names = sorted(os.listdir(os.path.join(self.path, 'instances')))
+        names = sorted((self.path / 'instances').iterdir())
         return [self.get_tracer(name) for name in names]
 
     def get_tracer(self, name):
@@ -33,16 +33,16 @@ class Tracing:
 
         """
         tracer_path = self._tracer_path(name)
-        if not os.path.isdir(tracer_path):
-            os.mkdir(tracer_path)
-        return Tracer(tracer_path)
+        if not tracer_path.is_dir():
+            tracer_path.mkdir()
+        return Tracer(path=tracer_path)
 
     def remove_tracer(self, name):
         """Remove the tracer with the specified name."""
-        os.rmdir(self._tracer_path(name))
+        self._tracer_path(name).rmdir()
 
     def _tracer_path(self, name):
-        return os.path.join(self.path, 'instances', name)
+        return self.path / 'instances' / name
 
 
 class Tracer:
@@ -51,7 +51,7 @@ class Tracer:
     _tracer_types = TRACER_TYPES
 
     def __init__(self, path):
-        self.path = path
+        self.path = Path(path)
         self._dir = TracingDirectory(path)
 
     def __getattr__(self, attr):
@@ -61,7 +61,7 @@ class Tracer:
     @property
     def name(self):
         """The tracer name."""
-        return os.path.basename(self.path)
+        return self.path.name
 
     @property
     def type(self):
@@ -76,12 +76,11 @@ class Tracer:
 
     def trace(self):
         """Return content from tracer."""
-        with open(os.path.join(self.path, 'trace')) as fd:
-            return fd.read()
+        return (self.path / 'trace').read_text()
 
     def trace_pipe(self):
         """Return an open file descript for the tracing output pipe."""
-        return open(os.path.join(self.path, 'trace_pipe'))
+        return (self.path / 'trace_pipe').open()
 
     @property
     def enabled(self):

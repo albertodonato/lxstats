@@ -1,12 +1,12 @@
-import os
-from unittest import mock
 from datetime import datetime
+from unittest import mock
 
-from ...testing import TestCase
 from ..process import (
-    TaskBase,
     Process,
-    Task)
+    Task,
+    TaskBase,
+)
+from ...testing import TestCase
 
 
 class TaskBaseTests(TestCase):
@@ -14,8 +14,7 @@ class TaskBaseTests(TestCase):
     def setUp(self):
         super().setUp()
         self.id = 10
-        self.task = TaskBase(
-            self.id, os.path.join(self.tempdir.path, str(self.id)))
+        self.task = TaskBase(self.id, self.tempdir.path / str(self.id))
 
     def test_repr(self):
         """__repr__ includes the task ID."""
@@ -156,8 +155,7 @@ class ProcessTests(TestCase):
     def setUp(self):
         super().setUp()
         self.pid = 10
-        self.process = Process(
-            self.pid, os.path.join(self.tempdir.path, str(self.pid)))
+        self.process = Process(self.pid, self.tempdir.path / str(self.pid))
 
     def test_pid(self):
         """The pid attribute returns the PID."""
@@ -174,8 +172,8 @@ class ProcessTests(TestCase):
         self.make_process_dir(self.pid, 'task/456')
         self.assertCountEqual(
             self.process.tasks(),
-            [Task(123, self, os.path.join(self.tempdir.path, 'task', '123')),
-             Task(456, self, os.path.join(self.tempdir.path, 'task', '456'))])
+            [Task(123, self.process, self.tempdir.path / 'task' / '123'),
+             Task(456, self.process, self.tempdir.path / 'task' / '456')])
 
 
 class TaskTests(TestCase):

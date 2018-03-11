@@ -34,7 +34,7 @@ class ProcsScript(Script):
             """Comma-separated list of PIDs."""
             try:
                 return [int(pid) for pid in pid_list.split(',')]
-            except:
+            except Exception:
                 raise ArgumentTypeError('Must specify a list of PIDs')
 
         parser.add_argument(

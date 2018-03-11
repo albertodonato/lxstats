@@ -3,8 +3,7 @@ Handle collection of processes, allowing filtering and sorting by attribute
 values.
 """
 
-from os import path
-from glob import iglob
+from pathlib import Path
 
 from .process import Process
 
@@ -17,20 +16,18 @@ class Collector:
 
     """
     def __init__(self, proc='/proc', pids=()):
-        self._proc = '{}/'.format(path.normpath(proc))
-        self._pids = pids
+        self._proc = Path(proc).absolute()
+        self._pids = sorted(pids)
 
     def collect(self):
         """Return an iterator yielding Process objects."""
         if self._pids:
-            proc_dirs = (
-                '{}{}'.format(self._proc, pid) for pid in sorted(self._pids))
+            proc_dirs = (self._proc / str(pid) for pid in self._pids)
         else:
-            proc_dirs = iglob('{}[0-9]*'.format(self._proc))
+            proc_dirs = self._proc.glob('[0-9]*')
 
-        l = len(self._proc)
         for proc_dir in proc_dirs:
-            process = Process(int(proc_dir[l:]), proc_dir)
+            process = Process(int(proc_dir.name), proc_dir)
             process.collect_stats()
             if process.exists:
                 # Don't return non-existing processes. Check this after trying
@@ -43,11 +40,10 @@ class Collector:
 class Collection:
     """A Process collection.
 
-    Parameters:
-      collector: A ProcessCollector instance. If not provided, a default one
-        will be created.
-      sort_by: The field to sort processes by. It can be prefixed with ``-``
-        to invert sorting (e.g. ``pid`` or ``-pid``).
+    :param Collector collector: the process collector. If not provided, a
+        default one will be created.
+    :param str sort_by: The field to sort processes by. It can be prefixed
+        with ``-`` to invert sorting (e.g. ``pid`` or ``-pid``).
 
     """
 
@@ -64,9 +60,8 @@ class Collection:
 
         Processes not matching the filter are not returned.
 
-        Parameters:
-          filter_function: A callable accepting a Process and returning a
-            boolean value (whether the process should be included).
+        :param callable filter_function: A callable accepting a Process and
+            returning a boolean value (whether the process should be included).
 
         """
         self._filters.append(filter_function)

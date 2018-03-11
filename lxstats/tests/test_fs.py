@@ -1,52 +1,54 @@
 import os
+from pathlib import PosixPath
 
-from ..testing import TestCase
 from ..fs import (
-    Entity,
+    Directory,
     File,
-    Directory)
+    Path,
+)
+from ..testing import TestCase
 
 
-class EntityTests(TestCase):
+class PathTests(TestCase):
 
     def setUp(self):
         super().setUp()
         self.filename = 'file'
-        self.entity = Entity(self.tempdir.join(self.filename))
+        self.path = Path(self.tempdir.join(self.filename))
 
     def test_path(self):
-        """The Entity path attribute contains the absolute path."""
+        """The Path._pathattribute contains the absolute path."""
         self.assertEqual(
-            self.entity.path, os.path.join(self.tempdir.path, self.filename))
+            self.path._path, PosixPath(self.tempdir.path) / self.filename)
 
     def test_exists_false(self):
-        """The exists property is False if the entity doesn't exist."""
-        self.assertFalse(self.entity.exists)
+        """The exists property is False if the path doesn't exist."""
+        self.assertFalse(self.path.exists)
 
     def test_exists_true(self):
-        """The exists property is True if the entity exists."""
+        """The exists property is True if the path exists."""
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.exists)
+        self.assertTrue(self.path.exists)
 
     def test_readable_false(self):
         """The readable property is False if the path is not readable."""
         self.tempdir.mkfile(self.filename, mode=0o200)
-        self.assertFalse(self.entity.readable)
+        self.assertFalse(self.path.readable)
 
     def test_readable_true(self):
         """The readable property is True if the path is readable."""
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.readable)
+        self.assertTrue(self.path.readable)
 
     def test_writable_false(self):
         """The writable property is False if the path is not writable."""
         self.tempdir.mkfile(path=self.filename, mode=0o400)
-        self.assertFalse(self.entity.writable)
+        self.assertFalse(self.path.writable)
 
     def test_writable_true(self):
         """The writable property is True if the path is writable."""
         self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.entity.writable)
+        self.assertTrue(self.path.writable)
 
 
 class FileTests(TestCase):
@@ -54,7 +56,7 @@ class FileTests(TestCase):
     def setUp(self):
         super().setUp()
         self.filename = 'foo'
-        self.file = File(os.path.join(self.tempdir.path, self.filename))
+        self.file = File(self.tempdir.path / self.filename)
 
     def test_read(self):
         """File content can be read."""
@@ -64,7 +66,7 @@ class FileTests(TestCase):
     def test_write(self):
         """Content can be written to file."""
         self.file.write('some content')
-        self.assertEqual(self.readfile(self.file.path), 'some content')
+        self.assertEqual(self.readfile(self.file._path), 'some content')
 
 
 class DirectoryTests(TestCase):
@@ -134,4 +136,4 @@ class DirectoryTests(TestCase):
         """It's possible to join a path with the Directory one."""
         self.assertEqual(
             self.dir.join('append', 'path'),
-            os.path.join(self.tempdir.path, 'append', 'path'))
+            self.tempdir.path / 'append' / 'path')
