@@ -1,8 +1,9 @@
-from ...testing import TestCase
 from ..text import (
     ParsedFile,
     SingleLineFile,
-    SplittedFile)
+    SplittedFile,
+)
+from ...testing import TestCase
 
 
 class SampleParsedFile(ParsedFile):
@@ -21,10 +22,9 @@ class ParsedFileTests(TestCase):
         self.assertEqual(parsed_file.parse(), content)
 
     def test_parse_not_existent(self):
-        """FileParser.parse returns None if file doesn't exist."""
+        """ParsedFile.parse returns None if file doesn't exist."""
         path = self.tempdir.join('file')
         parsed_file = SampleParsedFile(path)
-        # The parser method is not called
         self.assertIsNone(parsed_file.parse())
 
 

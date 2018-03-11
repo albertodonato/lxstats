@@ -4,8 +4,9 @@
 from collections import OrderedDict
 
 from .text import (
+    SingleLineFile,
     SplittedFile,
-    SingleLineFile)
+)
 
 
 class OptionsFile(SplittedFile):
