@@ -5,26 +5,25 @@ from ..text import (
     SplittedFile)
 
 
-class ParsedFileTests(TestCase):
+class SampleParsedFile(ParsedFile):
 
-    def test_parse_not_implemented(self):
-        """Parsedfile._parse must be implemented by subclasses."""
-        path = self.tempdir.mkfile()
-        parsed_file = ParsedFile(path)
-        self.assertRaises(NotImplementedError, parsed_file.parse)
+    def _parse(self, content):
+        return content
+
+
+class ParsedFileTests(TestCase):
 
     def test_parse(self):
         """ParsedFile.parse calls the parser with the file content."""
         content = 'line 1\nline 2'
         path = self.tempdir.mkfile(content=content)
-        parsed_file = ParsedFile(path)
-        parsed_file._parse = lambda content: content
+        parsed_file = SampleParsedFile(path)
         self.assertEqual(parsed_file.parse(), content)
 
     def test_parse_not_existent(self):
         """FileParser.parse returns None if file doesn't exist."""
         path = self.tempdir.join('file')
-        parsed_file = ParsedFile(path)
+        parsed_file = SampleParsedFile(path)
         # The parser method is not called
         self.assertIsNone(parsed_file.parse())
 

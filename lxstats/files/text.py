@@ -1,11 +1,15 @@
 """Base classes for reading and parsing text files."""
 
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
 from collections import Callable
 
 from ..fs import File
 
 
-class ParsedFile(File):
+class ParsedFile(File, metaclass=ABCMeta):
     """A file whose content is parsed.
 
     It's intended to be subclassed to provide parsers for specific types of
@@ -23,6 +27,7 @@ class ParsedFile(File):
 
         return self._parse(self.read())
 
+    @abstractmethod
     def _parse(self, content):
         """Parse the content of the file.
 
@@ -30,7 +35,6 @@ class ParsedFile(File):
             Subclasses must implement this method.
 
         """
-        raise NotImplementedError('The parser method must be implemented.')
 
 
 class SingleLineFile(ParsedFile):
