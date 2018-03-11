@@ -15,9 +15,9 @@ class Collector:
     the ``/proc`` directory are returned.
 
     """
-    def __init__(self, proc='/proc', pids=()):
+    def __init__(self, proc='/proc', pids=None):
         self._proc = Path(proc).absolute()
-        self._pids = sorted(pids)
+        self._pids = sorted(pids or ())
 
     def collect(self):
         """Return an iterator yielding Process objects."""
