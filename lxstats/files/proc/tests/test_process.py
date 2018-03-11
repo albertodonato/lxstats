@@ -1,15 +1,17 @@
 from textwrap import dedent
 
-from ....testing import TestCase
 from ..process import (
+    ProcPIDCgroup,
     ProcPIDCmdline,
+    ProcPIDEnviron,
+    ProcPIDIo,
+    ProcPIDNs,
+    ProcPIDSched,
     ProcPIDStat,
     ProcPIDStatm,
-    ProcPIDIo,
-    ProcPIDSched,
-    ProcPIDEnviron,
-    ProcPIDCgroup,
-    ProcPIDStatus)
+    ProcPIDStatus,
+)
+from ....testing import TestCase
 
 
 class ProcPIDCmdlineTests(TestCase):
@@ -98,7 +100,7 @@ class ProcPIDStatmTests(TestCase):
              'data': 6, 'dt': 7})
 
 
-class ProcPIDIOTests(TestCase):
+class ProcPIDIoTests(TestCase):
 
     def test_fields(self):
         """Fields and values from /proc/[pid]/io files are reported."""
@@ -123,6 +125,16 @@ class ProcPIDIOTests(TestCase):
              'read_bytes': 500,
              'write_bytes': 600,
              'cancelled_write_bytes': 700})
+
+
+class ProcPIDNsTests(TestCase):
+
+    def test_parse(self):
+        """The pid of each namespace from the link name is returned."""
+        self.tempdir.mksymlink('pid:[123]', path='pid')
+        self.tempdir.mksymlink('ipc:[456]', path='ipc')
+        ns_dir = ProcPIDNs(self.tempdir.path)
+        self.assertEqual(ns_dir.parse(), {'pid': 123, 'ipc': 456})
 
 
 class ProcPIDSchedTests(TestCase):

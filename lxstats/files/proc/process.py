@@ -1,10 +1,13 @@
 """Parsers for per-process files under :file:`/proc/[pid]/`."""
 
+import os
 import re
 
+from ..directory import ParsedDirectory
 from ..text import (
     ParsedFile,
-    SingleLineFile)
+    SingleLineFile,
+)
 
 
 class ProcPIDCmdline(SingleLineFile):
@@ -103,6 +106,18 @@ class ProcPIDIo(ParsedFile):
             key, value = line.split(': ', 1)
             result[key] = int(value)
         return result
+
+
+class ProcPIDNs(ParsedDirectory):
+    """Parse :file:`/proc/[pid]/ns` directory."""
+
+    _re = re.compile(r'.*:\[(.*)\]')
+
+    def _parse(self, path):
+        target = os.readlink(str(path))
+        match = self._re.match(target)
+        if match:
+            return int(match.groups()[0])
 
 
 class ProcPIDSched(ParsedFile):

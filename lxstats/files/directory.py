@@ -12,11 +12,11 @@ class ParsedDirectory(Directory, metaclass=ABCMeta):
     """A directory whose file listing is parsed."""
 
     def parse(self):
-        """Return a parsed list of files in the directory."""
+        """Return a dict with files in the directory and their parse result."""
         if not self.exists:
             return
 
-        return [self._parse(path) for path in self.listdir()]
+        return {path.name: self._parse(path) for path in self._path.iterdir()}
 
     @abstractmethod
     def _parse(self, path):

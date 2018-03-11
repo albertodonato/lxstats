@@ -15,25 +15,28 @@ Process-specific stats, like used memory, IO, etc. can be accessed through
 
 """
 
-from ...fs import Directory
-from ..types import ValueFile
 from .system import (
+    ProcCgroups,
     ProcDiskstats,
     ProcLoadavg,
     ProcMeminfo,
     ProcStat,
-    ProcVmstat,
     ProcUptime,
-    ProcCgroups)
+    ProcVmstat,
+)
 from .process import (
+    ProcPIDCgroup,
     ProcPIDCmdline,
+    ProcPIDEnviron,
     ProcPIDIo,
+    ProcPIDNs,
+    ProcPIDSched,
     ProcPIDStat,
     ProcPIDStatm,
     ProcPIDStatus,
-    ProcPIDEnviron,
-    ProcPIDSched,
-    ProcPIDCgroup)
+)
+from ..types import ValueFile
+from ...fs import Directory
 
 
 class ProcDirectory(Directory):
@@ -59,6 +62,7 @@ class ProcProcessDirectory(Directory):
         'comm': ValueFile,
         'environ': ProcPIDEnviron,
         'io': ProcPIDIo,
+        'ns': ProcPIDNs,
         'sched': ProcPIDSched,
         'stat': ProcPIDStat,
         'statm': ProcPIDStatm,

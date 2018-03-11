@@ -5,7 +5,7 @@ from ...testing import TestCase
 class SampleParsedDirectory(ParsedDirectory):
 
     def _parse(self, path):
-        return str(path) + '-parsed'
+        return path.name + '-parsed'
 
 
 class ParsedDirectoryTests(TestCase):
@@ -15,7 +15,8 @@ class ParsedDirectoryTests(TestCase):
         self.tempdir.mkfile(path='foo')
         self.tempdir.mkfile(path='bar')
         parsed_dir = SampleParsedDirectory(self.tempdir.path)
-        self.assertCountEqual(parsed_dir.parse(), ['foo-parsed', 'bar-parsed'])
+        self.assertEqual(
+            parsed_dir.parse(), {'foo': 'foo-parsed', 'bar': 'bar-parsed'})
 
     def test_parse_not_existent(self):
         """ParsedDirectory.parse returns None if directory doesn't exist."""
