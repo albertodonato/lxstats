@@ -1,6 +1,6 @@
-=======
-LxStats
-=======
+=============================================================
+LxStats - Access process and system stats from /proc and /sys
+=============================================================
 
 |Latest Version| |Build Status| |Coverage Status|
 
