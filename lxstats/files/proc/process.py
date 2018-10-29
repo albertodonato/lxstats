@@ -65,7 +65,7 @@ class ProcPIDStat(SingleLineFile):
         ('guest_time', int),
         ('cguest_time', int))
 
-    _re = re.compile('\((.+)\)')
+    _re = re.compile(r'\((.+)\)')
 
     def separator(self, content):
         """Custom separator to handle spaces in the process commandline."""
@@ -168,7 +168,7 @@ class ProcPIDCgroup(ParsedFile):
 class ProcPIDStatus(ParsedFile):
     """Parse :file:`/proc/[pid]/status`."""
 
-    _re = re.compile(':\s+')
+    _re = re.compile(r':\s+')
 
     def _parse(self, content):
         tokens = [
