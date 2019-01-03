@@ -1,5 +1,18 @@
 """Write field values for a collection of processes in a specific format."""
 
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    IO,
+    List,
+    Optional,
+    Sequence,
+)
+
+from .collection import Collection
+from .process import Process
+
 
 class Formatter:
     """Format a :class:`Process` :class:`Collection`.
@@ -14,25 +27,24 @@ class Formatter:
     fmt = ''
 
     # Configuration parameters with defaults.
-    config = {}
+    config: ClassVar[Dict[str, Any]] = {}
 
-    def __init__(self, stream, fields, **kwargs):
+    def __init__(self, stream: IO, fields: Sequence[str], **kwargs):
         self._stream = stream
         self.fields = fields
 
         unknown_keys = set(kwargs).difference(self.config)
         if unknown_keys:
-            raise TypeError(
-                'Unknown config parameters: {}'.format(
-                    ', '.join(sorted(unknown_keys))))
+            keys_list = ', '.join(sorted(unknown_keys))
+            raise TypeError(f'Unknown config parameters: {keys_list}')
         self._config = self.config.copy()
         self._config.update(kwargs)
 
-    def _fields_values(self, process):
+    def _fields_values(self, process: Process) -> List:
         """Return a list of fields values for a :class:`Process`."""
         return [process.get(field) for field in self.fields]
 
-    def format(self, collection):
+    def format(self, collection: Collection):
         """Write the formatted output of the :class:`Collection`."""
         self._format_header()
         for process in collection:
@@ -48,7 +60,7 @@ class Formatter:
         """
         pass
 
-    def _format_process(self, process):
+    def _format_process(self, process: Process):
         """Format data for a :class:`Process`.
 
         Subclasses can implement this.
@@ -72,6 +84,6 @@ class Formatter:
         """
         pass
 
-    def _write(self, data):
+    def _write(self, data: Optional[str]):
         if data is not None:
             self._stream.write(data)

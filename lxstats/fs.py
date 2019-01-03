@@ -6,31 +6,40 @@ filesytem entities.
 """
 
 import os
-from pathlib import PosixPath
+import pathlib
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    Iterable,
+    List,
+    Type,
+    Union,
+)
 
 
 class Path:
     """A filesystem path such as a file or directory."""
 
-    def __init__(self, path):
-        self._path = PosixPath(path).absolute()
+    def __init__(self, path: Union[str, pathlib.PurePath]):
+        self._path = pathlib.PosixPath(path).absolute()
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._path.name
 
     @property
-    def exists(self):
+    def exists(self) -> bool:
         """Whether the path exists."""
         return self._path.exists()
 
     @property
-    def readable(self):
+    def readable(self) -> bool:
         """Whether the path is readable."""
         return os.access(str(self._path), os.R_OK)
 
     @property
-    def writable(self):
+    def writable(self) -> bool:
         """Whether the path is writable."""
         return os.access(str(self._path), os.W_OK)
 
@@ -38,11 +47,11 @@ class Path:
 class File(Path):
     """Wrapper to reaad/write a file."""
 
-    def read(self):
+    def read(self) -> str:
         """Return file content."""
         return self._path.read_text()
 
-    def write(self, content):
+    def write(self, content: str):
         """Write content to file, replacing the content if it exists."""
         self._path.write_text(content)
 
@@ -51,10 +60,12 @@ class Directory(Path):
     """Access  files in a directory with a :class:`dict`-like interface."""
 
     #: Map names of files under the directory to their corresponding
-    #: :class:`File` type.  Subclasses should define this.
-    files = {}
+    #: :class:`File` type.
+    #:
+    #: Subclasses should define this.
+    files: ClassVar[Dict[str, Type[Path]]] = {}
 
-    def list(self):
+    def list(self) -> List[str]:
         """Return a list of names in the directory.
 
         Only existing files that match names listed in `files` are returned.
@@ -63,22 +74,22 @@ class Directory(Path):
         return sorted(
             name for name in self.files if (self._path / name).exists())
 
-    def listdir(self):
+    def listdir(self) -> List[str]:
         """Return all existing names in a directory."""
         return [path.name for path in self._path.iterdir()]
 
-    def join(self, *paths):
+    def join(self, *paths: Union[str, pathlib.PurePath]):
         """Append the given path to the directory one."""
         return self._path.joinpath(*paths)
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Any:
         """Return the :class:`File` instance for a name."""
         item = self.files[name](self._path / name)
         if not item.exists:
             raise KeyError(name)
         return item
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable:
         """Return an iterator yielding :class:`File`s in the directory."""
         for name in self.list():
             yield self[name]

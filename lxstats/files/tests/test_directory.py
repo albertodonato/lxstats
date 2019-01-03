@@ -1,5 +1,4 @@
 from ..directory import ParsedDirectory
-from ...testing import TestCase
 
 
 class SampleParsedDirectory(ParsedDirectory):
@@ -8,17 +7,16 @@ class SampleParsedDirectory(ParsedDirectory):
         return path.name + '-parsed'
 
 
-class ParsedDirectoryTests(TestCase):
+class TestParsedDirectory:
 
-    def test_parse(self):
+    def test_parse(self, tmpdir):
         """ParsedDirectory.parse calls the parser with path of each file."""
-        self.tempdir.mkfile(path='foo')
-        self.tempdir.mkfile(path='bar')
-        parsed_dir = SampleParsedDirectory(self.tempdir.path)
-        self.assertEqual(
-            parsed_dir.parse(), {'foo': 'foo-parsed', 'bar': 'bar-parsed'})
+        (tmpdir / 'foo').write_text('', 'utf-8')
+        (tmpdir / 'bar').write_text('', 'utf-8')
+        parsed_dir = SampleParsedDirectory(tmpdir)
+        assert parsed_dir.parse() == {'foo': 'foo-parsed', 'bar': 'bar-parsed'}
 
-    def test_parse_not_existent(self):
+    def test_parse_not_existent(self, tmpdir):
         """ParsedDirectory.parse returns None if directory doesn't exist."""
-        parsed_dir = SampleParsedDirectory(self.tempdir.join('somedir'))
-        self.assertIsNone(parsed_dir.parse())
+        parsed_dir = SampleParsedDirectory(tmpdir / 'somedir')
+        assert parsed_dir.parse() is None

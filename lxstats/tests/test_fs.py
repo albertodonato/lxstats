@@ -1,139 +1,138 @@
-import os
 from pathlib import PosixPath
+
+import pytest
 
 from ..fs import (
     Directory,
     File,
     Path,
 )
-from ..testing import TestCase
 
 
-class PathTests(TestCase):
+@pytest.fixture
+def posix_path(tmpdir):
+    yield PosixPath(tmpdir / 'somefile')
 
-    def setUp(self):
-        super().setUp()
-        self.filename = 'file'
-        self.path = Path(self.tempdir.join(self.filename))
 
-    def test_path(self):
+@pytest.fixture
+def path(tmpdir, posix_path):
+    yield Path(posix_path)
+
+
+class TestPath:
+
+    def test_path(self, tmpdir, path, posix_path):
         """The Path._pathattribute contains the absolute path."""
-        self.assertEqual(
-            self.path._path, PosixPath(self.tempdir.path) / self.filename)
+        assert path._path == posix_path
 
-    def test_exists_false(self):
-        """The exists property is False if the path doesn't exist."""
-        self.assertFalse(self.path.exists)
+    @pytest.mark.parametrize('exists', [True, False])
+    def test_exists(self, tmpdir, path, posix_path, exists):
+        """The exists property returns whether the file exists."""
+        if exists:
+            posix_path.touch()
+        assert path.exists == exists
 
-    def test_exists_true(self):
-        """The exists property is True if the path exists."""
-        self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.path.exists)
+    @pytest.mark.parametrize('mode,readable', [(0o400, True), (0o200, False)])
+    def test_readable(self, tmpdir, path, posix_path, mode, readable):
+        """The readable property returns whether the file is readable."""
+        posix_path.touch()
+        posix_path.chmod(mode)
+        assert path.readable == readable
 
-    def test_readable_false(self):
-        """The readable property is False if the path is not readable."""
-        self.tempdir.mkfile(self.filename, mode=0o200)
-        self.assertFalse(self.path.readable)
-
-    def test_readable_true(self):
-        """The readable property is True if the path is readable."""
-        self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.path.readable)
-
-    def test_writable_false(self):
-        """The writable property is False if the path is not writable."""
-        self.tempdir.mkfile(path=self.filename, mode=0o400)
-        self.assertFalse(self.path.writable)
-
-    def test_writable_true(self):
-        """The writable property is True if the path is writable."""
-        self.tempdir.mkfile(path=self.filename)
-        self.assertTrue(self.path.writable)
+    @pytest.mark.parametrize('mode,writable', [(0o200, True), (0o400, False)])
+    def test_writable(self, tmpdir, path, posix_path, mode, writable):
+        """The writable property returns whether the file is writable."""
+        posix_path.touch()
+        posix_path.chmod(mode)
+        assert path.writable == writable
 
 
-class FileTests(TestCase):
+@pytest.fixture
+def file(tmpdir, posix_path):
+    yield File(posix_path)
 
-    def setUp(self):
-        super().setUp()
-        self.filename = 'foo'
-        self.file = File(self.tempdir.path / self.filename)
 
-    def test_read(self):
+class TestFile:
+
+    def test_read(self, file, posix_path):
         """File content can be read."""
-        self.tempdir.mkfile(path=self.filename, content='some content')
-        self.assertEqual(self.file.read(), 'some content')
+        posix_path.write_text('some content')
+        assert file.read() == 'some content'
 
-    def test_write(self):
+    def test_write(self, file, posix_path):
         """Content can be written to file."""
-        self.file.write('some content')
-        self.assertEqual(self.readfile(self.file._path), 'some content')
+        file.write('some content')
+        assert posix_path.read_text() == 'some content'
 
 
-class DirectoryTests(TestCase):
+@pytest.fixture
+def dir(tmpdir, posix_path):
+    posix_path.mkdir()
+    dir = Directory(posix_path)
+    dir.files = {'foo': File, 'bar': File}
+    yield dir
 
-    def setUp(self):
-        super().setUp()
-        self.dir = Directory(self.tempdir.path)
-        self.dir.files = {'foo': File, 'bar': File}
 
-    def test_list_specified(self):
+class TestDirectory:
+
+    def test_list_specified(self, dir, posix_path):
         """Only names listed among Directory.files are returned."""
-        self.tempdir.mkfile(path='foo')
-        self.tempdir.mkfile(path='bar')
-        self.tempdir.mkfile(path='bza')
-        self.assertEqual(self.dir.list(), ['bar', 'foo'])
+        (posix_path / 'foo').touch()
+        (posix_path / 'bar').touch()
+        (posix_path / 'baz').touch()
+        assert dir.list() == ['bar', 'foo']
 
-    def test_list_existing(self):
+    def test_list_existing(self, dir, posix_path):
         """Only existing files are included in the listing."""
-        self.tempdir.mkfile(path='foo')
-        self.assertEqual(self.dir.list(), ['foo'])
+        (posix_path / 'foo').touch()
+        assert dir.list() == ['foo']
 
-    def test_listdir(self):
+    def test_listdir(self, dir, posix_path):
         """All names in the directory are returned."""
-        self.tempdir.mkfile(path='foo')
-        self.tempdir.mkfile(path='bar')
-        self.assertCountEqual(self.dir.listdir(), ['bar', 'foo'])
+        (posix_path / 'foo').touch()
+        (posix_path / 'bar').touch()
+        assert sorted(dir.listdir()) == ['bar', 'foo']
 
-    def test_iterable(self):
+    def test_iterable(self, dir, posix_path):
         """The Directory is iterable and returns Files in the directory."""
-        self.tempdir.mkfile(path='foo')
-        self.tempdir.mkfile(path='bar')
-        file_list = list(self.dir)
+        (posix_path / 'foo').touch()
+        (posix_path / 'bar').touch()
+        file_list = list(dir)
         for elem in file_list:
-            self.assertIsInstance(elem, File)
-        self.assertEqual([elem.name for elem in file_list], ['bar', 'foo'])
+            assert isinstance(elem, File)
+        assert [elem.name for elem in file_list] == ['bar', 'foo']
 
-    def test_get_file(self):
+    def test_get_file(self, dir, posix_path):
         """File items can be accessed."""
-        self.tempdir.mkfile(path='foo', content='foo text')
-        file_item = self.dir['foo']
-        self.assertIsInstance(file_item, File)
-        self.assertEqual(file_item.read(), 'foo text')
+        (posix_path / 'foo').write_text('foo text')
+        file_item = dir['foo']
+        assert isinstance(file_item, File)
+        assert file_item.read() == 'foo text'
 
-    def test_get_file_unknown(self):
+    def test_get_file_unknown(self, dir):
         """Accessing an unknown file name raises an error."""
-        self.assertRaises(KeyError, self.dir.__getitem__, 'unknown')
+        with pytest.raises(KeyError):
+            dir['unknown']
 
-    def test_get_file_not_existing(self):
+    def test_get_file_not_existing(self, dir):
         """Accessing a known file that doesn't exist raises an error."""
-        self.assertRaises(KeyError, self.dir.__getitem__, 'foo')
+        with pytest.raises(KeyError):
+            dir['foo']
 
-    def test_get_directory(self):
+    def test_get_directory(self, dir, posix_path):
         """A Directory can contains sub-Directories."""
 
         class SubDirectory(Directory):
             files = {'foo': File}
 
-        self.tempdir.mkfile(
-            path=os.path.join('subdir', 'foo'), content='foo text')
-        self.dir.files = {'subdir': SubDirectory}
+        dir.files = {'subdir': SubDirectory}
+        (posix_path / 'subdir').mkdir()
+        (posix_path / 'subdir' / 'foo').write_text('foo text')
         # The directory shows in the parent list
-        self.assertEqual(self.dir.list(), ['subdir'])
+        assert dir.list() == ['subdir']
         # The file is accessible through the tree
-        self.assertEqual(self.dir['subdir']['foo'].read(), 'foo text')
+        assert dir['subdir']['foo'].read() == 'foo text'
 
-    def test_join(self):
+    def test_join(self, dir, posix_path):
         """It's possible to join a path with the Directory one."""
-        self.assertEqual(
-            self.dir.join('append', 'path'),
-            self.tempdir.path / 'append' / 'path')
+        assert dir.join('append', 'path') == posix_path / 'append' / 'path'

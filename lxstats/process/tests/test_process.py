@@ -1,201 +1,199 @@
 from datetime import datetime
-from unittest import mock
+
+import pytest
 
 from ..process import (
-    Process,
     Task,
     TaskBase,
 )
-from ...testing import TestCase
 
 
-class TaskBaseTests(TestCase):
+@pytest.fixture
+def task_base(process_pid, process_dir):
+    yield TaskBase(process_pid, process_dir)
 
-    def setUp(self):
-        super().setUp()
-        self.id = 10
-        self.task = TaskBase(self.id, self.tempdir.path / str(self.id))
 
-    def test_repr(self):
+class TestTaskBase:
+
+    def test_repr(self, task_base, process_pid):
         """__repr__ includes the task ID."""
-        self.assertEqual(repr(self.task), 'TaskBase(10)')
+        assert repr(task_base) == f'TaskBase({process_pid})'
 
-    def test_id(self):
+    def test_id(self, task_base, process_pid):
         """The id attribute returns the task identifier."""
-        self.assertEqual(self.task._id, self.id)
+        assert task_base._id == process_pid
 
-    def test_exists(self):
+    def test_exists(self, task_base, process_dir):
         """It's possible to check whether a process exists."""
-        self.assertFalse(self.task.exists)
-        self.make_process_file(self.id, 'cmdline', content='cmd')
-        self.assertTrue(self.task.exists)
+        assert task_base.exists
+        process_dir.rmdir()
+        assert not task_base.exists
 
-    def test_collect_stats(self):
+    def test_collect_stats(self, task_base, process_dir):
         """Stats are collected from proc when collect_stats is called."""
-        self.assertEqual([], self.task.available_stats())
-        self.make_process_file(self.id, 'cmdline', content='cmd')
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), ['cmdline'])
+        assert task_base.available_stats() == []
+        (process_dir / 'cmdline').write_text('cmd')
+        task_base.collect_stats()
+        assert task_base.available_stats() == ['cmdline']
 
-    def test_collect_stats_no_proc_dir(self):
+    def test_collect_stats_no_proc_dir(self, task_base, process_dir):
         """If the task dir is not found, stats are left empty."""
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), [])
-        self.assertEqual(self.task.stats(), {})
+        task_base.collect_stats()
+        assert task_base.available_stats() == []
+        assert task_base.stats() == {}
 
-    def test_collect_stats_prefix(self):
+    def test_collect_stats_prefix(self, task_base, process_dir):
         """The file prefix is used if it reports multiple stats."""
-        self.make_process_file(self.id, 'statm', content='1 2 3 4 5 6 7')
-        self.task.collect_stats()
-        self.assertEqual(
-            self.task.stats(),
-            {'statm.size': 1, 'statm.resident': 2, 'statm.share': 3,
-             'statm.text': 4, 'statm.lib': 5, 'statm.data': 6, 'statm.dt': 7})
+        (process_dir / 'statm').write_text('1 2 3 4 5 6 7')
+        task_base.collect_stats()
+        assert task_base.stats() == {
+            'statm.size': 1,
+            'statm.resident': 2,
+            'statm.share': 3,
+            'statm.text': 4,
+            'statm.lib': 5,
+            'statm.data': 6,
+            'statm.dt': 7
+        }
 
-    def test_collect_stats_unreadable_file(self):
+    def test_collect_stats_unreadable_file(self, task_base, process_dir):
         """Unreadable files are skipped when reading stats."""
-        self.make_process_file(self.id, 'cmdline', content='cmd', mode=0o200)
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), [])
+        cmdline_file = (process_dir / 'cmdline')
+        cmdline_file.write_text('cmd')
+        cmdline_file.chmod(0o200)
+        task_base.collect_stats()
+        assert task_base.available_stats() == []
 
-    def test_collect_stats_not_parsable(self):
-        """STats are not collected for entries that are not parsable files."""
-        self.make_process_dir(self.id, 'task')
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), [])
+    def test_collect_stats_not_parsable(self, task_base, process_dir):
+        """Stats are not collected for entries that are not parsable files."""
+        (process_dir / 'task').mkdir()
+        task_base.collect_stats()
+        assert task_base.available_stats() == []
 
-    @mock.patch('lxstats.files.text.ParsedFile.parse')
-    def test_collect_stats_ioerror(self, mock_file):
+    def test_collect_stats_ioerror(self, mocker, task_base, process_dir):
         """If reading a file raises an IOError, the stat is skipped."""
-        self.make_process_file(self.id, 'cmdline', content='cmd')
-        mock_file.side_effect = IOError()
+        mock_parse = mocker.patch('lxstats.files.text.ParsedFile.parse')
+        mock_parse.side_effect = IOError()
+        (process_dir / 'cmdline').write_text('cmd')
+        task_base.collect_stats()
+        assert task_base.available_stats() == []
 
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), [])
-
-    def test_cmd_from_cmdline(self):
+    def test_cmd_from_cmdline(self, task_base, process_dir):
         """TaskBase.cmd parses the content of cmdline if not empty."""
-        self.make_process_file(
-            self.id, 'cmdline', content='cmd\x00with\x00args\x00')
-        self.task.collect_stats()
-        self.assertNotIn('comm', self.task.available_stats())
-        self.assertEqual(
-            self.task.get('cmdline'), ['cmd', 'with', 'args'])
-        self.assertEqual(self.task.cmd, 'cmd with args')
+        (process_dir / 'cmdline').write_text('cmd\x00with\x00args\x00')
+        task_base.collect_stats()
+        assert 'comm' not in task_base.available_stats()
+        assert task_base.get('cmdline') == ['cmd', 'with', 'args']
+        assert task_base.cmd == 'cmd with args'
 
-    def test_cmd_from_comm(self):
+    def test_cmd_from_comm(self, task_base, process_dir):
         """If cmdline is empty, comm is read."""
-        self.make_process_file(self.id, 'comm', content='cmd')
-        self.task.collect_stats()
-        self.assertNotIn('cmdline', self.task.available_stats())
-        self.assertEqual(self.task.cmd, '[cmd]')
+        (process_dir / 'comm').write_text('cmd')
+        task_base.collect_stats()
+        assert 'cmdline' not in task_base.available_stats()
+        assert task_base.cmd == '[cmd]'
 
-    def test_cmd_empty(self):
+    def test_cmd_empty(self, task_base, process_dir):
         """If cmdline and cmd are not found, an empty string is returned."""
-        self.task.collect_stats()
-        self.assertEqual(self.task.cmd, '')
+        task_base.collect_stats()
+        assert task_base.cmd == ''
 
-    def test_timestamp_empty(self):
+    def test_timestamp_empty(self, task_base, process_dir):
         """The timestamp is None when stats have not been collected."""
-        self.make_process_file(self.id, 'cmdline', content='cmd')
-        self.assertIsNone(self.task.timestamp)
+        (process_dir / 'cmdline').write_text('cmd')
+        assert task_base.timestamp is None
 
-    def test_timestamp(self):
+    def test_timestamp(self, task_base, process_dir):
         """The timestamp is None when stats have not been collected."""
-        self.make_process_file(self.id, 'cmdline', content='cmd')
+        (process_dir / 'cmdline').write_text('cmd')
         now = datetime.utcnow()
-        self.task._utcnow = lambda: now
-        self.task.collect_stats()
-        self.assertEqual(self.task.timestamp, now)
+        task_base._utcnow = lambda: now
+        task_base.collect_stats()
+        assert task_base.timestamp == now
 
-    def test_available_stats(self):
+    def test_available_stats(self, task_base, process_dir):
         """Available Process stats can be listed."""
-        self.make_process_file(self.id, 'comm', content='cmd')
-        self.make_process_file(self.id, 'wchan', content='0')
-        self.task.collect_stats()
-        self.assertEqual(self.task.available_stats(), ['comm', 'wchan'])
+        (process_dir / 'comm').write_text('cmd')
+        (process_dir / 'wchan').write_text('0')
+        task_base.collect_stats()
+        assert task_base.available_stats() == ['comm', 'wchan']
 
-    def test_stats(self):
+    def test_stats(self, task_base, process_dir):
         """Available Process  stats can be returned as a dict ."""
-        self.make_process_file(self.id, 'comm', content='cmd')
-        self.make_process_file(self.id, 'wchan', content='0')
-        self.task.collect_stats()
-        self.assertEqual(self.task.stats(), {'comm': 'cmd', 'wchan': '0'})
+        (process_dir / 'comm').write_text('cmd')
+        (process_dir / 'wchan').write_text('0')
+        task_base.collect_stats()
+        assert task_base.stats() == {'comm': 'cmd', 'wchan': '0'}
 
-    def test_get(self):
+    def test_get(self, task_base, process_dir):
         """Value for a stat can be returned."""
-        self.make_process_file(
-            self.id, 'wchan', content='poll_schedule_timeout')
-        self.task.collect_stats()
-        self.assertEqual(self.task.get('wchan'), 'poll_schedule_timeout')
+        (process_dir / 'wchan').write_text('poll_schedule_timeout')
+        task_base.collect_stats()
+        assert task_base.get('wchan') == 'poll_schedule_timeout'
 
-    def test_get_not_found(self):
+    def test_get_not_found(self, task_base, process_dir):
         """If the requested stat is not found, None is returned."""
-        self.task.collect_stats()
-        self.assertIsNone(self.task.get('wchan'))
+        task_base.collect_stats()
+        assert task_base.get('wchan') is None
 
-    def test_get_cmd(self):
+    def test_get_cmd(self, task_base, process_dir):
         """The get() method can return the cmd."""
-        self.make_process_file(self.id, 'cmdline', content='cmd')
-        self.task.collect_stats()
-        self.assertEqual(self.task.get('cmd'), 'cmd')
+        (process_dir / 'cmdline').write_text('cmd')
+        task_base.collect_stats()
+        assert task_base.get('cmd') == 'cmd'
 
-    def test_equal(self):
-        """Two Processes are equal if they have the same pid."""
-        other = Process(
-            self.id, '{}/{}'.format(self.tempdir.path, self.id))
-        different = Process(
-            self.id + 1, '{}/{}'.format(self.tempdir.path, self.id))
-        self.assertEqual(self.task, other)
-        self.assertNotEqual(self.task, different)
+    def test_equal(self, task_base, process_dir, process_pid):
+        """Two TaskBases are equal if they have the same pid."""
+        other = TaskBase(process_pid, process_dir)
+        different = TaskBase(process_pid + 1, process_dir)
+        assert task_base == other
+        assert task_base != different
+
+    def test_hash(self, task_base, process_dir, process_pid):
+        """Two TaskBases have the same hash if they have hte same id."""
+        other = TaskBase(process_pid, process_dir / 'other')
+        assert hash(task_base) == hash(other)
 
 
-class ProcessTests(TestCase):
+class TestProcess:
 
-    def setUp(self):
-        super().setUp()
-        self.pid = 10
-        self.process = Process(self.pid, self.tempdir.path / str(self.pid))
-
-    def test_pid(self):
+    def test_pid(self, process, process_pid):
         """The pid attribute returns the PID."""
-        self.assertEqual(self.process.pid, self.pid)
+        assert process.pid == process_pid
 
-    def test_get_pid(self):
+    def test_get_pid(self, process, process_pid):
         """The get() method can return the PID."""
-        self.process.collect_stats()
-        self.assertEqual(self.process.get('pid'), self.pid)
+        process.collect_stats()
+        assert process.get('pid') == process_pid
 
-    def test_tasks(self):
+    def test_tasks(self, process, process_dir):
         """The list of TIDs for process tasks can be returned."""
-        self.make_process_dir(self.pid, 'task/123')
-        self.make_process_dir(self.pid, 'task/456')
-        self.assertCountEqual(
-            self.process.tasks(),
-            [Task(123, self.process, self.tempdir.path / 'task' / '123'),
-             Task(456, self.process, self.tempdir.path / 'task' / '456')])
+        (process_dir / 'task').mkdir()
+        (process_dir / 'task/123').touch()
+        (process_dir / 'task/456').touch()
+        assert process.tasks() == [
+            Task(123, process, process_dir / 'task/123'),
+            Task(456, process, process_dir / 'task/456')
+        ]
 
 
-class TaskTests(TestCase):
+@pytest.fixture
+def task(process, process_pid):
+    yield Task(
+        process_pid, process, process._dir._path / f'task/{process_pid}')
 
-    def setUp(self):
-        super().setUp()
-        self.id = 10
-        self.process = Process(
-            self.id, '{}/{}'.format(self.tempdir.path, self.id))
-        self.task = Task(
-            self.id, self.process,
-            '{}/{}/task/{}'.format(self.tempdir.path, self.id, self.id))
 
-    def test_pid(self):
+class TestTask:
+
+    def test_pid(self, task, process_pid):
         """The tid attribute returns the TID."""
-        self.assertEqual(self.task.tid, self.id)
+        assert task.tid == process_pid
 
-    def test_process(self):
+    def test_process(self, task, process):
         """The parent attribute returns the task parent process."""
-        self.assertEqual(self.task.parent, self.process)
+        assert task.parent == process
 
-    def test_get_pid(self):
+    def test_get_pid(self, task, process_pid):
         """The get() method can return the PID."""
-        self.task.collect_stats()
-        self.assertEqual(self.task.get('tid'), self.id)
+        task.collect_stats()
+        assert task.get('tid') == process_pid

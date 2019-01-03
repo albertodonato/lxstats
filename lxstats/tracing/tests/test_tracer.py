@@ -1,6 +1,8 @@
+from pathlib import Path
+
+import pytest
 from toolrack.collect import Collection
 
-from ...testing import TestCase
 from ...tracing.tracer import (
     Tracer,
     Tracing,
@@ -9,114 +11,118 @@ from ...tracing.tracer import (
 from ...tracing.types import TracerType
 
 
-class TracingTests(TestCase):
+@pytest.fixture
+def instances_dir(tmpdir):
+    instances = tmpdir / 'instances'
+    instances.mkdir()
+    yield instances
 
-    def setUp(self):
-        super().setUp()
-        self.tracing = Tracing(path=self.tempdir.path)
-        self.tempdir.mkdir(path='instances')
 
-    def test_tracers_empty(self):
+@pytest.fixture
+def tracing(tmpdir):
+    yield Tracing(path=Path(tmpdir))
+
+
+class TestTracing:
+
+    def test_tracers_empty(self, tracing, instances_dir):
         """If no tracer is defined, an empty list is returned."""
-        self.assertEqual(self.tracing.tracers, [])
+        assert tracing.tracers == []
 
-    def test_tracers_exists(self):
+    def test_tracers_exists(self, tracing, instances_dir):
         """A Tracer object is returned for each tracing directory."""
-        self.tempdir.mkdir(path='instances/tracer-1')
-        self.tempdir.mkdir(path='instances/tracer-2')
-        for tracer in self.tracing.tracers:
-            self.assertIsInstance(tracer, Tracer)
-        self.assertEqual(
-            [tracer.name for tracer in self.tracing.tracers],
-            ['tracer-1', 'tracer-2'])
+        (instances_dir / 'tracer-1').mkdir()
+        (instances_dir / 'tracer-2').mkdir()
+        for tracer in tracing.tracers:
+            assert isinstance(tracer, Tracer)
+        assert [tracer.name
+                for tracer in tracing.tracers] == ['tracer-1', 'tracer-2']
 
-    def test_get_tracer_existing(self):
+    def test_get_tracer_existing(self, tracing, instances_dir):
         """A Tracer for a specified tracing instance is returned."""
-        self.tempdir.mkdir(path='instances/tracer')
-        tracer = self.tracing.get_tracer('tracer')
-        self.assertEqual(tracer.name, 'tracer')
+        (instances_dir / 'tracer').mkdir()
+        tracer = tracing.get_tracer('tracer')
+        assert tracer.name == 'tracer'
 
-    def test_get_tracer_create(self):
+    def test_get_tracer_create(self, tracing, instances_dir):
         """If the requested tracing instance doesn't exist, it's created."""
-        self.tracing.get_tracer('tracer')
-        self.assertTrue((self.tempdir.path / 'instances/tracer').exists())
+        tracing.get_tracer('tracer')
+        assert (instances_dir / 'tracer').exists()
 
-    def test_remove_tracer(self):
+    def test_remove_tracer(self, tracing, instances_dir):
         """A Tracer can be removed."""
-        self.tempdir.mkdir(path='instances/tracer')
-        self.tracing.remove_tracer('tracer')
-        self.assertFalse((self.tempdir.path / 'instances/tracer').exists())
+        (instances_dir / 'tracer').mkdir()
+        tracing.remove_tracer('tracer')
+        assert not (instances_dir / 'tracer').exists()
 
 
-class TracerTests(TestCase):
+@pytest.fixture
+def tracer(tmpdir):
+    yield Tracer(path=Path(tmpdir))
 
-    def setUp(self):
-        super().setUp()
-        self.tracer = Tracer(path=self.tempdir.path)
 
-    def test_name(self):
+class TestTracer:
+
+    def test_name(self, tmpdir, tracer):
         """The Tracer name is the name of the tracer directory."""
-        self.assertEqual(self.tracer.name, self.tempdir.path.name)
+        assert tracer.name == tmpdir.basename
 
-    def test_type(self):
+    def test_type(self, tmpdir, tracer):
         """The Tracer type can be returned."""
-        self.tempdir.mkfile(path='current_tracer', content='nop')
-        self.assertEqual(self.tracer.type, 'nop')
+        (tmpdir / 'current_tracer').write_text('nop', 'utf-8')
+        assert tracer.type == 'nop'
 
-    def test_set_type(self):
+    def test_set_type(self, tmpdir, tracer):
         """The Tracer type can be set."""
-        self.tempdir.mkfile(path='current_tracer', content='func')
-        self.tracer.set_type('nop')
-        self.assertEqual(self.tracer.type, 'nop')
+        (tmpdir / 'current_tracer').write_text('func', 'utf-8')
+        tracer.set_type('nop')
+        assert tracer.type == 'nop'
 
-    def test_set_type_unsupported(self):
+    def test_set_type_unsupported(self, tracer):
         """If the Tracer type is unsupported, an error is raised."""
-        self.assertRaises(UnsupportedTracer, self.tracer.set_type, 'unknown')
+        with pytest.raises(UnsupportedTracer):
+            tracer.set_type('unknown')
 
-    def test_enabled_true(self):
+    @pytest.mark.parametrize('content,enabled', [('1', True), ('0', False)])
+    def test_enabled(self, tmpdir, tracer, content, enabled):
         """The Tracer is enabled if the corresponding flag is set."""
-        self.tempdir.mkfile(path='tracing_on', content='1')
-        self.assertTrue(self.tracer.enabled)
+        (tmpdir / 'tracing_on').write_text(content, 'utf-8')
+        assert tracer.enabled == enabled
 
-    def test_enabled_false(self):
-        """The Tracer is enabled if the corresponding flag is not set."""
-        self.tempdir.mkfile(path='tracing_on', content='0')
-        self.assertFalse(self.tracer.enabled)
-
-    def test_toggle(self):
+    def test_toggle(self, tmpdir, tracer):
         """The Tracer can be enabled and disabled."""
-        self.tempdir.mkfile(path='tracing_on', content='0')
-        self.tracer.toggle(True)
-        self.assertTrue(self.tracer.enabled)
-        self.tracer.toggle(False)
-        self.assertFalse(self.tracer.enabled)
+        (tmpdir / 'tracing_on').write_text('1', 'utf-8')
+        tracer.toggle(True)
+        assert tracer.enabled
+        tracer.toggle(False)
+        assert not tracer.enabled
 
-    def test_options(self):
+    def test_options(self, tmpdir, tracer):
         """Tracer options are returned, with their status."""
-        self.tempdir.mkfile(path='trace_options', content='noraw\nhex')
-        self.assertEqual({'raw': False, 'hex': True}, self.tracer.options)
+        (tmpdir / 'trace_options').write_text('noraw\nhex', 'utf-8')
+        assert tracer.options == {'raw': False, 'hex': True}
 
-    def test_set_option(self):
+    def test_set_option(self, tmpdir, tracer):
         """Tracer options can be set."""
-        self.tempdir.mkfile(path='trace_options', content='nohex')
-        self.assertEqual({'hex': False}, self.tracer.options)
-        self.tracer.set_option('hex', True)
-        self.assertEqual({'hex': True}, self.tracer.options)
-        self.tracer.set_option('hex', False)
-        self.assertEqual({'hex': False}, self.tracer.options)
+        (tmpdir / 'trace_options').write_text('nohex', 'utf-8')
+        assert tracer.options == {'hex': False}
+        tracer.set_option('hex', True)
+        assert tracer.options == {'hex': True}
+        tracer.set_option('hex', False)
+        assert tracer.options == {'hex': False}
 
-    def test_trace_content(self):
+    def test_trace_content(self, tmpdir, tracer):
         """The trace file content can be returned."""
-        self.tempdir.mkfile(path='trace', content='some trace content')
-        self.assertEqual('some trace content', self.tracer.trace())
+        (tmpdir / 'trace').write_text('some trace content', 'utf-8')
+        assert tracer.trace() == 'some trace content'
 
-    def test_trace_pipe(self):
+    def test_trace_pipe(self, tmpdir, tracer):
         """The trace_pipe file cam be returned and read."""
-        self.tempdir.mkfile(path='trace_pipe', content='some trace content')
-        with self.tracer.trace_pipe() as pipe:
-            self.assertEqual('some trace content', pipe.read())
+        (tmpdir / 'trace_pipe').write_text('some trace content', 'utf-8')
+        with tracer.trace_pipe() as pipe:
+            assert pipe.read() == 'some trace content'
 
-    def test_attribute_access(self):
+    def test_attribute_access(self, tmpdir, tracer):
         """Attribute specific to the tracer type can be accessed."""
 
         class SampleTracer(TracerType):
@@ -125,9 +131,9 @@ class TracerTests(TestCase):
 
             foo = 'a sample attribute'
 
-        self.tracer._tracer_types = Collection('TracerType', 'name')
-        self.tracer._tracer_types.add(SampleTracer)
+        tracer._tracer_types = Collection('TracerType', 'name')
+        tracer._tracer_types.add(SampleTracer)
 
-        self.tempdir.mkfile(path='current_tracer')
-        self.tracer.set_type('sample')
-        self.assertEqual(self.tracer.foo, 'a sample attribute')
+        (tmpdir / 'current_tracer').write_text('', 'utf-8')
+        tracer.set_type('sample')
+        assert tracer.foo == 'a sample attribute'

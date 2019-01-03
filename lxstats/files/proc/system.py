@@ -4,7 +4,8 @@ import re
 
 from ..text import (
     ParsedFile,
-    SingleLineFile)
+    SingleLineFile,
+)
 
 
 class ProcStat(ParsedFile):
@@ -12,7 +13,8 @@ class ProcStat(ParsedFile):
 
     stat_fields = [
         'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal',
-        'guest', 'guest-nice']
+        'guest', 'guest-nice'
+    ]
 
     def _parse(self, content):
         result = {}
@@ -58,7 +60,8 @@ class ProcDiskstats(ParsedFile):
 
     diskstat_fields = [
         'read', 'read-merged', 'read-sect', 'read-ms', 'write', 'write-merged',
-        'write-sect', 'write-ms', 'io-curr', 'io-ms', 'io-ms-weighted']
+        'write-sect', 'write-ms', 'io-curr', 'io-ms', 'io-ms-weighted'
+    ]
 
     def _parse(self, content):
         result = {}
@@ -95,5 +98,6 @@ class ProcCgroups(ParsedFile):
             result[subsys] = {
                 'hierarchy-id': int(hier_id),
                 'num-cgroups': int(num_cgroups),
-                'enabled': enabled == '1'}
+                'enabled': enabled == '1'
+            }
         return result

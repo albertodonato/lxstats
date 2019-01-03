@@ -5,6 +5,7 @@ from abc import (
     abstractmethod,
 )
 from collections import Callable
+from typing import Optional
 
 from ..fs import File
 
@@ -28,7 +29,7 @@ class ParsedFile(File, metaclass=ABCMeta):
         return self._parse(self.read())
 
     @abstractmethod
-    def _parse(self, content):
+    def _parse(self, content: str):
         """Parse the content of the file.
 
         .. note::
@@ -57,7 +58,7 @@ class SingleLineFile(ParsedFile):
     #: The separator to use when splitting the content. If set to :data:`None`,
     #: content is not split.  It can also be set to a `callable` that splits
     #: content.
-    separator = ' '
+    separator: Optional[str] = ' '
 
     #: If set, it must be a list, where each element can be
     #:
@@ -83,7 +84,8 @@ class SingleLineFile(ParsedFile):
         return {
             key: field_type(value)
             for (key, field_type), value in zip(fields, splitted)
-            if key is not None}
+            if key is not None
+        }
 
     def _get_fields(self):
         fields = []

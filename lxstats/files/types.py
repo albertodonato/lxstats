@@ -1,6 +1,5 @@
 """Parse types of files used in /proc and /sys filesytems."""
 
-
 from collections import OrderedDict
 
 from .text import (
@@ -97,7 +96,7 @@ class TogglableOptionsFile(OptionsFile):
             raise ValueError(option)
 
         prefix = '' if value else 'no'
-        self.write('{}{}'.format(prefix, option))
+        self.write(f'{prefix}{option}')
 
 
 class ValueFile(SingleLineFile):

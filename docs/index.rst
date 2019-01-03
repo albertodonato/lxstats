@@ -1,4 +1,4 @@
-.. ToolRack documentation master file.
+.. LxStats documentation master file.
 
 .. _home:
 

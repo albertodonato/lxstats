@@ -20,50 +20,26 @@ class ProcPIDStat(SingleLineFile):
     """Parse :file:`/proc/[pid]/stat`, :file:`/proc/[pid]/tasks/[tid]/stat`."""
 
     fields = (
-        ('pid', int),
-        ('comm', str),
-        ('state', str),
-        ('ppid', int),
-        ('pgrp', int),
-        ('session', int),
-        ('tty_nr', int),
-        ('tpgid', int),
-        ('flags', int),
-        ('minflt', int),
-        ('cminflt', int),
-        ('majflt', int),
-        ('cmajflt', int),
-        ('utime', int),
-        ('stime', int),
-        ('cutime', int),
-        ('cstime', int),
-        ('priority', int),
-        ('nice', int),
-        ('num_threads', int),
-        ('itrealvalue', int),
-        ('starttime', int),
-        ('vsize', int),
-        ('rss', int),
-        ('rsslim', int),
-        ('startcode', int),
-        ('endcode', int),
-        ('startstack', int),
-        ('kstkesp', int),
-        ('kstkeip', int),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        ('exit_signal', int),
-        ('processor', int),
-        ('rt_priority', int),
-        ('policy', int),
-        ('delayacct_blkio_ticks', int),
-        ('guest_time', int),
-        ('cguest_time', int))
+        ('pid', int), ('comm', str), ('state', str), ('ppid', int),
+        ('pgrp', int), ('session', int), ('tty_nr',
+                                          int), ('tpgid', int), ('flags', int),
+        ('minflt', int), ('cminflt', int), ('majflt', int), ('cmajflt', int),
+        ('utime', int), ('stime', int), ('cutime', int), ('cstime', int),
+        ('priority', int), ('nice', int), ('num_threads',
+                                           int), ('itrealvalue',
+                                                  int), ('starttime', int),
+        ('vsize', int), ('rss', int), ('rsslim', int), ('startcode',
+                                                        int), ('endcode', int),
+        ('startstack', int), ('kstkesp',
+                              int), ('kstkeip',
+                                     int), None, None, None, None, None, None,
+        None, ('exit_signal',
+               int), ('processor',
+                      int), ('rt_priority',
+                             int), ('policy',
+                                    int), ('delayacct_blkio_ticks',
+                                           int), ('guest_time',
+                                                  int), ('cguest_time', int))
 
     _re = re.compile(r'\((.+)\)')
 
@@ -87,13 +63,8 @@ class ProcPIDStatm(SingleLineFile):
     """Parse :file:`/proc/[pid]/statm`."""
 
     fields = (
-        ('size', int),
-        ('resident', int),
-        ('share', int),
-        ('text', int),
-        ('lib', int),
-        ('data', int),
-        ('dt', int))
+        ('size', int), ('resident', int), ('share', int), ('text', int),
+        ('lib', int), ('data', int), ('dt', int))
 
 
 class ProcPIDIo(ParsedFile):
@@ -172,7 +143,9 @@ class ProcPIDStatus(ParsedFile):
 
     def _parse(self, content):
         tokens = [
-            self._re.split(line, maxsplit=1) for line in content.splitlines()]
+            self._re.split(line, maxsplit=1) for line in content.splitlines()
+        ]
         return {
-            key: int(value[:-3]) * 1024 for key, value in tokens
-            if value.endswith(' kB')}
+            key: int(value[:-3]) * 1024
+            for key, value in tokens if value.endswith(' kB')
+        }

@@ -1,22 +1,25 @@
 """ps-like script to dump processes information."""
 
-import os
-import sys
-from itertools import repeat
-from time import sleep
 from argparse import (
     ArgumentParser,
-    ArgumentTypeError)
+    ArgumentTypeError,
+)
+from itertools import repeat
+import os
+import sys
+from time import sleep
 
 from toolrack.script import Script
 
 from ..process.collection import (
     Collection,
-    Collector)
+    Collector,
+)
 from ..process.filter import CommandLineFilter
 from ..process.formatters import (
     get_formats,
-    get_formatter)
+    get_formatter,
+)
 
 
 class ProcsScript(Script):
@@ -38,29 +41,39 @@ class ProcsScript(Script):
                 raise ArgumentTypeError('Must specify a list of PIDs')
 
         parser.add_argument(
-            '--available-stats', help='Print a list of available stats.',
+            '--available-stats',
+            help='Print a list of available stats.',
             action='store_true')
         parser.add_argument(
-            '--fields', '-f',
+            '--fields',
+            '-f',
             help='comma-separated list of fields to display',
             default='pid,stat.state,comm')
         parser.add_argument(
             '--regexp', '-r', help='regexp to filter by process name')
         parser.add_argument(
-            '--cmdline-regexp', '-R',
+            '--cmdline-regexp',
+            '-R',
             help='regexp to filter by full command line')
         parser.add_argument(
             '--pids', '-p', help='list specific PIDs', type=pids)
         parser.add_argument(
-            '--format', '-F', help='output format', choices=get_formats(),
+            '--format',
+            '-F',
+            help='output format',
+            choices=get_formats(),
             default='table')
         parser.add_argument(
-            '--interval', '-i',
-            help='sample interval in seconds (default %(default)s)', type=int,
+            '--interval',
+            '-i',
+            help='sample interval in seconds (default %(default)s)',
+            type=int,
             default=5)
         parser.add_argument(
-            '--count', '-c',
-            help='number of samples to collect (default unlimited)', type=int,
+            '--count',
+            '-c',
+            help='number of samples to collect (default unlimited)',
+            type=int,
             default=0)
         return parser
 

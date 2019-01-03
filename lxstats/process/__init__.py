@@ -1,15 +1,17 @@
 """Access information about running processes."""
 
 from .collection import (
+    Collection,
     Collector,
-    Collection)
+)
+from .filter import CommandLineFilter
+from .formatter import Formatter
 from .process import (
     Process,
-    Task)
-from .formatter import Formatter
-from .filter import CommandLineFilter
-
+    Task,
+)
 
 __all__ = [
     'Collector', 'Collection', 'Process', 'Task', 'Formatter',
-    'CommandLineFilter']
+    'CommandLineFilter'
+]

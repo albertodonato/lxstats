@@ -26,7 +26,7 @@ class TaskBase:
         self._reset()
 
     def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, self._id)
+        return f'{self.__class__.__name__}({self._id})'
 
     def __eq__(self, other):
         return self._id == other._id
@@ -41,7 +41,7 @@ class TaskBase:
         if cmdline:
             return ' '.join(cmdline)
         comm = self._stats.get('comm')
-        return '[{}]'.format(comm) if comm else ''
+        return f'[{comm}]' if comm else ''
 
     @property
     def exists(self):
@@ -69,7 +69,7 @@ class TaskBase:
 
             if isinstance(parsed_stats, dict):
                 self._stats.update(
-                    ('{}.{}'.format(name, key), value)
+                    (f'{name}.{key}', value)
                     for key, value in parsed_stats.items())
             else:
                 self._stats[name] = parsed_stats

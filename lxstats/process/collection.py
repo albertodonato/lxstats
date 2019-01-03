@@ -15,6 +15,7 @@ class Collector:
     the ``/proc`` directory are returned.
 
     """
+
     def __init__(self, proc='/proc', pids=None):
         self._proc = Path(proc).absolute()
         self._pids = sorted(pids or ())
@@ -77,11 +78,12 @@ class Collection:
             iterator = filter(self._filter, iterator)
 
         if self._sort_by is not None:
+
             def key(elem):
                 return elem.get(self._sort_by)
 
-            iterator = iter(sorted(
-                iterator, key=key, reverse=self._sort_reverse))
+            iterator = iter(
+                sorted(iterator, key=key, reverse=self._sort_reverse))
 
         return iterator
 

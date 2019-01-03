@@ -7,13 +7,15 @@ This module currently allows to access and configure tracing options via
 
 from ...fs import (
     Directory,
-    File)
+    File,
+)
 from ..types import (
     OptionsFile,
-    ValueFile,
-    ToggleFile,
     SelectableOptionsFile,
-    TogglableOptionsFile)
+    TogglableOptionsFile,
+    ToggleFile,
+    ValueFile,
+)
 
 
 class TracingDirectory(Directory):
