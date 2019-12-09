@@ -4,8 +4,18 @@ from abc import (
     ABCMeta,
     abstractmethod,
 )
-from collections import Callable
-from typing import Optional
+from typing import (
+    Any,
+    Callable,
+    cast,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 
 from ..fs import File
 
@@ -21,7 +31,7 @@ class ParsedFile(File, metaclass=ABCMeta):
 
     """
 
-    def parse(self):
+    def parse(self) -> Any:
         """Read the file and preturn the parsed content."""
         if not self.exists:
             return
@@ -29,13 +39,18 @@ class ParsedFile(File, metaclass=ABCMeta):
         return self._parse(self.read())
 
     @abstractmethod
-    def _parse(self, content: str):
+    def _parse(self, content: str) -> Any:
         """Parse the content of the file.
 
         .. note::
             Subclasses must implement this method.
 
         """
+
+
+ParseResult = Union[str, List[str], Dict[str, Any]]
+
+FieldDefinition = Union[Tuple[str, Type], Tuple[None, None]]
 
 
 class SingleLineFile(ParsedFile):
@@ -57,20 +72,20 @@ class SingleLineFile(ParsedFile):
 
     #: The separator to use when splitting the content. If set to :data:`None`,
     #: content is not split.  It can also be set to a `callable` that splits
-    #: content.
-    separator: Optional[str] = ' '
+    #: the content, returning a list of strings.
+    separator: Optional[Union[str, Callable[[str], List[str]]]] = " "
 
-    #: If set, it must be a list, where each element can be
+    #: If set, it must be a list or tuple, where each element can be
     #:
     #: - a string: the key to use for the value.
     #: - a list of (key, type) tuples:  the value is  converted to the type by
     #:   calling :samp:`type(value)`.
     #: - :data:`None`: the field is ignored.
-    fields = None
+    fields: Optional[Sequence[Union[str, None, FieldDefinition]]] = None
 
-    def _parse(self, content):
+    def _parse(self, content: str) -> Optional[ParseResult]:
         # Take just fhe first line
-        content = content.split('\n')[0]
+        content = content.split("\n")[0]
         if self.separator is None:
             return content
 
@@ -82,14 +97,14 @@ class SingleLineFile(ParsedFile):
 
         # Map fields values to their name converting to the proper type
         return {
-            key: field_type(value)
+            key: cast(Callable, field_type)(value)
             for (key, field_type), value in zip(fields, splitted)
             if key is not None
         }
 
-    def _get_fields(self):
-        fields = []
-        for field in self.fields:
+    def _get_fields(self) -> List[FieldDefinition]:
+        fields: List[FieldDefinition] = []
+        for field in cast(List[Union[str, None, FieldDefinition]], self.fields):
             if field is None:
                 field = (None, None)
             elif isinstance(field, str):
@@ -98,11 +113,11 @@ class SingleLineFile(ParsedFile):
             fields.append(field)
         return fields
 
-    def _split(self, content):
+    def _split(self, content: str) -> List[str]:
         if not content:
             return []
 
-        if isinstance(self.separator, Callable):
+        if callable(self.separator):
             return self.separator(content)
 
         content = content.strip(self.separator)
@@ -129,7 +144,7 @@ class SplittedFile(ParsedFile):
 
     """
 
-    def _parse(self, content):
+    def _parse(self, content: str) -> List[str]:
         lines = content.splitlines()
         if len(lines) == 1:
             return lines[0].split()

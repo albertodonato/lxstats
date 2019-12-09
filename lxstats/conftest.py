@@ -12,13 +12,13 @@ from .process import (
 @pytest.fixture
 def tmpfile(tmpdir):
     """A temporary file"""
-    yield Path(tmpdir / 'file')
+    yield Path(tmpdir / "file")
 
 
 @pytest.fixture
 def proc_dir(tmpdir):
     """A /proc path."""
-    path = Path(tmpdir / 'proc')
+    path = Path(tmpdir / "proc")
     path.mkdir()
     yield path
 
@@ -56,9 +56,9 @@ def process(process_pid, process_dir):
 def processes_pids(make_process_dir):
     """A couple of processes with their cmdline set."""
     proc1_dir = make_process_dir(10)
-    (proc1_dir / 'cmdline').write_text('/bin/foo')
+    (proc1_dir / "cmdline").write_text("/bin/foo")
     proc2_dir = make_process_dir(20)
-    (proc2_dir / 'cmdline').write_text('/bin/bar')
+    (proc2_dir / "cmdline").write_text("/bin/bar")
     yield (10, 20)
 
 

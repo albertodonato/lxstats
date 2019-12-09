@@ -2,9 +2,9 @@
 
 Stats for a process can be collected and accessed::
 
-p = Process(123, '/proc/123')
-p.collect_stats()
-p.get('statm.size')
+    p = Process(123, '/proc/123')
+    p.collect_stats()
+    p.get('statm.size')
 
 """
 
@@ -18,7 +18,7 @@ class TaskBase:
 
     _utcnow = datetime.utcnow  # For testing
 
-    _id_attr = '_id'
+    _id_attr = "_id"
 
     def __init__(self, id, proc_dir):
         self._id = id
@@ -26,7 +26,7 @@ class TaskBase:
         self._reset()
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self._id})'
+        return f"{self.__class__.__name__}({self._id})"
 
     def __eq__(self, other):
         return self._id == other._id
@@ -37,11 +37,11 @@ class TaskBase:
     @property
     def cmd(self):
         """The task command line, with brackets for kernel tasks."""
-        cmdline = self._stats.get('cmdline')
+        cmdline = self._stats.get("cmdline")
         if cmdline:
-            return ' '.join(cmdline)
-        comm = self._stats.get('comm')
-        return f'[{comm}]' if comm else ''
+            return " ".join(cmdline)
+        comm = self._stats.get("comm")
+        return f"[{comm}]" if comm else ""
 
     @property
     def exists(self):
@@ -59,7 +59,7 @@ class TaskBase:
 
         for name in self._dir.list():
             entry = self._dir[name]
-            if not entry.readable or not hasattr(entry, 'parse'):
+            if not entry.readable or not hasattr(entry, "parse"):
                 continue
 
             try:
@@ -69,8 +69,8 @@ class TaskBase:
 
             if isinstance(parsed_stats, dict):
                 self._stats.update(
-                    (f'{name}.{key}', value)
-                    for key, value in parsed_stats.items())
+                    (f"{name}.{key}", value) for key, value in parsed_stats.items()
+                )
             else:
                 self._stats[name] = parsed_stats
 
@@ -89,7 +89,7 @@ class TaskBase:
 
     def get(self, stat):
         """Return the stat with the name, or None if not available."""
-        if stat in (self._id_attr, 'cmd', 'timestamp'):
+        if stat in (self._id_attr, "cmd", "timestamp"):
             return getattr(self, stat)
 
         return self._stats.get(stat)
@@ -105,7 +105,7 @@ class Process(TaskBase):
 
     _utcnow = datetime.utcnow  # For testing
 
-    _id_attr = 'pid'
+    _id_attr = "pid"
 
     @property
     def pid(self):
@@ -115,7 +115,7 @@ class Process(TaskBase):
     def tasks(self):
         """Return a list of Tasks for the Process."""
         tasks = []
-        tasks_dir = self._dir['task']
+        tasks_dir = self._dir["task"]
         for tid in tasks_dir.listdir():
             tasks.append(Task(int(tid), self, tasks_dir.join(tid)))
         return tasks
@@ -124,7 +124,7 @@ class Process(TaskBase):
 class Task(TaskBase):
     """Retrieve and hold information about a given task."""
 
-    _id_attr = 'tid'
+    _id_attr = "tid"
 
     def __init__(self, id, parent, proc_dir):
         super().__init__(id, proc_dir)

@@ -45,7 +45,7 @@ copyright = '{}, Alberto Donato'.format(datetime.today().year)
 # built documents.
 #
 # The short X.Y version.
-release = lxstats.__version__
+release = str(lxstats.__version__)
 # The full version, including alpha/beta/rc tags.
 version = release
 

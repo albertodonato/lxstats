@@ -1,9 +1,0 @@
-[run]
-source = lxstats
-omit =
-  lxstats/scripts/*
-
-[report]
-show_missing = True
-fail_under = 100
-skip_covered = True

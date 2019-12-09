@@ -43,14 +43,14 @@ class ProcDirectory(Directory):
     """The :file:`/proc` directory."""
 
     files = {
-        'cgroups': ProcCgroups,
-        'diskstats': ProcDiskstats,
-        'loadavg': ProcLoadavg,
-        'meminfo': ProcMeminfo,
-        'vmstat': ProcVmstat,
-        'stat': ProcStat,
-        'uptime': ProcUptime,
-        'vmstat': ProcVmstat
+        "cgroups": ProcCgroups,
+        "diskstats": ProcDiskstats,
+        "loadavg": ProcLoadavg,
+        "meminfo": ProcMeminfo,
+        "vmstat": ProcVmstat,
+        "stat": ProcStat,
+        "uptime": ProcUptime,
+        "vmstat": ProcVmstat,
     }
 
 
@@ -58,18 +58,18 @@ class ProcProcessDirectory(Directory):
     """A directory for a process under :file:`/proc/[pid]`."""
 
     files = {
-        'cgroup': ProcPIDCgroup,
-        'cmdline': ProcPIDCmdline,
-        'comm': ValueFile,
-        'environ': ProcPIDEnviron,
-        'io': ProcPIDIo,
-        'ns': ProcPIDNs,
-        'sched': ProcPIDSched,
-        'stat': ProcPIDStat,
-        'statm': ProcPIDStatm,
-        'status': ProcPIDStatus,
-        'task': Directory,
-        'wchan': ValueFile
+        "cgroup": ProcPIDCgroup,
+        "cmdline": ProcPIDCmdline,
+        "comm": ValueFile,
+        "environ": ProcPIDEnviron,
+        "io": ProcPIDIo,
+        "ns": ProcPIDNs,
+        "sched": ProcPIDSched,
+        "stat": ProcPIDStat,
+        "statm": ProcPIDStatm,
+        "status": ProcPIDStatus,
+        "task": Directory,
+        "wchan": ValueFile,
     }
 
 
@@ -77,13 +77,13 @@ class ProcTaskDirectory(Directory):
     """A directory for a task under :file:`/proc/[pid]/task/[tid]`."""
 
     files = {
-        'cgroup': ProcPIDCgroup,
-        'cmdline': ProcPIDCmdline,
-        'comm': ValueFile,
-        'environ': ProcPIDEnviron,
-        'io': ProcPIDIo,
-        'sched': ProcPIDSched,
-        'stat': ProcPIDStat,
-        'statm': ProcPIDStatm,
-        'wchan': ValueFile
+        "cgroup": ProcPIDCgroup,
+        "cmdline": ProcPIDCmdline,
+        "comm": ValueFile,
+        "environ": ProcPIDEnviron,
+        "io": ProcPIDIo,
+        "sched": ProcPIDSched,
+        "stat": ProcPIDStat,
+        "statm": ProcPIDStatm,
+        "wchan": ValueFile,
     }

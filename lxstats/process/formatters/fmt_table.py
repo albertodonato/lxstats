@@ -13,9 +13,9 @@ class TableFormatter(Formatter):
     - borders: whether to print table borders
     """
 
-    fmt = 'table'
+    fmt = "table"
 
-    config = {'borders': False}
+    config = {"borders": False}
 
     def __init__(self, stream, fields, **kwargs):
         super().__init__(stream, fields, **kwargs)
@@ -24,12 +24,12 @@ class TableFormatter(Formatter):
     def _format_header(self):
         self._table = PrettyTable()
         for field in self.fields:
-            self._table.add_column(field, [], align='l')
+            self._table.add_column(field, [], align="l")
 
     def _format_process(self, process):
         self._table.add_row(self._fields_values(process))
 
     def _dump(self):
-        content = self._table.get_string(border=self._config['borders'])
-        self._write(content + '\n')
+        content = self._table.get_string(border=self._config["borders"])
+        self._write(content + "\n")
         self._table = None

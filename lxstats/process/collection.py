@@ -16,7 +16,7 @@ class Collector:
 
     """
 
-    def __init__(self, proc='/proc', pids=None):
+    def __init__(self, proc="/proc", pids=None):
         self._proc = Path(proc).absolute()
         self._pids = sorted(pids or ())
 
@@ -25,7 +25,7 @@ class Collector:
         if self._pids:
             proc_dirs = (self._proc / str(pid) for pid in self._pids)
         else:
-            proc_dirs = self._proc.glob('[0-9]*')
+            proc_dirs = self._proc.glob("[0-9]*")
 
         for proc_dir in proc_dirs:
             process = Process(int(proc_dir.name), proc_dir)
@@ -82,8 +82,7 @@ class Collection:
             def key(elem):
                 return elem.get(self._sort_by)
 
-            iterator = iter(
-                sorted(iterator, key=key, reverse=self._sort_reverse))
+            iterator = iter(sorted(iterator, key=key, reverse=self._sort_reverse))
 
         return iterator
 
@@ -92,7 +91,7 @@ class Collection:
         return all(ffunc(proc) for ffunc in self._filters)
 
     def _set_sort_by(self, sort_by):
-        if sort_by is not None and sort_by.startswith('-'):
+        if sort_by is not None and sort_by.startswith("-"):
             self._sort_by = sort_by[1:]
             self._sort_reverse = True
         else:

@@ -24,7 +24,7 @@ class Formatter:
     """
 
     # Name of the format produced by the formatter.
-    fmt = ''
+    fmt = ""
 
     # Configuration parameters with defaults.
     config: ClassVar[Dict[str, Any]] = {}
@@ -35,8 +35,8 @@ class Formatter:
 
         unknown_keys = set(kwargs).difference(self.config)
         if unknown_keys:
-            keys_list = ', '.join(sorted(unknown_keys))
-            raise TypeError(f'Unknown config parameters: {keys_list}')
+            keys_list = ", ".join(sorted(unknown_keys))
+            raise TypeError(f"Unknown config parameters: {keys_list}")
         self._config = self.config.copy()
         self._config.update(kwargs)
 

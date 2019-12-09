@@ -12,6 +12,10 @@ from .process import (
 )
 
 __all__ = [
-    'Collector', 'Collection', 'Process', 'Task', 'Formatter',
-    'CommandLineFilter'
+    "Collector",
+    "Collection",
+    "Process",
+    "Task",
+    "Formatter",
+    "CommandLineFilter",
 ]

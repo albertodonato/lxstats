@@ -14,11 +14,11 @@ class CommandNameFilter:
         self._name = name
 
     def __call__(self, process):
-        cmdline = process.get('cmdline')
+        cmdline = process.get("cmdline")
         if cmdline:
             return cmdline[0] == self._name
 
-        return process.get('comm') == self._name
+        return process.get("comm") == self._name
 
 
 class CommandLineFilter:

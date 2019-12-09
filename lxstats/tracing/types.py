@@ -8,7 +8,7 @@ from toolrack.collect import Collection
 from ..files.sys import TracingDirectory
 
 # Available tracer types
-TRACER_TYPES = Collection('TracerType', 'name')
+TRACER_TYPES = Collection("TracerType", "name")
 
 
 class TracerType:
@@ -25,4 +25,4 @@ class TracerType:
 class NopTracer(TracerType):
     """No-op tracer."""
 
-    name = 'nop'
+    name = "nop"

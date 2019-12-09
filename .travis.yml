@@ -1,12 +1,13 @@
 language: python
 python:
   - "3.6"
-  - "3.7-dev"
+  - "3.7"
+  - "3.8"
 matrix:
   fast_finish: true
 stages:
   - lint
-  - check 
+  - check
   - test
 install: pip install tox codecov
 jobs:

@@ -1,6 +1,12 @@
 """Parse types of files used in /proc and /sys filesytems."""
 
 from collections import OrderedDict
+from typing import (
+    cast,
+    Dict,
+    List,
+    Optional,
+)
 
 from .text import (
     SingleLineFile,
@@ -25,12 +31,12 @@ class OptionsFile(SplittedFile):
     """
 
     @property
-    def options(self):
+    def options(self) -> List[str]:
         """Return a list with avalilable options."""
         return [self._strip_selected(value) for value in self.parse()]
 
-    def _strip_selected(self, value):
-        return value[1:-1] if value.startswith('[') else value
+    def _strip_selected(self, value: str) -> str:
+        return value[1:-1] if value.startswith("[") else value
 
 
 class SelectableOptionsFile(OptionsFile):
@@ -43,13 +49,14 @@ class SelectableOptionsFile(OptionsFile):
     """
 
     @property
-    def selected(self):
+    def selected(self) -> Optional[str]:
         """Return the selected option."""
         for value in self.parse():
-            if value.startswith('['):
+            if value.startswith("["):
                 return self._strip_selected(value)
+        return None
 
-    def select(self, value):
+    def select(self, value: str):
         """Set the specified option value.
 
         :class:`ValueError` is raised if the value is not valid."""
@@ -79,24 +86,24 @@ class TogglableOptionsFile(OptionsFile):
     """
 
     @property
-    def options(self):
+    def options(self) -> Dict[str, bool]:  # type: ignore
         """Return a dict with options and their current values."""
-        options = OrderedDict()
+        options: Dict[str, bool] = OrderedDict()
         for option in super().options:
-            value = not option.startswith('no')
+            value = not option.startswith("no")
             if not value:
                 option = option[2:]
             options[option] = value
 
         return options
 
-    def toggle(self, option, value):
+    def toggle(self, option: str, value: bool):
         """Change the value of the specified option."""
         if option not in self.options:
             raise ValueError(option)
 
-        prefix = '' if value else 'no'
-        self.write(f'{prefix}{option}')
+        prefix = "" if value else "no"
+        self.write(f"{prefix}{option}")
 
 
 class ValueFile(SingleLineFile):
@@ -105,11 +112,11 @@ class ValueFile(SingleLineFile):
     separator = None
 
     @property
-    def value(self):
+    def value(self) -> Optional[str]:
         """Return the current value in the file."""
-        return self.parse()
+        return cast(Optional[str], self.parse())
 
-    def set(self, value):
+    def set(self, value: str):
         self.write(value)
 
 
@@ -123,11 +130,11 @@ class ToggleFile(SingleLineFile):
     separator = None
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         """Return whether the toggle value is enabled."""
-        return self.parse() == '1'
+        return bool(self.parse() == "1")
 
-    def toggle(self, value):
+    def toggle(self, value: bool):
         """Enable or disable the value based on the passed :class:`bool`."""
-        content = '1' if value else '0'
+        content = "1" if value else "0"
         self.write(content)

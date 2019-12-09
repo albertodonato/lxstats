@@ -22,10 +22,10 @@ class TracingDirectory(Directory):
     """A :file:`/sys/kernel/debug/tracing/instance/[tracer]` directory."""
 
     files = {
-        'available_tracers': OptionsFile,
-        'current_tracer': ValueFile,
-        'trace_clock': SelectableOptionsFile,
-        'trace_options': TogglableOptionsFile,
-        'trace_marker': File,
-        'tracing_on': ToggleFile
+        "available_tracers": OptionsFile,
+        "current_tracer": ValueFile,
+        "trace_clock": SelectableOptionsFile,
+        "trace_options": TogglableOptionsFile,
+        "trace_marker": File,
+        "tracing_on": ToggleFile,
     }

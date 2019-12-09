@@ -71,8 +71,7 @@ class Directory(Path):
         Only existing files that match names listed in `files` are returned.
 
         """
-        return sorted(
-            name for name in self.files if (self._path / name).exists())
+        return sorted(name for name in self.files if (self._path / name).exists())
 
     def listdir(self) -> List[str]:
         """Return all existing names in a directory."""

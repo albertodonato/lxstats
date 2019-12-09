@@ -13,13 +13,13 @@ class CSVFormatter(Formatter):
     - tabs: use tabs as separators
     """
 
-    fmt = 'csv'
+    fmt = "csv"
 
-    config = {'tabs': False}
+    config = {"tabs": False}
 
     def __init__(self, stream, fields, **kwargs):
         super().__init__(stream, fields, **kwargs)
-        dialect = 'excel-tab' if self._config['tabs'] else 'excel'
+        dialect = "excel-tab" if self._config["tabs"] else "excel"
         self._writer = writer(self._stream, dialect=dialect)
 
     def _format_header(self):
