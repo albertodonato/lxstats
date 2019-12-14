@@ -1,3 +1,4 @@
+from collections import Counter
 from datetime import datetime
 
 import pytest
@@ -169,10 +170,12 @@ class TestProcess:
         (process_dir / "task").mkdir()
         (process_dir / "task/123").touch()
         (process_dir / "task/456").touch()
-        assert process.tasks() == [
-            Task(123, process, process_dir / "task/123"),
-            Task(456, process, process_dir / "task/456"),
-        ]
+        assert Counter(process.tasks()) == Counter(
+            [
+                Task(123, process, process_dir / "task/123"),
+                Task(456, process, process_dir / "task/456"),
+            ]
+        )
 
 
 @pytest.fixture
