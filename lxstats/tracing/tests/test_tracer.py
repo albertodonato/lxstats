@@ -1,8 +1,7 @@
 from pathlib import Path
 
-from toolrack.collect import Collection
-
 import pytest
+from toolrack.collect import Collection
 
 from ...tracing.tracer import (
     Tracer,
