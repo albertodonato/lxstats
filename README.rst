@@ -12,8 +12,11 @@ and ``/sys`` filesystems.
 
 
 .. |Latest Version| image:: https://img.shields.io/pypi/v/lxstats.svg
+   :alt: Latest Version
    :target: https://pypi.python.org/pypi/lxstats
-.. |Build Status| image:: https://img.shields.io/travis/albertodonato/lxstats.svg
-   :target: https://travis-ci.com/albertodonato/lxstats
+.. |Build Status| image:: https://github.com/albertodonato/lxstats/workflows/CI/badge.svg
+   :alt: Build Status
+   :target: https://github.com/albertodonato/lxstats/actions?query=workflow%3ACI
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/lxstats/master.svg
+   :alt: Coverage Status
    :target: https://codecov.io/gh/albertodonato/lxstats
