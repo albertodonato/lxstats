@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ..system import (
+from lxstats.files.proc.system import (
     ProcCgroups,
     ProcDiskstats,
     ProcLoadavg,

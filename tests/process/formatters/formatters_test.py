@@ -1,8 +1,8 @@
-from .. import (
+from lxstats.process.formatters import (
     get_formats,
     get_formatter,
 )
-from ..fmt_table import TableFormatter
+from lxstats.process.formatters.fmt_table import TableFormatter
 
 
 class TestGetFormats:

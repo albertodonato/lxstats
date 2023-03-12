@@ -1,6 +1,6 @@
 import pytest
 
-from ..filter import (
+from lxstats.process.filter import (
     CommandLineFilter,
     CommandNameFilter,
 )

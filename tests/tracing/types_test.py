@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from ...files.sys import TracingDirectory
-from ...tracing.types import (
+from lxstats.files.sys import TracingDirectory
+from lxstats.tracing.types import (
     NopTracer,
     TRACER_TYPES,
     TracerType,

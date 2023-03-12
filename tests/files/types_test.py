@@ -1,6 +1,6 @@
 import pytest
 
-from ..types import (
+from lxstats.files.types import (
     OptionsFile,
     SelectableOptionsFile,
     TogglableOptionsFile,

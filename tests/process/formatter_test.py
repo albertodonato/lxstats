@@ -2,12 +2,12 @@ from io import StringIO
 
 import pytest
 
-from ..collection import (
+from lxstats.process import Process
+from lxstats.process.collection import (
     Collection,
     Collector,
 )
-from ..formatter import Formatter
-from ..process import Process
+from lxstats.process.formatter import Formatter
 
 
 class SampleFormatter(Formatter):

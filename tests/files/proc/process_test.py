@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ..process import (
+from lxstats.files.proc.process import (
     ProcPIDCgroup,
     ProcPIDCmdline,
     ProcPIDEnviron,

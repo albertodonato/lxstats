@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .process import (
+from lxstats.process import (
     Collection,
     Collector,
     Process,

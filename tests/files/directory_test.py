@@ -1,4 +1,4 @@
-from ..directory import ParsedDirectory
+from lxstats.files.directory import ParsedDirectory
 
 
 class SampleParsedDirectory(ParsedDirectory):

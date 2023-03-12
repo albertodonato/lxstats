@@ -1,6 +1,6 @@
 import pytest
 
-from ..text import (
+from lxstats.files.text import (
     ParsedFile,
     SingleLineFile,
     SplittedFile,

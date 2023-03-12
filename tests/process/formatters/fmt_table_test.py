@@ -1,6 +1,6 @@
 from io import StringIO
 
-from .. import TableFormatter
+from lxstats.process.formatters import TableFormatter
 
 
 class TestTableFormatter:

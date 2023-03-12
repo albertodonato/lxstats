@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pytest
 
-from ..process import (
+from lxstats.process.process import (
     Task,
     TaskBase,
 )

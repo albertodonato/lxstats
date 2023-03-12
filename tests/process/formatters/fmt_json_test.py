@@ -1,7 +1,7 @@
 from io import StringIO
 import json
 
-from .. import JSONFormatter
+from lxstats.process.formatters import JSONFormatter
 
 
 class TestJSONFormatter:

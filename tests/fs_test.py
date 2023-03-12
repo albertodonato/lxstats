@@ -2,7 +2,7 @@ from pathlib import PosixPath
 
 import pytest
 
-from ..fs import (
+from lxstats.fs import (
     Directory,
     File,
     Path,

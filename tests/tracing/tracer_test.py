@@ -3,12 +3,12 @@ from pathlib import Path
 import pytest
 from toolrack.collect import Collection
 
-from ...tracing.tracer import (
+from lxstats.tracing.tracer import (
     Tracer,
     Tracing,
     UnsupportedTracer,
 )
-from ...tracing.types import TracerType
+from lxstats.tracing.types import TracerType
 
 
 @pytest.fixture

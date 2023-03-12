@@ -1,6 +1,6 @@
 from io import StringIO
 
-from .. import CSVFormatter
+from lxstats.process.formatters import CSVFormatter
 
 
 class TestCSVFormatter:

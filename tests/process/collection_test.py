@@ -3,11 +3,11 @@ import random
 
 import pytest
 
-from ..collection import (
+from lxstats.process import Process
+from lxstats.process.collection import (
     Collection,
     Collector,
 )
-from ..process import Process
 
 
 @pytest.fixture
