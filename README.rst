@@ -1,19 +1,13 @@
 Library to interact with files under /proc and /sys on Linux
 ============================================================
 
-|Latest Version| |Build Status| |Coverage Status| |Documentation|
+|Latest Version| |Build Status| |Coverage Status|
 
 LxStats is a library to access system and process statistics and metrics on
 Linux systems.
 
 It provides easy parsing of information from various files under the ``/proc``
 and ``/sys`` filesystems.
-
-Documentation
--------------
-
-Documentation is available on ReadTheDocs_.
-
 
 Installation
 ------------
@@ -37,6 +31,3 @@ As a user run::
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/lxstats/main.svg
    :alt: Coverage Status
    :target: https://codecov.io/gh/albertodonato/lxstats
-.. |Documentation| image:: https://readthedocs.org/projects/lxstats/badge/?version=stable
-   :alt: Documentation
-   :target: https://lxstats.readthedocs.io/en/stable/?badge=stable
