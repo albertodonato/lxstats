@@ -6,13 +6,13 @@
 # containing dir.
 #
 
+from datetime import datetime
 import os
 import sys
-from datetime import datetime
 
 # Add the directory containing the project tree so that the autodocs extension
 # can find the code.
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(".."))
 # Import the base module.
 import lxstats
 
@@ -22,23 +22,25 @@ import lxstats
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'LxStats'
-copyright = '{}, Alberto Donato'.format(datetime.today().year)
+project = "LxStats"
+copyright = "{}, Alberto Donato".format(datetime.today().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -56,18 +58,18 @@ version = release
 #  today_fmt = '%B %d, %Y'
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.
-html_theme = 'default'
+html_theme = "default"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -75,7 +77,7 @@ html_static_path = ['_static']
 # html_use_opensearch = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'lxstatsdoc'
+htmlhelp_basename = "lxstatsdoc"
 
 
 # -- Options for manual page output ---------------------------------------
@@ -83,8 +85,13 @@ htmlhelp_basename = 'lxstatsdoc'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'lxstats', 'LxStats Documentation',
-     ['Alberto Donato'], 1)
+    (
+        "index",
+        "lxstats",
+        "LxStats Documentation",
+        ["Alberto Donato"],
+        1,
+    )
 ]
 
 # If true, show URL addresses after external links.
