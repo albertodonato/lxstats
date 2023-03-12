@@ -1,3 +1,10 @@
+v0.4.0 - 2023-03-12
+===================
+
+- Bump minimum Python version to 3.10.
+- Update project structure, drop ``setup.py`` and ``setup.cfg``.
+- Move tests to separte dir.
+
 v0.3.0 - 2018-03-11
 ===================
 
