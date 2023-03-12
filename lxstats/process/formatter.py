@@ -1,13 +1,10 @@
 """Write field values for a collection of processes in a specific format."""
 
+from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
-    Dict,
     IO,
-    List,
-    Optional,
-    Sequence,
 )
 
 from .collection import Collection
@@ -27,7 +24,7 @@ class Formatter:
     fmt = ""
 
     # Configuration parameters with defaults.
-    config: ClassVar[Dict[str, Any]] = {}
+    config: ClassVar[dict[str, Any]] = {}
 
     def __init__(self, stream: IO, fields: Sequence[str], **kwargs):
         self._stream = stream
@@ -40,7 +37,7 @@ class Formatter:
         self._config = self.config.copy()
         self._config.update(kwargs)
 
-    def _fields_values(self, process: Process) -> List:
+    def _fields_values(self, process: Process) -> list:
         """Return a list of fields values for a :class:`Process`."""
         return [process.get(field) for field in self.fields]
 
@@ -84,6 +81,6 @@ class Formatter:
         """
         pass
 
-    def _write(self, data: Optional[str]):
+    def _write(self, data: str | None):
         if data is not None:
             self._stream.write(data)

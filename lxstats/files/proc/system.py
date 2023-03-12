@@ -60,7 +60,7 @@ class ProcVmstat(ParsedFile):
 
     def _parse(self, content):
         items = (line.split() for line in content.splitlines())
-        return dict((key, int(value)) for key, value in items)
+        return {key: int(value) for key, value in items}
 
 
 class ProcDiskstats(ParsedFile):

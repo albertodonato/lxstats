@@ -3,8 +3,6 @@
 from collections import OrderedDict
 from typing import (
     cast,
-    Dict,
-    List,
     Optional,
 )
 
@@ -31,7 +29,7 @@ class OptionsFile(SplittedFile):
     """
 
     @property
-    def options(self) -> List[str]:
+    def options(self) -> list[str]:
         """Return a list with avalilable options."""
         return [self._strip_selected(value) for value in self.parse()]
 
@@ -49,7 +47,7 @@ class SelectableOptionsFile(OptionsFile):
     """
 
     @property
-    def selected(self) -> Optional[str]:
+    def selected(self) -> str | None:
         """Return the selected option."""
         for value in self.parse():
             if value.startswith("["):
@@ -86,9 +84,9 @@ class TogglableOptionsFile(OptionsFile):
     """
 
     @property
-    def options(self) -> Dict[str, bool]:  # type: ignore
+    def options(self) -> dict[str, bool]:  # type: ignore
         """Return a dict with options and their current values."""
-        options: Dict[str, bool] = OrderedDict()
+        options: dict[str, bool] = OrderedDict()
         for option in super().options:
             value = not option.startswith("no")
             if not value:
@@ -112,7 +110,7 @@ class ValueFile(SingleLineFile):
     separator = None
 
     @property
-    def value(self) -> Optional[str]:
+    def value(self) -> str | None:
         """Return the current value in the file."""
         return cast(Optional[str], self.parse())
 

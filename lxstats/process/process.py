@@ -64,12 +64,13 @@ class TaskBase:
 
             try:
                 parsed_stats = entry.parse()
-            except IOError:
+            except OSError:
                 continue
 
             if isinstance(parsed_stats, dict):
                 self._stats.update(
-                    (f"{name}.{key}", value) for key, value in parsed_stats.items()
+                    (f"{name}.{key}", value)
+                    for key, value in parsed_stats.items()
                 )
             else:
                 self._stats[name] = parsed_stats

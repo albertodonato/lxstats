@@ -180,7 +180,9 @@ class TestProcess:
 
 @pytest.fixture
 def task(process, process_pid):
-    yield Task(process_pid, process, process._dir._path / f"task/{process_pid}")
+    yield Task(
+        process_pid, process, process._dir._path / f"task/{process_pid}"
+    )
 
 
 class TestTask:

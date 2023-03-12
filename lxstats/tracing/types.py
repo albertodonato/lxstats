@@ -1,7 +1,6 @@
 """Linux kernel tracer types."""
 
 from pathlib import Path
-from typing import Optional
 
 from toolrack.collect import Collection
 
@@ -14,7 +13,7 @@ TRACER_TYPES = Collection("TracerType", "name")
 class TracerType:
     """Base class for tracer types."""
 
-    name: Optional[str] = None
+    name: str | None = None
 
     def __init__(self, path):
         self.path = Path(path)

@@ -11,7 +11,6 @@ from ..process import Process
 
 
 class SampleFormatter(Formatter):
-
     config = {"option": 10}
     endl = "\n"
 
@@ -51,7 +50,11 @@ class TestFormatter:
         formatter = SampleFormatter(stream, ["pid", "cmd"])
         formatter.format(collection)
         assert stream.getvalue() == (
-            "header\n" "process 10 cmd1\n" "process 20 cmd2\n" "footer\n" "dump\n"
+            "header\n"
+            "process 10 cmd1\n"
+            "process 20 cmd2\n"
+            "footer\n"
+            "dump\n"
         )
 
     def test_fields_values(self, proc_dir):

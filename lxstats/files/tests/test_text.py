@@ -87,9 +87,17 @@ class TestSingleLineFile:
                 {"one": "foo", "two": 1, "three": 30.3},
             ),
             # with skipped field
-            (("one", None, "three"), "foo bar baz", {"one": "foo", "three": "baz"}),
+            (
+                ("one", None, "three"),
+                "foo bar baz",
+                {"one": "foo", "three": "baz"},
+            ),
             # with less fields than available
-            (("one", "two", "three", "four"), "foo bar", {"one": "foo", "two": "bar"}),
+            (
+                ("one", "two", "three", "four"),
+                "foo bar",
+                {"one": "foo", "two": "bar"},
+            ),
         ],
     )
     def test_parse_with_fields(

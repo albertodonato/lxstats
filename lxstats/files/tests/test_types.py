@@ -67,9 +67,15 @@ class TestTogglableOptionsFile:
     def test_options(self, toggle_options_file, tmpfile):
         """Options are returned as a dict with current values."""
         tmpfile.write_text("foo\nnobar\nbaz")
-        assert toggle_options_file.options == {"foo": True, "bar": False, "baz": True}
+        assert toggle_options_file.options == {
+            "foo": True,
+            "bar": False,
+            "baz": True,
+        }
 
-    @pytest.mark.parametrize("value,content", [(True, "bar"), (False, "nobar")])
+    @pytest.mark.parametrize(
+        "value,content", [(True, "bar"), (False, "nobar")]
+    )
     def test_toggle_option(self, toggle_options_file, tmpfile, value, content):
         """Options can be toggled."""
         tmpfile.write_text("foo\nnobar\nbaz")
@@ -108,7 +114,9 @@ def toggle_file(tmpfile):
 
 
 class TestToggleFile:
-    @pytest.mark.parametrize("content,enabled", [("1\n", True), ("0\n", False)])
+    @pytest.mark.parametrize(
+        "content,enabled", [("1\n", True), ("0\n", False)]
+    )
     def test_enabled(self, toggle_file, tmpfile, content, enabled):
         """The enabled value can be returned."""
         tmpfile.write_text(content)

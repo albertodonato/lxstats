@@ -34,7 +34,10 @@ class TestTracing:
         (instances_dir / "tracer-2").mkdir()
         for tracer in tracing.tracers:
             assert isinstance(tracer, Tracer)
-        assert [tracer.name for tracer in tracing.tracers] == ["tracer-1", "tracer-2"]
+        assert [tracer.name for tracer in tracing.tracers] == [
+            "tracer-1",
+            "tracer-2",
+        ]
 
     def test_get_tracer_existing(self, tracing, instances_dir):
         """A Tracer for a specified tracing instance is returned."""
@@ -123,7 +126,6 @@ class TestTracer:
         """Attribute specific to the tracer type can be accessed."""
 
         class SampleTracer(TracerType):
-
             name = "sample"
 
             foo = "a sample attribute"

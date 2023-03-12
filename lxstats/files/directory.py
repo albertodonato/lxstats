@@ -5,11 +5,7 @@ from abc import (
     abstractmethod,
 )
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    Optional,
-)
+from typing import Any
 
 from ..fs import Directory
 
@@ -17,7 +13,7 @@ from ..fs import Directory
 class ParsedDirectory(Directory, metaclass=ABCMeta):
     """A directory whose file listing is parsed."""
 
-    def parse(self) -> Optional[Dict[str, Any]]:
+    def parse(self) -> dict[str, Any] | None:
         """Return a dict with files in the directory and their parse result."""
         if not self.exists:
             return None

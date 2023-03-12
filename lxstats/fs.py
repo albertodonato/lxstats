@@ -5,23 +5,19 @@ filesytem entities.
 
 """
 
+from collections.abc import Iterable
 import os
 import pathlib
 from typing import (
     Any,
     ClassVar,
-    Dict,
-    Iterable,
-    List,
-    Type,
-    Union,
 )
 
 
 class Path:
     """A filesystem path such as a file or directory."""
 
-    def __init__(self, path: Union[str, pathlib.PurePath]):
+    def __init__(self, path: str | pathlib.PurePath):
         self._path = pathlib.PosixPath(path).absolute()
 
     @property
@@ -63,23 +59,25 @@ class Directory(Path):
     #: :class:`File` type.
     #:
     #: Subclasses should define this.
-    files: ClassVar[Dict[str, Type[Path]]] = {}
+    files: ClassVar[dict[str, type[Path]]] = {}
 
-    def list(self) -> List[str]:
+    def listdir(self) -> list[str]:
+        """Return all existing names in a directory."""
+        return [path.name for path in self._path.iterdir()]
+
+    def join(self, *paths: str | pathlib.PurePath):
+        """Append the given path to the directory one."""
+        return self._path.joinpath(*paths)
+
+    def list(self) -> list[str]:
         """Return a list of names in the directory.
 
         Only existing files that match names listed in `files` are returned.
 
         """
-        return sorted(name for name in self.files if (self._path / name).exists())
-
-    def listdir(self) -> List[str]:
-        """Return all existing names in a directory."""
-        return [path.name for path in self._path.iterdir()]
-
-    def join(self, *paths: Union[str, pathlib.PurePath]):
-        """Append the given path to the directory one."""
-        return self._path.joinpath(*paths)
+        return sorted(
+            name for name in self.files if (self._path / name).exists()
+        )
 
     def __getitem__(self, name: str) -> Any:
         """Return the :class:`File` instance for a name."""

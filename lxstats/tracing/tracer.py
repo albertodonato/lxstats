@@ -3,9 +3,7 @@
 from pathlib import Path
 from typing import (
     Any,
-    Dict,
     IO,
-    List,
 )
 
 from ..files.sys import TracingDirectory
@@ -67,7 +65,7 @@ class Tracer:
         self._dir["tracing_on"].toggle(status)
 
     @property
-    def options(self) -> Dict[str, bool]:
+    def options(self) -> dict[str, bool]:
         """Return a dict with tracing options and their status."""
         return dict(self._dir["trace_options"].options)
 
@@ -88,7 +86,7 @@ class Tracing:
         self.path = path
 
     @property
-    def tracers(self) -> List[Tracer]:
+    def tracers(self) -> list[Tracer]:
         """List of current tracing instances in alphabetical order."""
         names = sorted((self.path / "instances").iterdir())
         return [self.get_tracer(str(name)) for name in names]

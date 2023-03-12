@@ -82,7 +82,9 @@ class Collection:
             def key(elem):
                 return elem.get(self._sort_by)
 
-            iterator = iter(sorted(iterator, key=key, reverse=self._sort_reverse))
+            iterator = iter(
+                sorted(iterator, key=key, reverse=self._sort_reverse)
+            )
 
         return iterator
 

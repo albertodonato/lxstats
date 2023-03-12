@@ -64,7 +64,9 @@ class TestProcStat:
 
     def test_ignore_non_cpu_fields(self, tmpfile):
         """Extra fields after CPU ones are ignored."""
-        tmpfile.write_text("cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\nanother row\n")
+        tmpfile.write_text(
+            "cpu0 20.0 10.0 30.0 20.0 7.0 3.0 10.0\nanother row\n"
+        )
         stat_file = ProcStat(tmpfile)
         assert stat_file.parse() == {
             "cpu0": {
@@ -92,7 +94,11 @@ class TestProcLoadavg:
         """Load average over 1, 5, and 15 minutes is reported."""
         tmpfile.write_text("0.40 0.30 0.20")
         loadavg_file = ProcLoadavg(tmpfile)
-        assert loadavg_file.parse() == {"load1": 0.40, "load5": 0.30, "load15": 0.20}
+        assert loadavg_file.parse() == {
+            "load1": 0.40,
+            "load5": 0.30,
+            "load15": 0.20,
+        }
 
 
 class TestProcVmstat:
@@ -180,7 +186,15 @@ class TestProcCgroups:
         )
         cgroups_file = ProcCgroups(tmpfile)
         assert cgroups_file.parse() == {
-            "cpuset": {"hierarchy-id": 10, "num-cgroups": 200, "enabled": True},
+            "cpuset": {
+                "hierarchy-id": 10,
+                "num-cgroups": 200,
+                "enabled": True,
+            },
             "cpu": {"hierarchy-id": 3, "num-cgroups": 100, "enabled": False},
-            "cpuacct": {"hierarchy-id": 3, "num-cgroups": 300, "enabled": True},
+            "cpuacct": {
+                "hierarchy-id": 3,
+                "num-cgroups": 300,
+                "enabled": True,
+            },
         }

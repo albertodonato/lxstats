@@ -255,7 +255,10 @@ class TestProcPIDStatus:
         )
         tmpfile.write_text(content)
         status_file = ProcPIDStatus(tmpfile)
-        assert status_file.parse() == {"VmPeak": 1159798784, "VmSize": 1141960704}
+        assert status_file.parse() == {
+            "VmPeak": 1159798784,
+            "VmSize": 1141960704,
+        }
 
     def test_parse_split_in_two(self, tmpfile):
         """Lines containing more than one ':' are split in two."""
@@ -268,4 +271,7 @@ class TestProcPIDStatus:
         )
         tmpfile.write_text(content)
         status_file = ProcPIDStatus(tmpfile)
-        assert status_file.parse() == {"VmPeak": 1159798784, "VmSize": 1141960704}
+        assert status_file.parse() == {
+            "VmPeak": 1159798784,
+            "VmSize": 1141960704,
+        }

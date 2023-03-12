@@ -31,12 +31,18 @@ class TestCollector:
     def test_collector_with_pids(self, proc_dir):
         """If PIDs are provided, only those are included."""
         collector = Collector(proc=proc_dir, pids=(10, 30))
-        assert sorted(process.pid for process in collector.collect()) == [10, 30]
+        assert sorted(process.pid for process in collector.collect()) == [
+            10,
+            30,
+        ]
 
     def test_collector_with_pids_sorts(self, proc_dir):
         """Processes are listed in PID order."""
         collector = Collector(proc=proc_dir, pids=(20, 10))
-        assert sorted(process.pid for process in collector.collect()) == [10, 20]
+        assert sorted(process.pid for process in collector.collect()) == [
+            10,
+            20,
+        ]
 
     def test_collector_skip_non_existing(self, proc_dir):
         """Collector skips non-existing processes."""

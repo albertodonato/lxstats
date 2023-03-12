@@ -30,7 +30,9 @@ class ProcsScript(Script):
     """
 
     def get_parser(self):
-        parser = ArgumentParser(description="Dump info about running processes.")
+        parser = ArgumentParser(
+            description="Dump info about running processes."
+        )
 
         def pids(pid_list):
             """Comma-separated list of PIDs."""
@@ -50,11 +52,17 @@ class ProcsScript(Script):
             help="comma-separated list of fields to display",
             default="pid,stat.state,comm",
         )
-        parser.add_argument("--regexp", "-r", help="regexp to filter by process name")
         parser.add_argument(
-            "--cmdline-regexp", "-R", help="regexp to filter by full command line"
+            "--regexp", "-r", help="regexp to filter by process name"
         )
-        parser.add_argument("--pids", "-p", help="list specific PIDs", type=pids)
+        parser.add_argument(
+            "--cmdline-regexp",
+            "-R",
+            help="regexp to filter by full command line",
+        )
+        parser.add_argument(
+            "--pids", "-p", help="list specific PIDs", type=pids
+        )
         parser.add_argument(
             "--format",
             "-F",

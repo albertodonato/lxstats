@@ -4,16 +4,13 @@ from abc import (
     ABCMeta,
     abstractmethod,
 )
+from collections.abc import (
+    Callable,
+    Sequence,
+)
 from typing import (
     Any,
-    Callable,
     cast,
-    Dict,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -48,9 +45,9 @@ class ParsedFile(File, metaclass=ABCMeta):
         """
 
 
-ParseResult = Union[str, List[str], Dict[str, Any]]
+ParseResult = Union[str, list[str], dict[str, Any]]
 
-FieldDefinition = Union[Tuple[str, Type], Tuple[None, None]]
+FieldDefinition = Union[tuple[str, type], tuple[None, None]]
 
 
 class SingleLineFile(ParsedFile):
@@ -73,7 +70,7 @@ class SingleLineFile(ParsedFile):
     #: The separator to use when splitting the content. If set to :data:`None`,
     #: content is not split.  It can also be set to a `callable` that splits
     #: the content, returning a list of strings.
-    separator: Optional[Union[str, Callable[[str], List[str]]]] = " "
+    separator: str | Callable[[str], list[str]] | None = " "
 
     #: If set, it must be a list or tuple, where each element can be
     #:
@@ -81,9 +78,9 @@ class SingleLineFile(ParsedFile):
     #: - a list of (key, type) tuples:  the value is  converted to the type by
     #:   calling :samp:`type(value)`.
     #: - :data:`None`: the field is ignored.
-    fields: Optional[Sequence[Union[str, None, FieldDefinition]]] = None
+    fields: Sequence[str | None | FieldDefinition] | None = None
 
-    def _parse(self, content: str) -> Optional[ParseResult]:
+    def _parse(self, content: str) -> ParseResult | None:
         # Take just fhe first line
         content = content.split("\n")[0]
         if self.separator is None:
@@ -102,9 +99,11 @@ class SingleLineFile(ParsedFile):
             if key is not None
         }
 
-    def _get_fields(self) -> List[FieldDefinition]:
-        fields: List[FieldDefinition] = []
-        for field in cast(List[Union[str, None, FieldDefinition]], self.fields):
+    def _get_fields(self) -> list[FieldDefinition]:
+        fields: list[FieldDefinition] = []
+        for field in cast(
+            list[Union[str, None, FieldDefinition]], self.fields
+        ):
             if field is None:
                 field = (None, None)
             elif isinstance(field, str):
@@ -113,7 +112,7 @@ class SingleLineFile(ParsedFile):
             fields.append(field)
         return fields
 
-    def _split(self, content: str) -> List[str]:
+    def _split(self, content: str) -> list[str]:
         if not content:
             return []
 
@@ -144,7 +143,7 @@ class SplittedFile(ParsedFile):
 
     """
 
-    def _parse(self, content: str) -> List[str]:
+    def _parse(self, content: str) -> list[str]:
         lines = content.splitlines()
         if len(lines) == 1:
             return lines[0].split()

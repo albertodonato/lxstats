@@ -30,7 +30,9 @@ class TestCommandLineFilter:
         "cmdline,matches",
         [("/bin/foo\x00bar\x00", True), ("/bin/bar\x00foo\x00", False)],
     )
-    def test_filter_matching_process(self, process, process_dir, cmdline, matches):
+    def test_filter_matching_process(
+        self, process, process_dir, cmdline, matches
+    ):
         """CommandLineFilter matches a process by command line."""
         proc_filter = CommandLineFilter("foo")
         (process_dir / "cmdline").write_text(cmdline)
